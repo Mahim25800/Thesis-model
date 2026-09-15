@@ -1,0 +1,45 @@
+# Physics-Based Deepfake Detection System Configuration
+
+data:
+  pilot_dir: "data/pilot"
+  cache_dir: "data/cache"
+  train_real_count: 400
+  train_fake_count: 400
+  test_real_count: 100
+  test_fake_count: 100
+  hf_dataset_name: "Lunahera/genimagepp"
+  unseen_generator: "flux" # Modern held-out generator
+  image_size: [256, 256]
+
+extractors:
+  illumination_sh:
+    patch_regions: ["forehead", "left_cheek", "right_cheek", "ambient"]
+    sh_order: 2 # 9 coefficients: (l+1)^2
+    feature_dim: 5
+  corneal_optics:
+    min_resolution: 24
+    feature_dim: 4
+    temperature: 0.1 # for soft-argmax
+  surface_normals:
+    feature_dim: 3
+    sobel_kernel_size: 3
+  chromatic_shadow:
+    feature_dim: 2
+    lit_percentile: 80
+    shadow_percentile: 20
+
+model:
+  feature_dim: 14 # 5 + 4 + 3 + 2
+  confidence_dim: 4
+  hidden_dim_1: 64
+  hidden_dim_2: 32
+  dropout: 0.2
+  num_classes: 1
+
+training:
+  batch_size: 32
+  epochs: 50
+  lr: 0.001 # 1e-3
+  weight_decay: 0.0001 # 1e-4
+  seed: 42
+  checkpoint_dir: "models/checkpoints"

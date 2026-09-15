@@ -1,0 +1,274 @@
+{
+  "static_threshold_0_50": {
+    "auc_roc": 0.7734986875000001,
+    "eer": 0.30374999999999996,
+    "eer_threshold": 0.49119138717651367,
+    "accuracy": 0.692,
+    "confusion_matrix": {
+      "tn": 2934,
+      "fp": 1066,
+      "fn": 1398,
+      "tp": 2602
+    },
+    "raw_confusion_matrix": [
+      [
+        2934,
+        1066
+      ],
+      [
+        1398,
+        2602
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.6773    0.7335    0.7043      4000\n        Fake     0.7094    0.6505    0.6787      4000\n\n    accuracy                         0.6920      8000\n   macro avg     0.6933    0.6920    0.6915      8000\nweighted avg     0.6933    0.6920    0.6915      8000\n"
+  },
+  "optimal_eer_threshold": {
+    "auc_roc": 0.7734986875000001,
+    "eer": 0.30374999999999996,
+    "eer_threshold": 0.49119138717651367,
+    "accuracy": 0.69625,
+    "confusion_matrix": {
+      "tn": 2785,
+      "fp": 1215,
+      "fn": 1215,
+      "tp": 2785
+    },
+    "raw_confusion_matrix": [
+      [
+        2785,
+        1215
+      ],
+      [
+        1215,
+        2785
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.6963    0.6963    0.6963      4000\n        Fake     0.6963    0.6963    0.6963      4000\n\n    accuracy                         0.6963      8000\n   macro avg     0.6963    0.6963    0.6963      8000\nweighted avg     0.6963    0.6963    0.6963      8000\n"
+  },
+  "youden_j_threshold": {
+    "auc_roc": 0.7734986875000001,
+    "eer": 0.30374999999999996,
+    "eer_threshold": 0.49119138717651367,
+    "accuracy": 0.70175,
+    "confusion_matrix": {
+      "tn": 2678,
+      "fp": 1322,
+      "fn": 1064,
+      "tp": 2936
+    },
+    "raw_confusion_matrix": [
+      [
+        2678,
+        1322
+      ],
+      [
+        1064,
+        2936
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.7157    0.6695    0.6918      4000\n        Fake     0.6895    0.7340    0.7111      4000\n\n    accuracy                         0.7017      8000\n   macro avg     0.7026    0.7017    0.7014      8000\nweighted avg     0.7026    0.7017    0.7014      8000\n"
+  },
+  "platt_calibrated_0_50": {
+    "auc_roc": 0.7734987500000001,
+    "eer": 0.30374999999999996,
+    "eer_threshold": 0.5020006731708512,
+    "accuracy": 0.696625,
+    "confusion_matrix": {
+      "tn": 2775,
+      "fp": 1225,
+      "fn": 1202,
+      "tp": 2798
+    },
+    "raw_confusion_matrix": [
+      [
+        2775,
+        1225
+      ],
+      [
+        1202,
+        2798
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.6978    0.6937    0.6958      4000\n        Fake     0.6955    0.6995    0.6975      4000\n\n    accuracy                         0.6966      8000\n   macro avg     0.6966    0.6966    0.6966      8000\nweighted avg     0.6966    0.6966    0.6966      8000\n"
+  },
+  "platt_calibrated_youden": {
+    "auc_roc": 0.7734987500000001,
+    "eer": 0.30374999999999996,
+    "eer_threshold": 0.5020006731708512,
+    "accuracy": 0.70175,
+    "confusion_matrix": {
+      "tn": 2678,
+      "fp": 1322,
+      "fn": 1064,
+      "tp": 2936
+    },
+    "raw_confusion_matrix": [
+      [
+        2678,
+        1322
+      ],
+      [
+        1064,
+        2936
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.7157    0.6695    0.6918      4000\n        Fake     0.6895    0.7340    0.7111      4000\n\n    accuracy                         0.7017      8000\n   macro avg     0.7026    0.7017    0.7014      8000\nweighted avg     0.7026    0.7017    0.7014      8000\n"
+  },
+  "selective_abstention_policy": {
+    "margin_0.03": {
+      "tau_low": 0.4544104945659637,
+      "tau_high": 0.5144104945659638,
+      "obs_threshold": 1.0,
+      "total_samples": 8000,
+      "num_decided": 5678,
+      "num_abstained": 2322,
+      "coverage_percent": 70.975,
+      "decided_accuracy": 75.25537160972173,
+      "authentic_accuracy": 77.00430191630817,
+      "synthetic_accuracy": 73.82249279077219
+    },
+    "margin_0.05": {
+      "tau_low": 0.43441049456596376,
+      "tau_high": 0.5344104945659638,
+      "obs_threshold": 1.0,
+      "total_samples": 8000,
+      "num_decided": 4443,
+      "num_abstained": 3557,
+      "coverage_percent": 55.537499999999994,
+      "decided_accuracy": 78.68557281116362,
+      "authentic_accuracy": 80.13111447302067,
+      "synthetic_accuracy": 77.52032520325203
+    },
+    "margin_0.08": {
+      "tau_low": 0.40441049456596373,
+      "tau_high": 0.5644104945659637,
+      "obs_threshold": 1.0,
+      "total_samples": 8000,
+      "num_decided": 3032,
+      "num_abstained": 4968,
+      "coverage_percent": 37.9,
+      "decided_accuracy": 83.57519788918206,
+      "authentic_accuracy": 85.10473235065943,
+      "synthetic_accuracy": 82.44406196213426
+    },
+    "margin_0.10": {
+      "tau_low": 0.38441049456596377,
+      "tau_high": 0.5844104945659637,
+      "obs_threshold": 1.0,
+      "total_samples": 8000,
+      "num_decided": 2292,
+      "num_abstained": 5708,
+      "coverage_percent": 28.65,
+      "decided_accuracy": 86.60558464223385,
+      "authentic_accuracy": 87.55186721991701,
+      "synthetic_accuracy": 85.91867469879519
+    },
+    "margin_0.12": {
+      "tau_low": 0.36441049456596375,
+      "tau_high": 0.6044104945659637,
+      "obs_threshold": 1.0,
+      "total_samples": 8000,
+      "num_decided": 1763,
+      "num_abstained": 6237,
+      "coverage_percent": 22.037499999999998,
+      "decided_accuracy": 89.61996596710154,
+      "authentic_accuracy": 89.94413407821229,
+      "synthetic_accuracy": 89.39828080229226
+    },
+    "margin_0.15": {
+      "tau_low": 0.3344104945659637,
+      "tau_high": 0.6344104945659638,
+      "obs_threshold": 1.0,
+      "total_samples": 8000,
+      "num_decided": 1198,
+      "num_abstained": 6802,
+      "coverage_percent": 14.975,
+      "decided_accuracy": 92.73789649415693,
+      "authentic_accuracy": 92.66247379454927,
+      "synthetic_accuracy": 92.7877947295423
+    }
+  },
+  "primary_obs_threshold": 1.0,
+  "observability_sweep": {
+    "tau_0.5": {
+      "tau": 0.5,
+      "observable_count": 7959,
+      "coverage_percent": 99.4875,
+      "auc_roc": 0.7735518933000864,
+      "eer": 30.43094318205355,
+      "accuracy": 70.1595677848976
+    },
+    "tau_0.8": {
+      "tau": 0.8,
+      "observable_count": 7864,
+      "coverage_percent": 98.3,
+      "auc_roc": 0.7740151770941273,
+      "eer": 30.467912968446598,
+      "accuracy": 70.14242115971516
+    },
+    "tau_1.0": {
+      "tau": 1.0,
+      "observable_count": 7716,
+      "coverage_percent": 96.45,
+      "auc_roc": 0.7737630599628631,
+      "eer": 30.573037524201606,
+      "accuracy": 70.1270088128564
+    },
+    "tau_1.2": {
+      "tau": 1.2,
+      "observable_count": 7476,
+      "coverage_percent": 93.45,
+      "auc_roc": 0.775021138897662,
+      "eer": 30.510802527905778,
+      "accuracy": 70.25147137506687
+    },
+    "tau_1.4": {
+      "tau": 1.4,
+      "observable_count": 7098,
+      "coverage_percent": 88.725,
+      "auc_roc": 0.7767703730392026,
+      "eer": 30.3752187489277,
+      "accuracy": 70.40011270780502
+    },
+    "tau_1.5": {
+      "tau": 1.5,
+      "observable_count": 6849,
+      "coverage_percent": 85.6125,
+      "auc_roc": 0.7782395291810715,
+      "eer": 30.136682320930785,
+      "accuracy": 70.55044532048474
+    },
+    "tau_1.6": {
+      "tau": 1.6,
+      "observable_count": 6581,
+      "coverage_percent": 82.2625,
+      "auc_roc": 0.7810450569681555,
+      "eer": 30.041173447885782,
+      "accuracy": 70.65795471812794
+    },
+    "tau_1.7": {
+      "tau": 1.7,
+      "observable_count": 6217,
+      "coverage_percent": 77.71249999999999,
+      "auc_roc": 0.782923287877197,
+      "eer": 29.933898174858154,
+      "accuracy": 70.80585491394564
+    },
+    "tau_1.8": {
+      "tau": 1.8,
+      "observable_count": 5784,
+      "coverage_percent": 72.3,
+      "auc_roc": 0.783798474023317,
+      "eer": 29.892471908983143,
+      "accuracy": 70.83333333333334
+    },
+    "tau_2.0": {
+      "tau": 2.0,
+      "observable_count": 4842,
+      "coverage_percent": 60.525,
+      "auc_roc": 0.7885369729230483,
+      "eer": 29.554240662154296,
+      "accuracy": 71.18959107806691
+    }
+  }
+}

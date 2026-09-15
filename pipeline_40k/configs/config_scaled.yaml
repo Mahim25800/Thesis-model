@@ -1,0 +1,36 @@
+# Scaled 40,000+ Image Physics Deepfake Pipeline Configuration
+
+data:
+  raw_dir: "data/scaled"
+  cache_dir: "data/cache_scaled"
+  shards_dir: "data/cache_scaled/shards"
+  train_real_count: 16000
+  train_fake_count: 16000
+  test_real_count: 4000
+  test_fake_count: 4000
+  total_samples: 40000
+  shard_size: 2000
+  image_size: [256, 256]
+
+extractors:
+  batch_size: 64
+  feature_dim: 14
+  confidence_dim: 4
+
+model:
+  module_dims: [5, 4, 3, 2]
+  feature_dim: 14
+  confidence_dim: 4
+  use_mask_tokens: true
+  include_confidences: true
+  dropout: 0.2
+
+training:
+  batch_size: 256
+  epochs: 40
+  lr: 0.0005 # 5e-4
+  weight_decay: 0.001 # 1e-3
+  eta_min: 0.000001 # 1e-6 (CosineAnnealingLR)
+  seed: 42
+  best_checkpoint: "models/gated_cross_gen_40k_best.pt"
+  checkpoint_dir: "models/checkpoints"
