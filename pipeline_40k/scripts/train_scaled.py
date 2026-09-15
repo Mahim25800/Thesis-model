@@ -28,6 +28,8 @@ def train_scaled_model(
     train_cache: Path,
     test_cache: Path,
     best_checkpoint_path: Path,
+    val_split: float = 0.15,
+    val_cache: Path = None,
     epochs: int = 40,
     batch_size: int = 256,
     lr: float = 5e-4,
@@ -48,6 +50,7 @@ def train_scaled_model(
     print(f"Device:               {device}")
     print(f"Batch Size:           {batch_size}")
     print(f"Epochs:               {epochs}")
+    print(f"Validation Split:     {val_split * 100:.1f}% (Honest Model Selection)")
     print(f"Initial LR:           {lr}")
     print(f"Weight Decay:         {weight_decay}")
     print(f"Focal Gamma / Alpha:  gamma={gamma_focal}, alpha={alpha_focal}")
@@ -57,13 +60,62 @@ def train_scaled_model(
     print("=" * 95)
 
     print(f"Loading cached tensors from:\n  Train: {train_cache}\n  Test:  {test_cache}")
-    train_dataset = PhysicsFeatureDataset.from_cache(train_cache)
+    full_train_dataset = PhysicsFeatureDataset.from_cache(train_cache)
     test_dataset = PhysicsFeatureDataset.from_cache(test_cache)
+
+    # 1. Stratified Validation Split from Training Data
+    if val_split > 0.0:
+        labels_arr = full_train_dataset.labels.numpy()
+        real_indices = np.where(labels_arr == 0)[0]
+        fake_indices = np.where(labels_arr == 1)[0]
+
+        np.random.seed(seed)
+        perm_real = np.random.permutation(real_indices)
+        perm_fake = np.random.permutation(fake_indices)
+
+        n_val_real = int(len(real_indices) * val_split)
+        n_val_fake = int(len(fake_indices) * val_split)
+
+        val_idx = np.concatenate([perm_real[:n_val_real], perm_fake[:n_val_fake]])
+        train_idx = np.concatenate([perm_real[n_val_real:], perm_fake[n_val_fake:]])
+
+        train_dataset = PhysicsFeatureDataset(
+            full_train_dataset.features[train_idx],
+            full_train_dataset.confidences[train_idx],
+            full_train_dataset.labels[train_idx],
+        )
+        val_dataset = PhysicsFeatureDataset(
+            full_train_dataset.features[val_idx],
+            full_train_dataset.confidences[val_idx],
+            full_train_dataset.labels[val_idx],
+        )
+
+        # Save validation split tensor cache for downstream calibration scripts
+        if val_cache is None:
+            val_cache = train_cache.parent / "val_scaled_features.pt"
+        torch.save(
+            {
+                "features": full_train_dataset.features[val_idx],
+                "confidences": full_train_dataset.confidences[val_idx],
+                "labels": full_train_dataset.labels[val_idx],
+            },
+            val_cache,
+        )
+        print(f"Saved stratified validation split cache to: {val_cache}")
+    else:
+        train_dataset = full_train_dataset
+        val_dataset = test_dataset
 
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
         shuffle=True,
+        pin_memory=torch.cuda.is_available(),
+    )
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=batch_size,
+        shuffle=False,
         pin_memory=torch.cuda.is_available(),
     )
     test_loader = DataLoader(
@@ -73,7 +125,11 @@ def train_scaled_model(
         pin_memory=torch.cuda.is_available(),
     )
 
-    print(f"Loaded {len(train_dataset):,} training samples and {len(test_dataset):,} unseen test samples.")
+    print(
+        f"Partition Sizes: {len(train_dataset):,} Training samples | "
+        f"{len(val_dataset):,} Validation samples (Checkpoint Selection) | "
+        f"{len(test_dataset):,} Held-Out Test samples (Touched Once)."
+    )
 
     # Initialize MHSA Transformer Head
     model = TransformerPhysicsCrossGenHead(
@@ -94,7 +150,8 @@ def train_scaled_model(
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs, eta_min=eta_min)
 
     best_checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
-    best_auc = 0.0
+    best_val_auc = 0.0
+    best_val_epoch = 0
 
     print("\nStarting Training Execution...")
     print("-" * 110)
@@ -132,14 +189,14 @@ def train_scaled_model(
         avg_con = total_con / max(1, batch_count)
         current_lr = scheduler.get_last_lr()[0]
 
-        # Validation evaluation each epoch
+        # Validation evaluation each epoch (STRICTLY ON VALIDATION SPLIT)
         model.eval()
         val_probs = []
         val_targets = []
         val_confs = []
 
         with torch.no_grad():
-            for features, confidences, labels in test_loader:
+            for features, confidences, labels in val_loader:
                 features = features.to(device)
                 confidences = confidences.to(device)
                 logits, _ = model(features, confidences)
@@ -158,23 +215,39 @@ def train_scaled_model(
         youden_j, _ = compute_youden_threshold(y_t_ep, y_p_ep)
 
         status = ""
-        if auc >= best_auc:
-            best_auc = auc
+        if auc >= best_val_auc:
+            best_val_auc = auc
+            best_val_epoch = epoch
             torch.save(model.state_dict(), best_checkpoint_path)
-            status = "(* Peak Saved *)"
+            status = "(* Peak Val Saved *)"
 
         print(
             f"{epoch:<7}{current_lr:<10.6f}{avg_loss:<13.4f}{avg_focal:<12.4f}{avg_con:<11.4f}{auc:<11.4f}{eer * 100:<10.2f}%{youden_j:<11.4f}{acc * 100:<9.2f}% {status}"
         )
 
     print("-" * 110)
-    print(f"Training completed successfully! Peak Validation AUC: {best_auc:.4f}")
+    print(f"Training completed successfully! Peak Validation AUC: {best_val_auc:.4f} (at Epoch {best_val_epoch})")
     print(f"Best model saved to: {best_checkpoint_path}")
 
-    # Load best checkpoint and print complete final breakdown
+    # Load best checkpoint selected strictly by validation performance
     model.load_state_dict(torch.load(best_checkpoint_path, map_location=device, weights_only=True))
     model.eval()
 
+    # 1. Final Validation Breakdown
+    val_probs_fin = []
+    val_targets_fin = []
+    with torch.no_grad():
+        for features, confidences, labels in val_loader:
+            logits, _ = model(features.to(device), confidences.to(device))
+            val_probs_fin.extend(torch.sigmoid(logits.squeeze()).cpu().numpy().tolist())
+            val_targets_fin.extend(labels.numpy().tolist())
+    val_final_results = evaluate_predictions(np.array(val_targets_fin), np.array(val_probs_fin))
+    print("\n" + format_evaluation_summary(val_final_results, title="Selected Checkpoint - Validation Split Performance"))
+
+    # 2. Touch Held-Out Unseen Test Set STRICTLY ONCE
+    print("\n" + "#" * 95)
+    print("FINAL HELD-OUT UNSEEN TEST EVALUATION (TOUCHED EXACTLY ONCE AT THE VERY END)")
+    print("#" * 95)
     final_probs = []
     final_targets = []
     final_confs = []
@@ -217,6 +290,8 @@ def main():
     parser = argparse.ArgumentParser(description="Train Scaled Transformer with Hard-Negative Focal Loss")
     parser.add_argument("--train-cache", type=str, default="data/cache_scaled/train_scaled_features.pt")
     parser.add_argument("--test-cache", type=str, default="data/cache_scaled/test_scaled_features.pt")
+    parser.add_argument("--val-cache", type=str, default="data/cache_scaled/val_scaled_features.pt")
+    parser.add_argument("--val-split", type=float, default=0.15)
     parser.add_argument("--best-checkpoint", type=str, default="models/gated_cross_gen_40k_best.pt")
     parser.add_argument("--epochs", type=int, default=40)
     parser.add_argument("--batch-size", type=int, default=256)
@@ -231,12 +306,15 @@ def main():
 
     train_cache = Path(args.train_cache) if Path(args.train_cache).exists() else PROJECT_ROOT / args.train_cache
     test_cache = Path(args.test_cache) if Path(args.test_cache).exists() else PROJECT_ROOT / args.test_cache
+    val_cache = Path(args.val_cache) if Path(args.val_cache).is_absolute() else PROJECT_ROOT / args.val_cache
     best_checkpoint = Path(args.best_checkpoint) if Path(args.best_checkpoint).is_absolute() else PROJECT_ROOT / args.best_checkpoint
 
     train_scaled_model(
         train_cache=train_cache,
         test_cache=test_cache,
         best_checkpoint_path=best_checkpoint,
+        val_split=args.val_split,
+        val_cache=val_cache,
         epochs=args.epochs,
         batch_size=args.batch_size,
         lr=args.lr,

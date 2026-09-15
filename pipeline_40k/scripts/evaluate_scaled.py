@@ -96,6 +96,7 @@ def evaluate_selective_abstention(
 def evaluate_scaled_pipeline(
     checkpoint_path: Path,
     test_cache: Path,
+    val_cache: Path = None,
     train_cache: Path = None,
     output_json: Path = None,
     obs_threshold: float = 1.0,
@@ -165,23 +166,30 @@ def evaluate_scaled_pipeline(
     print("\n" + format_evaluation_summary(youden_eval, title=f"Youden's J Optimal Evaluation (J* = {youden_j:.4f}, Tau* = {youden_thresh:.4f})"))
 
     # 4. Platt Scaling Calibration: P(Fake | z) = sigma(a * z + b)
-    if train_cache and train_cache.exists():
-        print(f"\nFitting Platt Scaling calibration on training cache: {train_cache} ...")
-        train_dataset = PhysicsFeatureDataset.from_cache(train_cache)
-        train_loader = DataLoader(train_dataset, batch_size=512, shuffle=False)
-        train_logits = []
-        train_targets = []
+    # Calibrate on independent validation or training split to prevent calibration leakage
+    calib_cache = val_cache if (val_cache and val_cache.exists()) else train_cache
+    if calib_cache and calib_cache.exists():
+        print(f"\nFitting Platt Scaling calibration on independent cache: {calib_cache} ...")
+        calib_dataset = PhysicsFeatureDataset.from_cache(calib_cache)
+        calib_loader = DataLoader(calib_dataset, batch_size=512, shuffle=False)
+        calib_logits = []
+        calib_targets = []
         with torch.no_grad():
-            for f_tr, c_tr, l_tr in train_loader:
+            for f_tr, c_tr, l_tr in calib_loader:
                 lg, _ = model(f_tr.to(device), c_tr.to(device))
-                train_logits.extend(lg.squeeze().cpu().numpy().tolist())
-                train_targets.extend(l_tr.numpy().tolist())
-        calib_lr, platt_a, platt_b = fit_platt_scaling(np.array(train_logits), np.array(train_targets))
+                calib_logits.extend(lg.squeeze().cpu().numpy().tolist())
+                calib_targets.extend(l_tr.numpy().tolist())
+        calib_lr, platt_a, platt_b = fit_platt_scaling(np.array(calib_logits), np.array(calib_targets))
     else:
-        n_half = len(y_logits) // 2
-        calib_lr, platt_a, platt_b = fit_platt_scaling(y_logits[:n_half], y_true[:n_half])
+        print("\nWarning: No validation or train cache provided for Platt scaling. Using non-parametric identity calibration.")
+        platt_a, platt_b = 1.0, 0.0
+        calib_lr = None
 
-    calib_probs = calib_lr.predict_proba(y_logits.reshape(-1, 1))[:, 1]
+    if calib_lr is not None:
+        calib_probs = calib_lr.predict_proba(y_logits.reshape(-1, 1))[:, 1]
+    else:
+        calib_probs = y_probs
+
     platt_eval_05 = evaluate_predictions(y_true, calib_probs, threshold=0.50)
     calib_j, calib_youden_thresh = compute_youden_threshold(y_true, calib_probs)
     platt_eval_youden = evaluate_predictions(y_true, calib_probs, threshold=calib_youden_thresh)
@@ -269,6 +277,7 @@ def main():
     parser = argparse.ArgumentParser(description="Evaluate Transformer Scaled 40k Physics Deepfake Pipeline")
     parser.add_argument("--checkpoint", type=str, default="models/gated_cross_gen_40k_best.pt")
     parser.add_argument("--test-cache", type=str, default="data/cache_scaled/test_scaled_features.pt")
+    parser.add_argument("--val-cache", type=str, default="data/cache_scaled/val_scaled_features.pt")
     parser.add_argument("--train-cache", type=str, default="data/cache_scaled/train_scaled_features.pt")
     parser.add_argument("--output-json", type=str, default="models/evaluation_scaled_40k.json")
     parser.add_argument("--obs-threshold", type=float, default=1.0)
@@ -276,12 +285,14 @@ def main():
 
     checkpoint_path = Path(args.checkpoint) if Path(args.checkpoint).exists() else PROJECT_ROOT / args.checkpoint
     test_cache = Path(args.test_cache) if Path(args.test_cache).exists() else PROJECT_ROOT / args.test_cache
+    val_cache = (Path(args.val_cache) if Path(args.val_cache).exists() else PROJECT_ROOT / args.val_cache) if args.val_cache else None
     train_cache = (Path(args.train_cache) if Path(args.train_cache).exists() else PROJECT_ROOT / args.train_cache) if args.train_cache else None
     output_json = Path(args.output_json) if Path(args.output_json).is_absolute() or Path(args.output_json).parent.exists() else PROJECT_ROOT / args.output_json
 
     evaluate_scaled_pipeline(
         checkpoint_path,
         test_cache,
+        val_cache=val_cache,
         train_cache=train_cache,
         output_json=output_json,
         obs_threshold=args.obs_threshold,

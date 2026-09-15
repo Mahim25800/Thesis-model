@@ -37,4 +37,6 @@ Thumbs.db
 # Temporary & Log Files
 *.tmp
 *.log
+*.bak
 scratch/
+

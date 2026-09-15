@@ -1,0 +1,233 @@
+{
+  "overall_evaluation": {
+    "auc_roc": 0.78802815625,
+    "eer": 0.28300000000000003,
+    "eer_threshold": 0.5003111362457275,
+    "accuracy": 0.717875,
+    "confusion_matrix": {
+      "tn": 2869,
+      "fp": 1131,
+      "fn": 1126,
+      "tp": 2874
+    },
+    "raw_confusion_matrix": [
+      [
+        2869,
+        1131
+      ],
+      [
+        1126,
+        2874
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.7181    0.7173    0.7177      4000\n        Fake     0.7176    0.7185    0.7181      4000\n\n    accuracy                         0.7179      8000\n   macro avg     0.7179    0.7179    0.7179      8000\nweighted avg     0.7179    0.7179    0.7179      8000\n"
+  },
+  "optimal_eer": {
+    "eer": 0.28300000000000003,
+    "threshold": 0.5003111362457275
+  },
+  "youden_j": {
+    "j_stat": 0.43575,
+    "threshold": 0.5000368356704712
+  },
+  "source_breakdown": {
+    "real_samples": 4000,
+    "specificity": 0.71725,
+    "false_positive_rate": 0.28274999999999995,
+    "fake_samples": 4000,
+    "sensitivity": 0.7185,
+    "false_negative_rate": 0.2815
+  },
+  "modality_ablation": {
+    "Token 1: Illumination SH (5D)": {
+      "auc_roc": 0.65777471875,
+      "delta_auc": -0.13025343749999996,
+      "accuracy": 0.60875,
+      "eer": 0.38949999999999996
+    },
+    "Token 2: Corneal/Specular (4D)": {
+      "auc_roc": 0.73252415625,
+      "delta_auc": -0.055504,
+      "accuracy": 0.672625,
+      "eer": 0.32625000000000004
+    },
+    "Token 3: Surface Normals (3D)": {
+      "auc_roc": 0.70207384375,
+      "delta_auc": -0.08595431249999996,
+      "accuracy": 0.62875,
+      "eer": 0.34675
+    },
+    "Token 4: Chromatic Shadow (2D)": {
+      "auc_roc": 0.59882921875,
+      "delta_auc": -0.18919893750000005,
+      "accuracy": 0.5485,
+      "eer": 0.44275
+    }
+  },
+  "observability_stratification": {
+    "overall": {
+      "auc_roc": 0.78802815625,
+      "eer": 0.28300000000000003,
+      "eer_threshold": 0.5003111362457275,
+      "accuracy": 0.717875,
+      "confusion_matrix": {
+        "tn": 2869,
+        "fp": 1131,
+        "fn": 1126,
+        "tp": 2874
+      },
+      "raw_confusion_matrix": [
+        [
+          2869,
+          1131
+        ],
+        [
+          1126,
+          2874
+        ]
+      ],
+      "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.7181    0.7173    0.7177      4000\n        Fake     0.7176    0.7185    0.7181      4000\n\n    accuracy                         0.7179      8000\n   macro avg     0.7179    0.7179    0.7179      8000\nweighted avg     0.7179    0.7179    0.7179      8000\n"
+    },
+    "observable": {
+      "auc_roc": 0.7892804464571479,
+      "eer": 0.2832749641291423,
+      "eer_threshold": 0.5020415782928467,
+      "accuracy": 0.7187944638468503,
+      "confusion_matrix": {
+        "tn": 2729,
+        "fp": 1105,
+        "fn": 1069,
+        "tp": 2828
+      },
+      "raw_confusion_matrix": [
+        [
+          2729,
+          1105
+        ],
+        [
+          1069,
+          2828
+        ]
+      ],
+      "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.7185    0.7118    0.7151      3834\n        Fake     0.7190    0.7257    0.7223      3897\n\n    accuracy                         0.7188      7731\n   macro avg     0.7188    0.7187    0.7187      7731\nweighted avg     0.7188    0.7188    0.7188      7731\n"
+    },
+    "obs_threshold": 1.0,
+    "num_observable": 7731,
+    "num_indeterminate": 269,
+    "total_samples": 8000
+  },
+  "feature_effect_sizes": {
+    "SH_Mean_Multi_Source_Res": {
+      "real_mean": 0.1291914851265028,
+      "real_std": 0.11187578734325454,
+      "fake_mean": 0.16248383266013117,
+      "fake_std": 0.12766287128386652,
+      "cohen_d": 0.27736858812300647,
+      "assessment": "Small signal"
+    },
+    "SH_Max_Isolated_Res": {
+      "real_mean": 0.5706906234174967,
+      "real_std": 0.3172781323503624,
+      "fake_mean": 0.6099993547052145,
+      "fake_std": 0.31784424740493294,
+      "cohen_d": 0.12378308353470745,
+      "assessment": "Subtle / Shared"
+    },
+    "SH_Variance_Res_Field": {
+      "real_mean": 0.03940612989797673,
+      "real_std": 0.03346958771418002,
+      "fake_mean": 0.04435386079022359,
+      "fake_std": 0.034360187420964965,
+      "cohen_d": 0.14587369248085136,
+      "assessment": "Subtle / Shared"
+    },
+    "SH_Mode_Separation": {
+      "real_mean": 1.949596407637,
+      "real_std": 0.10429952120738745,
+      "fake_mean": 1.9394523977935314,
+      "fake_std": 0.11671506351015012,
+      "cohen_d": -0.0916503586358219,
+      "assessment": "Subtle / Shared"
+    },
+    "SH_Spatial_Coherence": {
+      "real_mean": 0.5398749972097575,
+      "real_std": 0.11172302027764766,
+      "fake_mean": 0.5320729132220149,
+      "fake_std": 0.10983127075778368,
+      "cohen_d": -0.07042781715073969,
+      "assessment": "Subtle / Shared"
+    },
+    "Cornea_Horiz_Displacement": {
+      "real_mean": 0.33523017014935613,
+      "real_std": 0.2395786325718342,
+      "fake_mean": 0.36617130455170993,
+      "fake_std": 0.2539622418915257,
+      "cohen_d": 0.12533101847466538,
+      "assessment": "Subtle / Shared"
+    },
+    "Cornea_Vert_Displacement": {
+      "real_mean": 0.2485195074522635,
+      "real_std": 0.21198559578780768,
+      "fake_mean": 0.23866363545095196,
+      "fake_std": 0.2119266719208921,
+      "cohen_d": -0.046499561380541475,
+      "assessment": "Subtle / Shared"
+    },
+    "Cornea_Angular_Delta": {
+      "real_mean": 0.46771309626625407,
+      "real_std": 0.29042694791293766,
+      "fake_mean": 0.5092339911480712,
+      "fake_std": 0.28346914162127973,
+      "cohen_d": 0.14468761853329273,
+      "assessment": "Subtle / Shared"
+    },
+    "Cornea_Profile_Discrepancy": {
+      "real_mean": 0.07119252932071686,
+      "real_std": 0.08500724407805353,
+      "fake_mean": 0.08217944478988648,
+      "fake_std": 0.09842980020708014,
+      "cohen_d": 0.11946995759571132,
+      "assessment": "Subtle / Shared"
+    },
+    "Normal_Variance_Error": {
+      "real_mean": 0.1892147343843244,
+      "real_std": 0.05470910903980991,
+      "fake_mean": 0.19270427261013537,
+      "fake_std": 0.060135776279843664,
+      "cohen_d": 0.06070175444540158,
+      "assessment": "Subtle / Shared"
+    },
+    "Normal_Skewness_Error": {
+      "real_mean": 0.015555089217377827,
+      "real_std": 0.0058857652017268005,
+      "fake_mean": 0.01544363515310397,
+      "fake_std": 0.005866408442107232,
+      "cohen_d": -0.01896704724922411,
+      "assessment": "Subtle / Shared"
+    },
+    "Normal_Kurtosis_Error": {
+      "real_mean": 0.5279000189658254,
+      "real_std": 0.09328135860651601,
+      "fake_mean": 0.5095735389254987,
+      "fake_std": 0.08176660685579368,
+      "cohen_d": -0.20893630241704264,
+      "assessment": "Small signal"
+    },
+    "Shadow_Penumbra_Mean_Drift": {
+      "real_mean": 0.2369309428358183,
+      "real_std": 0.326763244390677,
+      "fake_mean": 0.4693051933859824,
+      "fake_std": 0.5353434466567714,
+      "cohen_d": 0.5239671229996041,
+      "assessment": "Moderate signal"
+    },
+    "Shadow_Peak_Gradient_Drift": {
+      "real_mean": 0.22765552786932858,
+      "real_std": 0.28023482380304626,
+      "fake_mean": 0.4646585570669304,
+      "fake_std": 0.5937652642054322,
+      "cohen_d": 0.5104879073376973,
+      "assessment": "Moderate signal"
+    }
+  }
+}

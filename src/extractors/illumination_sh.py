@@ -1,74 +1,85 @@
 """Multi-Source Illumination Spherical Harmonics (SH) Regional Extractor.
 
-Models multi-illuminant physical environments (e.g., ceiling bulb + desk lamp + window)
-by decomposing regional light vectors into K=2 dominant directional modes via spherical clustering:
+Decomposes local patch irradiance into analytical order-2 Spherical Harmonics (SH)
+representations (Ramamoorthi & Hanrahan 2001, Basri & Jacobs 2003) via deterministic
+closed-form least-squares fitting against gradient-derived surface normals.
+
+Regional light vectors across a 4x4 spatial grid are clustered into K=2 dominant
+directional modes via spherical k-means:
     r_i = min_{k in {1, 2}} (1 - d_i . m_k)
-This prevents legitimate indoor and multi-light real photos from being penalized as fake,
-recovering real-photo recall and cutting false positive rates.
+This models complex multi-illuminant physical environments (e.g. ambient + key light)
+without un-trained neural network weights or heuristic shortcuts.
 """
 
-from typing import Dict, Tuple, Union
+from typing import Tuple, Union
 import numpy as np
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 import cv2
 
 from .base import BasePhysicsExtractor
-from ..data.preprocessor import extract_face_patches, validate_and_load_image
+from ..data.preprocessor import validate_and_load_image
 
 
-class ResidualBlock(nn.Module):
-    """Lightweight residual block for patch-level feature extraction."""
+def fit_sh_patch_least_squares(
+    patch_gray: np.ndarray, reg_lambda: float = 1e-3
+) -> np.ndarray:
+    """Fits 9 Spherical Harmonics coefficients to a grayscale image patch via least squares.
 
-    def __init__(self, channels: int):
-        super().__init__()
-        self.conv = nn.Sequential(
-            nn.Conv2d(channels, channels, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(channels),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(channels, channels, kernel_size=3, padding=1, bias=False),
-            nn.BatchNorm2d(channels),
-        )
-        self.relu = nn.ReLU(inplace=True)
+    Uses gradient-derived surface normals n = (-gx, -gy, 1) / sqrt(gx^2 + gy^2 + 1).
+    Order-2 basis functions (9 coefficients):
+        Y0 = 1.0
+        Y1 = ny, Y2 = nz, Y3 = nx  (Order 1 directional lighting)
+        Y4 = nx*ny, Y5 = ny*nz, Y6 = (3*nz^2 - 1)/2, Y7 = nx*nz, Y8 = nx^2 - ny^2 (Order 2)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.relu(x + self.conv(x))
+    Returns:
+        coeffs: 9-dimensional float array of SH coefficients.
+    """
+    h, w = patch_gray.shape
+    if h < 4 or w < 4:
+        return np.array([1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0], dtype=np.float32)
 
+    scale = 2.0 / max(h, w)
+    gx = cv2.Sobel(patch_gray, cv2.CV_32F, 1, 0, ksize=3) * scale
+    gy = cv2.Sobel(patch_gray, cv2.CV_32F, 0, 1, ksize=3) * scale
+    denom = np.sqrt(gx**2 + gy**2 + 1.0)
 
-class LightweightResidualSHNet(nn.Module):
-    """Lightweight residual CNN for estimating 9 order-2 spherical harmonics coefficients."""
+    nx = -gx / denom
+    ny = -gy / denom
+    nz = 1.0 / denom
 
-    def __init__(self, sh_dim: int = 9):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=3, stride=2, padding=1, bias=False),
-            nn.BatchNorm2d(32),
-            nn.ReLU(inplace=True),
-            ResidualBlock(32),
-            nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1, bias=False),
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True),
-            ResidualBlock(64),
-            nn.AdaptiveAvgPool2d((1, 1)),
-        )
-        self.head = nn.Linear(64, sh_dim)
+    y = patch_gray.reshape(-1, 1).astype(np.float32)
+    nx_f = nx.reshape(-1, 1)
+    ny_f = ny.reshape(-1, 1)
+    nz_f = nz.reshape(-1, 1)
 
-        with torch.no_grad():
-            self.head.weight.normal_(mean=0.0, std=0.02)
-            self.head.bias.zero_()
-            self.head.bias[0] = 1.0  # DC order-0 ambient baseline
+    Y0 = np.ones_like(nx_f)
+    Y1 = ny_f
+    Y2 = nz_f
+    Y3 = nx_f
+    Y4 = nx_f * ny_f
+    Y5 = ny_f * nz_f
+    Y6 = (3.0 * nz_f**2 - 1.0) / 2.0
+    Y7 = nx_f * nz_f
+    Y8 = (nx_f**2 - ny_f**2)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        features = self.encoder(x)
-        features = torch.flatten(features, 1)
-        sh_coeffs = self.head(features)
-        sh_norm = torch.norm(sh_coeffs, p=2, dim=1, keepdim=True) + 1e-6
-        return sh_coeffs / sh_norm
+    B = np.hstack([Y0, Y1, Y2, Y3, Y4, Y5, Y6, Y7, Y8])
+    BTB = B.T @ B
+    reg = reg_lambda * np.eye(9, dtype=np.float32)
+    BTy = B.T @ y
+
+    try:
+        coeffs = np.linalg.solve(BTB + reg, BTy).flatten()
+    except np.linalg.LinAlgError:
+        coeffs = np.linalg.pinv(BTB + reg) @ BTy.flatten()
+
+    return coeffs.astype(np.float32)
 
 
 class IlluminationSHExtractor(BasePhysicsExtractor):
-    """Estimates multi-source illumination consistency across 4x4 regional patches.
+    """Estimates multi-source illumination consistency across 4x4 regional patches
+
+    using deterministic closed-form Spherical Harmonics decomposition.
 
     Fits K=2 dominant directional light modes and computes minimum mode angular residuals.
     Outputs:
@@ -85,32 +96,10 @@ class IlluminationSHExtractor(BasePhysicsExtractor):
         super().__init__(feature_dim=5)
         self.patch_size = patch_size
         self.grid_size = grid_size
-        self.model = LightweightResidualSHNet(sh_dim=9)
-        self.model.eval()
 
-    def _prepare_patch(self, patch: np.ndarray) -> torch.Tensor:
-        if patch.size == 0 or patch.shape[0] < 4 or patch.shape[1] < 4:
-            patch = np.zeros((self.patch_size, self.patch_size, 3), dtype=np.uint8)
-        resized = cv2.resize(patch, (self.patch_size, self.patch_size), interpolation=cv2.INTER_AREA)
-        tensor = torch.from_numpy(resized).permute(2, 0, 1).float() / 255.0
-        return (tensor - 0.5) / 0.5
-
-    def _extract_grid_patches(self, image_np: np.ndarray) -> torch.Tensor:
-        h, w = image_np.shape[:2]
-        step_h = h // self.grid_size
-        step_w = w // self.grid_size
-        patches = []
-
-        for r in range(self.grid_size):
-            for c in range(self.grid_size):
-                y1, y2 = r * step_h, (r + 1) * step_h
-                x1, x2 = c * step_w, (c + 1) * step_w
-                patch = image_np[y1:y2, x1:x2]
-                patches.append(self._prepare_patch(patch))
-
-        return torch.stack(patches, dim=0)
-
-    def _fit_bimodal_sources(self, dirs: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    def _fit_bimodal_sources(
+        self, dirs: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Fits K=2 dominant directional light modes via spherical k-means."""
         m1 = F.normalize(dirs.mean(dim=0, keepdim=True), p=2, dim=1)
 
@@ -143,22 +132,41 @@ class IlluminationSHExtractor(BasePhysicsExtractor):
         self, image: Union[np.ndarray, torch.Tensor]
     ) -> Tuple[torch.Tensor, float]:
         image_np = validate_and_load_image(image)
-        grid_tensors = self._extract_grid_patches(image_np)
+        gray = cv2.cvtColor(image_np, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255.0
 
-        with torch.no_grad():
-            sh_coeffs = self.model(grid_tensors)
+        h, w = gray.shape[:2]
+        step_h = h // self.grid_size
+        step_w = w // self.grid_size
 
-        directional_sh = sh_coeffs[:, 1:4]
-        dir_norms = torch.norm(directional_sh, p=2, dim=1, keepdim=True) + 1e-6
-        dirs = directional_sh / dir_norms
+        dirs = []
+        for r in range(self.grid_size):
+            for c in range(self.grid_size):
+                patch = gray[r * step_h : (r + 1) * step_h, c * step_w : (c + 1) * step_w]
+                coeffs = fit_sh_patch_least_squares(patch)
+                # Directional lighting vector from order-1 basis coefficients:
+                # Y3=nx -> coeffs[3], Y1=ny -> coeffs[1], Y2=nz -> coeffs[2]
+                d = torch.tensor([coeffs[3], coeffs[1], coeffs[2]], dtype=torch.float32)
+                d_norm = torch.norm(d, p=2) + 1e-6
+                dirs.append(d / d_norm)
 
-        modes, assignments, residuals = self._fit_bimodal_sources(dirs)
+        dirs_tensor = torch.stack(dirs, dim=0)  # [16, 3]
 
+        # Fit K=2 directional modes via spherical clustering
+        modes, assignments, residuals = self._fit_bimodal_sources(dirs_tensor)
+
+        # 1. Mean residual to nearest light source mode
         mean_res = residuals.mean()
+
+        # 2. Maximum isolated residual
         max_res = residuals.max()
+
+        # 3. Variance of multi-source residual field
         var_res = residuals.var()
+
+        # 4. Mode angular separation: 1 - (m1 . m2)
         mode_sep = torch.clamp(1.0 - torch.dot(modes[0], modes[1]), 0.0, 2.0)
 
+        # 5. Spatial mode coherence across the 4x4 grid
         grid_assign = assignments.view(self.grid_size, self.grid_size)
         h_same = (grid_assign[:, :-1] == grid_assign[:, 1:]).float().mean()
         v_same = (grid_assign[:-1, :] == grid_assign[1:, :]).float().mean()
@@ -166,7 +174,7 @@ class IlluminationSHExtractor(BasePhysicsExtractor):
 
         delta = torch.stack([mean_res, max_res, var_res, mode_sep, spatial_coherence]).float()
 
-        gray = cv2.cvtColor(image_np, cv2.COLOR_RGB2GRAY) / 255.0
+        # Physical confidence conditioned on image contrast and texture dynamic range
         p_std = float(np.std(gray))
         p_range = float(np.percentile(gray, 95) - np.percentile(gray, 5))
         confidence = float(np.clip((p_std * 2.5) * (p_range * 1.5), 0.05, 1.0))
