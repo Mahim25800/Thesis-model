@@ -1,6 +1,6 @@
-torch
-torchvision
-torchaudio
+--extra-index-url https://download.pytorch.org/whl/cu124
+torch==2.6.0+cu124
+torchvision==0.21.0+cu124
 opencv-python
 numpy
 pillow
@@ -8,3 +8,7 @@ tqdm
 datasets
 pyyaml
 scikit-learn
+joblib
+threadpoolctl
+geffnet==1.0.2
+matplotlib==3.11.2

@@ -1,0 +1,63 @@
+{
+  "protocol": "TTA selected on internal development and Wukong only",
+  "branches": {
+    "regional_v5_tta": {
+      "mode": "horizontal_vertical",
+      "permutations": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        [
+          0,
+          2,
+          1,
+          4,
+          3
+        ],
+        [
+          0,
+          3,
+          4,
+          1,
+          2
+        ],
+        [
+          0,
+          4,
+          3,
+          2,
+          1
+        ]
+      ],
+      "internal_auc": 0.8866013904867316,
+      "wukong_auc": 0.6489075000000001,
+      "selection_score": [
+        0.6489075000000001,
+        0.7677544452433658
+      ]
+    },
+    "generator_invariant_v6_tta": {
+      "mode": "none",
+      "permutations": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "internal_auc": 0.8172261221065651,
+      "wukong_auc": 0.6321855000000001,
+      "selection_score": [
+        0.6321855000000001,
+        0.7247058110532826
+      ]
+    }
+  },
+  "confirmatory_data_read": false
+}

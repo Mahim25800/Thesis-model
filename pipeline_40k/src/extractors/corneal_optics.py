@@ -59,10 +59,18 @@ class CornealOpticsExtractor(BasePhysicsExtractor):
         Quantifies physical visibility and prominence of specular highlights.
     """
 
-    def __init__(self, min_resolution: int = 24, temperature: float = 0.05):
+    def __init__(
+        self,
+        min_resolution: int = 24,
+        temperature: float = 0.05,
+        region_mode: str = "legacy_auto",
+    ):
         super().__init__(feature_dim=4)
+        if region_mode not in {"legacy_auto", "general"}:
+            raise ValueError("region_mode must be 'legacy_auto' or 'general'")
         self.min_resolution = min_resolution
         self.temperature = temperature
+        self.region_mode = region_mode
 
     def _extract_glint_stats(
         self, crop: np.ndarray
@@ -80,7 +88,9 @@ class CornealOpticsExtractor(BasePhysicsExtractor):
         if crop.ndim == 3:
             gray = cv2.cvtColor(crop, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255.0
         else:
-            gray = crop.astype(np.float32) / 255.0
+            gray = crop.astype(np.float32)
+            if float(np.max(gray)) > 1.0:
+                gray /= 255.0
 
         max_val = float(np.max(gray))
         med_val = float(np.median(gray))
@@ -162,8 +172,10 @@ class CornealOpticsExtractor(BasePhysicsExtractor):
         lh, lw = left_eye.shape[:2]
         rh, rw = right_eye.shape[:2]
 
-        # Use eye crops if high-enough resolution and valid
-        if min(lh, lw, rh, rw) >= self.min_resolution:
+        # Historical caches used fixed eye-shaped coordinates on every large
+        # image. New general-scene caches explicitly bypass that positional
+        # assumption and locate specular candidates from the image itself.
+        if self.region_mode == "legacy_auto" and min(lh, lw, rh, rw) >= self.min_resolution:
             crop1, crop2 = left_eye, right_eye
             cx1, cy1, prof1, prom1 = self._extract_glint_stats(crop1)
             cx2, cy2, prof2, prom2 = self._extract_glint_stats(crop2)

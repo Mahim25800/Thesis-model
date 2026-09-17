@@ -1,0 +1,3091 @@
+{
+  "protocol": "weights selected without reading Synthbuster or confirmatory GenImage GLIDE",
+  "selected": {
+    "weights": {
+      "regional_v5_tta": 0.7000000000000001,
+      "generator_invariant_v6_tta": 0.30000000000000004,
+      "physics_masked_v10": 0.0
+    },
+    "internal_auc": 0.8831887046490141,
+    "wukong_auc": 0.6515805,
+    "selection_score": [
+      0.6515805,
+      0.767384602324507
+    ]
+  },
+  "candidates": [
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 1.0
+      },
+      "internal_auc": 0.7947306018068827,
+      "wukong_auc": 0.62130075,
+      "selection_score": [
+        0.62130075,
+        0.7080156759034413
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.95
+      },
+      "internal_auc": 0.7977586572457096,
+      "wukong_auc": 0.6227254999999999,
+      "selection_score": [
+        0.6227254999999999,
+        0.7102420786228547
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.9
+      },
+      "internal_auc": 0.8005101997858317,
+      "wukong_auc": 0.6239615,
+      "selection_score": [
+        0.6239615,
+        0.7122358498929158
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.85
+      },
+      "internal_auc": 0.8029993899493972,
+      "wukong_auc": 0.6251695,
+      "selection_score": [
+        0.6251695,
+        0.7140844449746986
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.8
+      },
+      "internal_auc": 0.8053117649445176,
+      "wukong_auc": 0.626224,
+      "selection_score": [
+        0.626224,
+        0.7157678824722589
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.75
+      },
+      "internal_auc": 0.8073537505099702,
+      "wukong_auc": 0.6271682500000001,
+      "selection_score": [
+        0.6271682500000001,
+        0.7172610002549851
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.7
+      },
+      "internal_auc": 0.8091907912210885,
+      "wukong_auc": 0.62809925,
+      "selection_score": [
+        0.62809925,
+        0.7186450206105442
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.6499999999999999
+      },
+      "internal_auc": 0.810846806878799,
+      "wukong_auc": 0.62888625,
+      "selection_score": [
+        0.62888625,
+        0.7198665284393995
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.6
+      },
+      "internal_auc": 0.8122779764078047,
+      "wukong_auc": 0.62961625,
+      "selection_score": [
+        0.62961625,
+        0.7209471132039024
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.55
+      },
+      "internal_auc": 0.8135639049055877,
+      "wukong_auc": 0.63021575,
+      "selection_score": [
+        0.63021575,
+        0.7218898274527938
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.5
+      },
+      "internal_auc": 0.8146326416109622,
+      "wukong_auc": 0.6307915000000001,
+      "selection_score": [
+        0.6307915000000001,
+        0.722712070805481
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.55,
+        "physics_masked_v10": 0.44999999999999996
+      },
+      "internal_auc": 0.8155674274311511,
+      "wukong_auc": 0.631262,
+      "selection_score": [
+        0.631262,
+        0.7234147137155755
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.6000000000000001,
+        "physics_masked_v10": 0.3999999999999999
+      },
+      "internal_auc": 0.81625268188808,
+      "wukong_auc": 0.63162225,
+      "selection_score": [
+        0.63162225,
+        0.7239374659440401
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.65,
+        "physics_masked_v10": 0.35
+      },
+      "internal_auc": 0.8168554608714155,
+      "wukong_auc": 0.6319325,
+      "selection_score": [
+        0.6319325,
+        0.7243939804357078
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.7000000000000001,
+        "physics_masked_v10": 0.29999999999999993
+      },
+      "internal_auc": 0.8173418939430471,
+      "wukong_auc": 0.6322305,
+      "selection_score": [
+        0.6322305,
+        0.7247861969715236
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.75,
+        "physics_masked_v10": 0.25
+      },
+      "internal_auc": 0.8176702649701595,
+      "wukong_auc": 0.63239925,
+      "selection_score": [
+        0.63239925,
+        0.7250347574850797
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.8,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.817788141749123,
+      "wukong_auc": 0.6324865,
+      "selection_score": [
+        0.6324865,
+        0.7251373208745615
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.8500000000000001,
+        "physics_masked_v10": 0.1499999999999999
+      },
+      "internal_auc": 0.817855117191716,
+      "wukong_auc": 0.6324605,
+      "selection_score": [
+        0.6324605,
+        0.725157808595858
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.9,
+        "physics_masked_v10": 0.09999999999999998
+      },
+      "internal_auc": 0.8177491046340116,
+      "wukong_auc": 0.6324802500000001,
+      "selection_score": [
+        0.6324802500000001,
+        0.7251146773170059
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 0.9500000000000001,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8175213881291961,
+      "wukong_auc": 0.63234675,
+      "selection_score": [
+        0.63234675,
+        0.724934069064598
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.0,
+        "generator_invariant_v6_tta": 1.0,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8172263134649727,
+      "wukong_auc": 0.6321880000000001,
+      "selection_score": [
+        0.6321880000000001,
+        0.7247071567324863
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.95
+      },
+      "internal_auc": 0.806147427109669,
+      "wukong_auc": 0.624582,
+      "selection_score": [
+        0.624582,
+        0.7153647135548344
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.8999999999999999
+      },
+      "internal_auc": 0.8088302719815317,
+      "wukong_auc": 0.62588625,
+      "selection_score": [
+        0.62588625,
+        0.7173582609907658
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.85
+      },
+      "internal_auc": 0.8112767892202452,
+      "wukong_auc": 0.62708525,
+      "selection_score": [
+        0.62708525,
+        0.7191810196101226
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.7999999999999999
+      },
+      "internal_auc": 0.8134703306443649,
+      "wukong_auc": 0.6281607499999999,
+      "selection_score": [
+        0.6281607499999999,
+        0.7208155403221824
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.75
+      },
+      "internal_auc": 0.8154774889796694,
+      "wukong_auc": 0.6291589999999999,
+      "selection_score": [
+        0.6291589999999999,
+        0.7223182444898346
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.7
+      },
+      "internal_auc": 0.8172408567039358,
+      "wukong_auc": 0.6300644999999999,
+      "selection_score": [
+        0.6300644999999999,
+        0.7236526783519679
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.6499999999999999
+      },
+      "internal_auc": 0.8188700821846089,
+      "wukong_auc": 0.63093125,
+      "selection_score": [
+        0.63093125,
+        0.7249006660923045
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.5999999999999999
+      },
+      "internal_auc": 0.8203215357047997,
+      "wukong_auc": 0.63170475,
+      "selection_score": [
+        0.63170475,
+        0.7260131428523999
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.5499999999999999
+      },
+      "internal_auc": 0.8215971308485827,
+      "wukong_auc": 0.6323427500000001,
+      "selection_score": [
+        0.6323427500000001,
+        0.7269699404242913
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.49999999999999994
+      },
+      "internal_auc": 0.8227129417221799,
+      "wukong_auc": 0.632999,
+      "selection_score": [
+        0.632999,
+        0.7278559708610899
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.44999999999999996
+      },
+      "internal_auc": 0.823601036090961,
+      "wukong_auc": 0.6335700000000001,
+      "selection_score": [
+        0.6335700000000001,
+        0.7285855180454806
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.55,
+        "physics_masked_v10": 0.3999999999999999
+      },
+      "internal_auc": 0.8242696423664453,
+      "wukong_auc": 0.63396275,
+      "selection_score": [
+        0.63396275,
+        0.7291161961832227
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.6000000000000001,
+        "physics_masked_v10": 0.34999999999999987
+      },
+      "internal_auc": 0.8248473533984106,
+      "wukong_auc": 0.6343152500000001,
+      "selection_score": [
+        0.6343152500000001,
+        0.7295813016992054
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.65,
+        "physics_masked_v10": 0.29999999999999993
+      },
+      "internal_auc": 0.8252449961690048,
+      "wukong_auc": 0.634493,
+      "selection_score": [
+        0.634493,
+        0.7298689980845023
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.7000000000000001,
+        "physics_masked_v10": 0.2499999999999999
+      },
+      "internal_auc": 0.8255710708952282,
+      "wukong_auc": 0.63471275,
+      "selection_score": [
+        0.63471275,
+        0.7301419104476141
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.75,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.825732194674266,
+      "wukong_auc": 0.634857,
+      "selection_score": [
+        0.634857,
+        0.730294597337133
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.8,
+        "physics_masked_v10": 0.1499999999999999
+      },
+      "internal_auc": 0.8257507564397845,
+      "wukong_auc": 0.63487125,
+      "selection_score": [
+        0.63487125,
+        0.7303110032198923
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.8500000000000001,
+        "physics_masked_v10": 0.09999999999999987
+      },
+      "internal_auc": 0.825692392125525,
+      "wukong_auc": 0.63484825,
+      "selection_score": [
+        0.63484825,
+        0.7302703210627626
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.9,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8255008423597096,
+      "wukong_auc": 0.6347712500000001,
+      "selection_score": [
+        0.6347712500000001,
+        0.7301360461798548
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.05,
+        "generator_invariant_v6_tta": 0.9500000000000001,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8251408971953745,
+      "wukong_auc": 0.634644,
+      "selection_score": [
+        0.634644,
+        0.7298924485976872
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.9
+      },
+      "internal_auc": 0.8163225277067837,
+      "wukong_auc": 0.6275435,
+      "selection_score": [
+        0.6275435,
+        0.7219330138533919
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.85
+      },
+      "internal_auc": 0.8187179522507193,
+      "wukong_auc": 0.6288162500000001,
+      "selection_score": [
+        0.6288162500000001,
+        0.7237671011253597
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.8
+      },
+      "internal_auc": 0.8209455554713578,
+      "wukong_auc": 0.6299545000000001,
+      "selection_score": [
+        0.6299545000000001,
+        0.725450027735679
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.75
+      },
+      "internal_auc": 0.8229517570146252,
+      "wukong_auc": 0.63094525,
+      "selection_score": [
+        0.63094525,
+        0.7269485035073127
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.7
+      },
+      "internal_auc": 0.8247348346548545,
+      "wukong_auc": 0.63191825,
+      "selection_score": [
+        0.63191825,
+        0.7283265423274272
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.65
+      },
+      "internal_auc": 0.8263525786310831,
+      "wukong_auc": 0.6327877500000001,
+      "selection_score": [
+        0.6327877500000001,
+        0.7295701643155417
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.6
+      },
+      "internal_auc": 0.8277826000096444,
+      "wukong_auc": 0.6336155000000001,
+      "selection_score": [
+        0.6336155000000001,
+        0.7306990500048223
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.55
+      },
+      "internal_auc": 0.8290821149543534,
+      "wukong_auc": 0.6343702500000001,
+      "selection_score": [
+        0.6343702500000001,
+        0.7317261824771768
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.5
+      },
+      "internal_auc": 0.8301669257659503,
+      "wukong_auc": 0.6349545000000001,
+      "selection_score": [
+        0.6349545000000001,
+        0.7325607128829752
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.45
+      },
+      "internal_auc": 0.8310881251392133,
+      "wukong_auc": 0.6355415,
+      "selection_score": [
+        0.6355415,
+        0.7333148125696066
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.4
+      },
+      "internal_auc": 0.8318382500962532,
+      "wukong_auc": 0.6360142499999999,
+      "selection_score": [
+        0.6360142499999999,
+        0.7339262500481265
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.55,
+        "physics_masked_v10": 0.35
+      },
+      "internal_auc": 0.8324079240751076,
+      "wukong_auc": 0.636373,
+      "selection_score": [
+        0.636373,
+        0.7343904620375538
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.6000000000000001,
+        "physics_masked_v10": 0.29999999999999993
+      },
+      "internal_auc": 0.8328136038988128,
+      "wukong_auc": 0.636673,
+      "selection_score": [
+        0.636673,
+        0.7347433019494064
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.65,
+        "physics_masked_v10": 0.25
+      },
+      "internal_auc": 0.8330891600054805,
+      "wukong_auc": 0.636922,
+      "selection_score": [
+        0.636922,
+        0.7350055800027402
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.7000000000000001,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.8332437775986664,
+      "wukong_auc": 0.6370322500000001,
+      "selection_score": [
+        0.6370322500000001,
+        0.7351380137993333
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.75,
+        "physics_masked_v10": 0.15000000000000002
+      },
+      "internal_auc": 0.8332648270234811,
+      "wukong_auc": 0.637076,
+      "selection_score": [
+        0.637076,
+        0.7351704135117405
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.8,
+        "physics_masked_v10": 0.09999999999999998
+      },
+      "internal_auc": 0.8330979624922212,
+      "wukong_auc": 0.6370835,
+      "selection_score": [
+        0.6370835,
+        0.7350907312461106
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.8500000000000001,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8328601039918129,
+      "wukong_auc": 0.6370302499999999,
+      "selection_score": [
+        0.6370302499999999,
+        0.7349451769959063
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.1,
+        "generator_invariant_v6_tta": 0.9,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.832526757646108,
+      "wukong_auc": 0.6369075,
+      "selection_score": [
+        0.6369075,
+        0.734717128823054
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.85
+      },
+      "internal_auc": 0.825668855041414,
+      "wukong_auc": 0.6302715000000001,
+      "selection_score": [
+        0.6302715000000001,
+        0.727970177520707
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.7999999999999999
+      },
+      "internal_auc": 0.8278842113239782,
+      "wukong_auc": 0.6314627500000001,
+      "selection_score": [
+        0.6314627500000001,
+        0.7296734806619891
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.75
+      },
+      "internal_auc": 0.829875678269875,
+      "wukong_auc": 0.63256275,
+      "selection_score": [
+        0.63256275,
+        0.7312192141349374
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.7
+      },
+      "internal_auc": 0.8317035337774379,
+      "wukong_auc": 0.6335784999999999,
+      "selection_score": [
+        0.6335784999999999,
+        0.732641016888719
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.6499999999999999
+      },
+      "internal_auc": 0.833294678935037,
+      "wukong_auc": 0.63456725,
+      "selection_score": [
+        0.63456725,
+        0.7339309644675185
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.6
+      },
+      "internal_auc": 0.8346971447029313,
+      "wukong_auc": 0.63538875,
+      "selection_score": [
+        0.63538875,
+        0.7350429473514657
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.5499999999999999
+      },
+      "internal_auc": 0.8359543694396031,
+      "wukong_auc": 0.63612825,
+      "selection_score": [
+        0.63612825,
+        0.7360413097198015
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.49999999999999994
+      },
+      "internal_auc": 0.8370671185786815,
+      "wukong_auc": 0.6367459999999999,
+      "selection_score": [
+        0.6367459999999999,
+        0.7369065592893407
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.44999999999999996
+      },
+      "internal_auc": 0.8379841080669816,
+      "wukong_auc": 0.63734575,
+      "selection_score": [
+        0.63734575,
+        0.7376649290334909
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.39999999999999997
+      },
+      "internal_auc": 0.8388080973692812,
+      "wukong_auc": 0.6378490000000001,
+      "selection_score": [
+        0.6378490000000001,
+        0.7383285486846407
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.35
+      },
+      "internal_auc": 0.8393965244720611,
+      "wukong_auc": 0.63831325,
+      "selection_score": [
+        0.63831325,
+        0.7388548872360305
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.55,
+        "physics_masked_v10": 0.29999999999999993
+      },
+      "internal_auc": 0.8398678402295076,
+      "wukong_auc": 0.63862525,
+      "selection_score": [
+        0.63862525,
+        0.7392465451147539
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.6000000000000001,
+        "physics_masked_v10": 0.2499999999999999
+      },
+      "internal_auc": 0.8400840752298788,
+      "wukong_auc": 0.638895,
+      "selection_score": [
+        0.638895,
+        0.7394895376149394
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.65,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.8402115199292126,
+      "wukong_auc": 0.6390012500000001,
+      "selection_score": [
+        0.6390012500000001,
+        0.7396063849646064
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.7000000000000001,
+        "physics_masked_v10": 0.1499999999999999
+      },
+      "internal_auc": 0.8401556432742494,
+      "wukong_auc": 0.6390642499999999,
+      "selection_score": [
+        0.6390642499999999,
+        0.7396099466371246
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.75,
+        "physics_masked_v10": 0.09999999999999998
+      },
+      "internal_auc": 0.8400176738625083,
+      "wukong_auc": 0.639107,
+      "selection_score": [
+        0.639107,
+        0.7395623369312541
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.8,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8397775190612109,
+      "wukong_auc": 0.6391117500000001,
+      "selection_score": [
+        0.6391117500000001,
+        0.7394446345306055
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.15000000000000002,
+        "generator_invariant_v6_tta": 0.8500000000000001,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8394328825694689,
+      "wukong_auc": 0.6390067500000001,
+      "selection_score": [
+        0.6390067500000001,
+        0.7392198162847345
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.8
+      },
+      "internal_auc": 0.834271754963263,
+      "wukong_auc": 0.6328919999999999,
+      "selection_score": [
+        0.6328919999999999,
+        0.7335818774816314
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.75
+      },
+      "internal_auc": 0.8362452342188634,
+      "wukong_auc": 0.6340174999999999,
+      "selection_score": [
+        0.6340174999999999,
+        0.7351313671094317
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.7000000000000001
+      },
+      "internal_auc": 0.8379846821422037,
+      "wukong_auc": 0.63508575,
+      "selection_score": [
+        0.63508575,
+        0.7365352160711018
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.65
+      },
+      "internal_auc": 0.8395957285741732,
+      "wukong_auc": 0.63607075,
+      "selection_score": [
+        0.63607075,
+        0.7378332392870866
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.6000000000000001
+      },
+      "internal_auc": 0.8410624907669568,
+      "wukong_auc": 0.63699975,
+      "selection_score": [
+        0.63699975,
+        0.7390311203834784
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.55
+      },
+      "internal_auc": 0.842285270990295,
+      "wukong_auc": 0.63775925,
+      "selection_score": [
+        0.63775925,
+        0.7400222604951475
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.5
+      },
+      "internal_auc": 0.8434005077886699,
+      "wukong_auc": 0.63847925,
+      "selection_score": [
+        0.63847925,
+        0.740939878894335
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.45
+      },
+      "internal_auc": 0.8443544294495996,
+      "wukong_auc": 0.6390567500000001,
+      "selection_score": [
+        0.6390567500000001,
+        0.7417055897247998
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.4
+      },
+      "internal_auc": 0.8451347890350103,
+      "wukong_auc": 0.6395480000000001,
+      "selection_score": [
+        0.6395480000000001,
+        0.7423413945175052
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.35000000000000003
+      },
+      "internal_auc": 0.8457735433989386,
+      "wukong_auc": 0.6399625,
+      "selection_score": [
+        0.6399625,
+        0.7428680216994693
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.30000000000000004
+      },
+      "internal_auc": 0.8461889825014217,
+      "wukong_auc": 0.6403362499999999,
+      "selection_score": [
+        0.6403362499999999,
+        0.7432626162507108
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.55,
+        "physics_masked_v10": 0.25
+      },
+      "internal_auc": 0.8464656867585341,
+      "wukong_auc": 0.6406445000000001,
+      "selection_score": [
+        0.6406445000000001,
+        0.7435550933792671
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.6000000000000001,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.8465598350949789,
+      "wukong_auc": 0.6408305,
+      "selection_score": [
+        0.6408305,
+        0.7436951675474894
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.65,
+        "physics_masked_v10": 0.15000000000000002
+      },
+      "internal_auc": 0.8465852857631642,
+      "wukong_auc": 0.64096775,
+      "selection_score": [
+        0.64096775,
+        0.743776517881582
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.7000000000000001,
+        "physics_masked_v10": 0.09999999999999998
+      },
+      "internal_auc": 0.8464276064354597,
+      "wukong_auc": 0.6410285,
+      "selection_score": [
+        0.6410285,
+        0.7437280532177298
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.75,
+        "physics_masked_v10": 0.050000000000000044
+      },
+      "internal_auc": 0.8461836244660144,
+      "wukong_auc": 0.6409957500000001,
+      "selection_score": [
+        0.6409957500000001,
+        0.7435896872330072
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.2,
+        "generator_invariant_v6_tta": 0.8,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8458883584433836,
+      "wukong_auc": 0.6408867499999998,
+      "selection_score": [
+        0.6408867499999998,
+        0.7433875542216917
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.75
+      },
+      "internal_auc": 0.8420525791668867,
+      "wukong_auc": 0.6354475,
+      "selection_score": [
+        0.6354475,
+        0.7387500395834434
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.7
+      },
+      "internal_auc": 0.8438358481655235,
+      "wukong_auc": 0.6364827500000001,
+      "selection_score": [
+        0.6364827500000001,
+        0.7401592990827618
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.65
+      },
+      "internal_auc": 0.8453906352257149,
+      "wukong_auc": 0.637514,
+      "selection_score": [
+        0.637514,
+        0.7414523176128575
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.6
+      },
+      "internal_auc": 0.8468598850777949,
+      "wukong_auc": 0.6383967500000001,
+      "selection_score": [
+        0.6383967500000001,
+        0.7426283175388975
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.55
+      },
+      "internal_auc": 0.8481054369516146,
+      "wukong_auc": 0.6392165,
+      "selection_score": [
+        0.6392165,
+        0.7436609684758073
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.5
+      },
+      "internal_auc": 0.8492254577101748,
+      "wukong_auc": 0.63993725,
+      "selection_score": [
+        0.63993725,
+        0.7445813538550874
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.44999999999999996
+      },
+      "internal_auc": 0.8501657929241785,
+      "wukong_auc": 0.64063575,
+      "selection_score": [
+        0.64063575,
+        0.7454007714620892
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.39999999999999997
+      },
+      "internal_auc": 0.8509698809521076,
+      "wukong_auc": 0.6411239999999999,
+      "selection_score": [
+        0.6411239999999999,
+        0.7460469404760537
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.35
+      },
+      "internal_auc": 0.8516015550549619,
+      "wukong_auc": 0.64158975,
+      "selection_score": [
+        0.64158975,
+        0.746595652527481
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.3
+      },
+      "internal_auc": 0.8520386176574822,
+      "wukong_auc": 0.64197225,
+      "selection_score": [
+        0.64197225,
+        0.7470054338287411
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.25
+      },
+      "internal_auc": 0.8523103465960018,
+      "wukong_auc": 0.642272,
+      "selection_score": [
+        0.642272,
+        0.7472911732980009
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.55,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.8524892667069285,
+      "wukong_auc": 0.642507,
+      "selection_score": [
+        0.642507,
+        0.7474981333534643
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.6000000000000001,
+        "physics_masked_v10": 0.1499999999999999
+      },
+      "internal_auc": 0.8525181618264471,
+      "wukong_auc": 0.6427235,
+      "selection_score": [
+        0.6427235,
+        0.7476208309132235
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.65,
+        "physics_masked_v10": 0.09999999999999998
+      },
+      "internal_auc": 0.8523734948704466,
+      "wukong_auc": 0.642861,
+      "selection_score": [
+        0.642861,
+        0.7476172474352233
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.7000000000000001,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8521260684496678,
+      "wukong_auc": 0.6429060000000002,
+      "selection_score": [
+        0.6429060000000002,
+        0.7475160342248339
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.25,
+        "generator_invariant_v6_tta": 0.75,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8518036295331849,
+      "wukong_auc": 0.6427675,
+      "selection_score": [
+        0.6427675,
+        0.7472855647665925
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.7
+      },
+      "internal_auc": 0.8491106426657298,
+      "wukong_auc": 0.63781575,
+      "selection_score": [
+        0.63781575,
+        0.7434631963328648
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.6499999999999999
+      },
+      "internal_auc": 0.8507379545623289,
+      "wukong_auc": 0.6388074999999999,
+      "selection_score": [
+        0.6388074999999999,
+        0.7447727272811644
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.6
+      },
+      "internal_auc": 0.8521331487107419,
+      "wukong_auc": 0.63974075,
+      "selection_score": [
+        0.63974075,
+        0.7459369493553709
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.5499999999999999
+      },
+      "internal_auc": 0.853436108106784,
+      "wukong_auc": 0.6406675000000001,
+      "selection_score": [
+        0.6406675000000001,
+        0.747051804053392
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.49999999999999994
+      },
+      "internal_auc": 0.8544862830466401,
+      "wukong_auc": 0.6414477500000001,
+      "selection_score": [
+        0.6414477500000001,
+        0.7479670165233201
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.44999999999999996
+      },
+      "internal_auc": 0.8554930196280146,
+      "wukong_auc": 0.64208,
+      "selection_score": [
+        0.64208,
+        0.7487865098140073
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.3999999999999999
+      },
+      "internal_auc": 0.8562416137177954,
+      "wukong_auc": 0.6426365,
+      "selection_score": [
+        0.6426365,
+        0.7494390568588978
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.3499999999999999
+      },
+      "internal_auc": 0.8569067755419462,
+      "wukong_auc": 0.64316575,
+      "selection_score": [
+        0.64316575,
+        0.7500362627709731
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.29999999999999993
+      },
+      "internal_auc": 0.8573256590957626,
+      "wukong_auc": 0.6435325000000001,
+      "selection_score": [
+        0.6435325000000001,
+        0.7504290795478814
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.24999999999999994
+      },
+      "internal_auc": 0.8576425486184307,
+      "wukong_auc": 0.6438635,
+      "selection_score": [
+        0.6438635,
+        0.7507530243092153
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.8578308452913204,
+      "wukong_auc": 0.64410975,
+      "selection_score": [
+        0.64410975,
+        0.7509702976456603
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.55,
+        "physics_masked_v10": 0.1499999999999999
+      },
+      "internal_auc": 0.8579070059374687,
+      "wukong_auc": 0.6443920000000001,
+      "selection_score": [
+        0.6443920000000001,
+        0.7511495029687344
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.6000000000000001,
+        "physics_masked_v10": 0.09999999999999987
+      },
+      "internal_auc": 0.8578325675169869,
+      "wukong_auc": 0.6445375,
+      "selection_score": [
+        0.6445375,
+        0.7511850337584934
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.65,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8575924127156896,
+      "wukong_auc": 0.64455975,
+      "selection_score": [
+        0.64455975,
+        0.7510760813578448
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.30000000000000004,
+        "generator_invariant_v6_tta": 0.7000000000000001,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8572764799850587,
+      "wukong_auc": 0.64450125,
+      "selection_score": [
+        0.64450125,
+        0.7508888649925294
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.6499999999999999
+      },
+      "internal_auc": 0.8554488158359033,
+      "wukong_auc": 0.6400340000000001,
+      "selection_score": [
+        0.6400340000000001,
+        0.7477414079179516
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.5999999999999999
+      },
+      "internal_auc": 0.8569305039844648,
+      "wukong_auc": 0.640894,
+      "selection_score": [
+        0.640894,
+        0.7489122519922324
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.5499999999999999
+      },
+      "internal_auc": 0.8581779694423587,
+      "wukong_auc": 0.64183475,
+      "selection_score": [
+        0.64183475,
+        0.7500063597211793
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.4999999999999999
+      },
+      "internal_auc": 0.8592935889575483,
+      "wukong_auc": 0.6426175000000001,
+      "selection_score": [
+        0.6426175000000001,
+        0.7509555444787741
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.4499999999999999
+      },
+      "internal_auc": 0.8602226340255149,
+      "wukong_auc": 0.6433402500000001,
+      "selection_score": [
+        0.6433402500000001,
+        0.7517814420127575
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.3999999999999999
+      },
+      "internal_auc": 0.860993425690555,
+      "wukong_auc": 0.6439557499999999,
+      "selection_score": [
+        0.6439557499999999,
+        0.7524745878452774
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.34999999999999987
+      },
+      "internal_auc": 0.8616402171075946,
+      "wukong_auc": 0.6444765,
+      "selection_score": [
+        0.6444765,
+        0.7530583585537973
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.2999999999999999
+      },
+      "internal_auc": 0.8620901007234112,
+      "wukong_auc": 0.644925,
+      "selection_score": [
+        0.644925,
+        0.7535075503617056
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.2499999999999999
+      },
+      "internal_auc": 0.8624431569850792,
+      "wukong_auc": 0.645268,
+      "selection_score": [
+        0.645268,
+        0.7538555784925396
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.1999999999999999
+      },
+      "internal_auc": 0.8626260956225617,
+      "wukong_auc": 0.6455934999999999,
+      "selection_score": [
+        0.6455934999999999,
+        0.7541097978112807
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.1499999999999999
+      },
+      "internal_auc": 0.8627043612111915,
+      "wukong_auc": 0.64592725,
+      "selection_score": [
+        0.64592725,
+        0.7543158056055957
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.55,
+        "physics_masked_v10": 0.09999999999999987
+      },
+      "internal_auc": 0.8626544166668579,
+      "wukong_auc": 0.6460755,
+      "selection_score": [
+        0.6460755,
+        0.754364958333429
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.6000000000000001,
+        "physics_masked_v10": 0.04999999999999982
+      },
+      "internal_auc": 0.8624622928258203,
+      "wukong_auc": 0.6460144999999999,
+      "selection_score": [
+        0.6460144999999999,
+        0.7542383964129101
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.35000000000000003,
+        "generator_invariant_v6_tta": 0.65,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8621731502722264,
+      "wukong_auc": 0.6460185,
+      "selection_score": [
+        0.6460185,
+        0.7540958251361132
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.6
+      },
+      "internal_auc": 0.8611468951332966,
+      "wukong_auc": 0.64204825,
+      "selection_score": [
+        0.64204825,
+        0.7515975725666483
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.5499999999999999
+      },
+      "internal_auc": 0.8624567434320054,
+      "wukong_auc": 0.64287375,
+      "selection_score": [
+        0.64287375,
+        0.7526652467160027
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.5
+      },
+      "internal_auc": 0.8635679617038248,
+      "wukong_auc": 0.6436630000000001,
+      "selection_score": [
+        0.6436630000000001,
+        0.7536154808519124
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.44999999999999996
+      },
+      "internal_auc": 0.8645088709930506,
+      "wukong_auc": 0.64444825,
+      "selection_score": [
+        0.64444825,
+        0.7544785604965253
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.39999999999999997
+      },
+      "internal_auc": 0.8652595700253127,
+      "wukong_auc": 0.6451309999999999,
+      "selection_score": [
+        0.6451309999999999,
+        0.7551952850126563
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.35
+      },
+      "internal_auc": 0.8659132503450192,
+      "wukong_auc": 0.645703,
+      "selection_score": [
+        0.645703,
+        0.7558081251725096
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.29999999999999993
+      },
+      "internal_auc": 0.8664151834476508,
+      "wukong_auc": 0.64613625,
+      "selection_score": [
+        0.64613625,
+        0.7562757167238254
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.24999999999999994
+      },
+      "internal_auc": 0.8667412581738743,
+      "wukong_auc": 0.64652925,
+      "selection_score": [
+        0.64652925,
+        0.7566352540869372
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.8669352955989862,
+      "wukong_auc": 0.6468975,
+      "selection_score": [
+        0.6468975,
+        0.756916397799493
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.14999999999999997
+      },
+      "internal_auc": 0.8670671415416905,
+      "wukong_auc": 0.64712575,
+      "selection_score": [
+        0.64712575,
+        0.7570964457708453
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.09999999999999998
+      },
+      "internal_auc": 0.8670292525770237,
+      "wukong_auc": 0.64727225,
+      "selection_score": [
+        0.64727225,
+        0.7571507512885118
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.55,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8668688942316156,
+      "wukong_auc": 0.6473792500000001,
+      "selection_score": [
+        0.6473792500000001,
+        0.7571240721158079
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.4,
+        "generator_invariant_v6_tta": 0.6000000000000001,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8665942949169849,
+      "wukong_auc": 0.6473814999999999,
+      "selection_score": [
+        0.6473814999999999,
+        0.7569878974584925
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.55
+      },
+      "internal_auc": 0.8661346520223904,
+      "wukong_auc": 0.643822,
+      "selection_score": [
+        0.643822,
+        0.7549783260111952
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.5
+      },
+      "internal_auc": 0.8672108517056542,
+      "wukong_auc": 0.64467725,
+      "selection_score": [
+        0.64467725,
+        0.755944050852827
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.45000000000000007
+      },
+      "internal_auc": 0.8681831437736949,
+      "wukong_auc": 0.6454415000000001,
+      "selection_score": [
+        0.6454415000000001,
+        0.7568123218868474
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.4
+      },
+      "internal_auc": 0.8689950774963278,
+      "wukong_auc": 0.64617075,
+      "selection_score": [
+        0.64617075,
+        0.7575829137481639
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.35000000000000003
+      },
+      "internal_auc": 0.8696964060594787,
+      "wukong_auc": 0.6467292499999999,
+      "selection_score": [
+        0.6467292499999999,
+        0.7582128280297393
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.30000000000000004
+      },
+      "internal_auc": 0.8702431170294438,
+      "wukong_auc": 0.6472090000000001,
+      "selection_score": [
+        0.6472090000000001,
+        0.758726058514722
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.25
+      },
+      "internal_auc": 0.8706373153487048,
+      "wukong_auc": 0.647649,
+      "selection_score": [
+        0.647649,
+        0.7591431576743524
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.2
+      },
+      "internal_auc": 0.8708032230879277,
+      "wukong_auc": 0.6480064999999999,
+      "selection_score": [
+        0.6480064999999999,
+        0.7594048615439638
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.15000000000000002
+      },
+      "internal_auc": 0.8708975627827799,
+      "wukong_auc": 0.648258,
+      "selection_score": [
+        0.648258,
+        0.75957778139139
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.10000000000000003
+      },
+      "internal_auc": 0.8708967973491503,
+      "wukong_auc": 0.648409,
+      "selection_score": [
+        0.648409,
+        0.7596528986745752
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.050000000000000044
+      },
+      "internal_auc": 0.8707886798489646,
+      "wukong_auc": 0.6485185,
+      "selection_score": [
+        0.6485185,
+        0.7596535899244823
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.45,
+        "generator_invariant_v6_tta": 0.55,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.870501450879445,
+      "wukong_auc": 0.64850025,
+      "selection_score": [
+        0.64850025,
+        0.7595008504397225
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.5
+      },
+      "internal_auc": 0.8703904630031483,
+      "wukong_auc": 0.645532,
+      "selection_score": [
+        0.645532,
+        0.7579612315015741
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.45
+      },
+      "internal_auc": 0.8713979650181523,
+      "wukong_auc": 0.6462612500000001,
+      "selection_score": [
+        0.6462612500000001,
+        0.7588296075090761
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.4
+      },
+      "internal_auc": 0.8722808927099336,
+      "wukong_auc": 0.6469245,
+      "selection_score": [
+        0.6469245,
+        0.7596026963549668
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.35
+      },
+      "internal_auc": 0.8729485421933807,
+      "wukong_auc": 0.6475489999999999,
+      "selection_score": [
+        0.6475489999999999,
+        0.7602487710966903
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.3
+      },
+      "internal_auc": 0.8735094136854941,
+      "wukong_auc": 0.6481372500000001,
+      "selection_score": [
+        0.6481372500000001,
+        0.7608233318427471
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.25
+      },
+      "internal_auc": 0.8739009329870512,
+      "wukong_auc": 0.6484995,
+      "selection_score": [
+        0.6484995,
+        0.7612002164935256
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.8741585014034224,
+      "wukong_auc": 0.64891475,
+      "selection_score": [
+        0.64891475,
+        0.7615366257017112
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.14999999999999997
+      },
+      "internal_auc": 0.8742817362177935,
+      "wukong_auc": 0.64917625,
+      "selection_score": [
+        0.64917625,
+        0.7617289931088967
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.09999999999999998
+      },
+      "internal_auc": 0.8743046992266824,
+      "wukong_auc": 0.6493757499999999,
+      "selection_score": [
+        0.6493757499999999,
+        0.7618402246133411
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.04999999999999999
+      },
+      "internal_auc": 0.8741958162928671,
+      "wukong_auc": 0.649476,
+      "selection_score": [
+        0.649476,
+        0.7618359081464336
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.5,
+        "generator_invariant_v6_tta": 0.5,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8740025443013848,
+      "wukong_auc": 0.6494989999999999,
+      "selection_score": [
+        0.6494989999999999,
+        0.7617507721506924
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.55,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.44999999999999996
+      },
+      "internal_auc": 0.8740919086776445,
+      "wukong_auc": 0.646809,
+      "selection_score": [
+        0.646809,
+        0.7604504543388222
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.55,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.39999999999999997
+      },
+      "internal_auc": 0.874965077090648,
+      "wukong_auc": 0.6474840000000001,
+      "selection_score": [
+        0.6474840000000001,
+        0.761224538545324
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.55,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.35
+      },
+      "internal_auc": 0.8756709982555768,
+      "wukong_auc": 0.6481524999999999,
+      "selection_score": [
+        0.6481524999999999,
+        0.7619117491277884
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.55,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.29999999999999993
+      },
+      "internal_auc": 0.8762697587123568,
+      "wukong_auc": 0.6487102499999999,
+      "selection_score": [
+        0.6487102499999999,
+        0.7624900043561784
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.55,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.24999999999999994
+      },
+      "internal_auc": 0.8766765866865067,
+      "wukong_auc": 0.649146,
+      "selection_score": [
+        0.649146,
+        0.7629112933432534
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.55,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.8769730008595819,
+      "wukong_auc": 0.649486,
+      "selection_score": [
+        0.649486,
+        0.7632295004297909
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.55,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.1499999999999999
+      },
+      "internal_auc": 0.8771681864351383,
+      "wukong_auc": 0.64987275,
+      "selection_score": [
+        0.64987275,
+        0.7635204682175691
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.55,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.09999999999999992
+      },
+      "internal_auc": 0.877195167970583,
+      "wukong_auc": 0.65005325,
+      "selection_score": [
+        0.65005325,
+        0.7636242089852915
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.55,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8771069517447677,
+      "wukong_auc": 0.6502364999999999,
+      "selection_score": [
+        0.6502364999999999,
+        0.7636717258723837
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.55,
+        "generator_invariant_v6_tta": 0.45,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8769209513727669,
+      "wukong_auc": 0.6503607499999999,
+      "selection_score": [
+        0.6503607499999999,
+        0.7636408506863834
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.6000000000000001,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.3999999999999999
+      },
+      "internal_auc": 0.8771846432581754,
+      "wukong_auc": 0.647907,
+      "selection_score": [
+        0.647907,
+        0.7625458216290877
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.6000000000000001,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.3499999999999999
+      },
+      "internal_auc": 0.8779611756754377,
+      "wukong_auc": 0.64850875,
+      "selection_score": [
+        0.64850875,
+        0.7632349628377189
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.6000000000000001,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.29999999999999993
+      },
+      "internal_auc": 0.8785869176676626,
+      "wukong_auc": 0.64908275,
+      "selection_score": [
+        0.64908275,
+        0.7638348338338313
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.6000000000000001,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.2499999999999999
+      },
+      "internal_auc": 0.8790230234781458,
+      "wukong_auc": 0.6496550000000001,
+      "selection_score": [
+        0.6496550000000001,
+        0.7643390117390729
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.6000000000000001,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.1999999999999999
+      },
+      "internal_auc": 0.8792987709432208,
+      "wukong_auc": 0.6500342499999999,
+      "selection_score": [
+        0.6500342499999999,
+        0.7646665104716104
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.6000000000000001,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.1499999999999999
+      },
+      "internal_auc": 0.8795316541250368,
+      "wukong_auc": 0.6503355,
+      "selection_score": [
+        0.6503355,
+        0.7649335770625183
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.6000000000000001,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.09999999999999987
+      },
+      "internal_auc": 0.8796214012181109,
+      "wukong_auc": 0.6506554999999999,
+      "selection_score": [
+        0.6506554999999999,
+        0.7651384506090555
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.6000000000000001,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.04999999999999988
+      },
+      "internal_auc": 0.8795861912711479,
+      "wukong_auc": 0.650874,
+      "selection_score": [
+        0.650874,
+        0.765230095635574
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.6000000000000001,
+        "generator_invariant_v6_tta": 0.4,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8793973205230361,
+      "wukong_auc": 0.65099675,
+      "selection_score": [
+        0.65099675,
+        0.765197035261518
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.65,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.35
+      },
+      "internal_auc": 0.8798081670237414,
+      "wukong_auc": 0.648776,
+      "selection_score": [
+        0.648776,
+        0.7642920835118707
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.65,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.3
+      },
+      "internal_auc": 0.8804620387018552,
+      "wukong_auc": 0.6493344999999999,
+      "selection_score": [
+        0.6493344999999999,
+        0.7648982693509276
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.65,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.24999999999999997
+      },
+      "internal_auc": 0.8809492372071164,
+      "wukong_auc": 0.6498735,
+      "selection_score": [
+        0.6498735,
+        0.7654113686035582
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.65,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.881326021911303,
+      "wukong_auc": 0.6503135,
+      "selection_score": [
+        0.6503135,
+        0.7658197609556515
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.65,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.14999999999999997
+      },
+      "internal_auc": 0.8815101086992297,
+      "wukong_auc": 0.6507162499999999,
+      "selection_score": [
+        0.6507162499999999,
+        0.7661131793496148
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.65,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.09999999999999998
+      },
+      "internal_auc": 0.8816298990622672,
+      "wukong_auc": 0.6510095,
+      "selection_score": [
+        0.6510095,
+        0.7663196995311337
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.65,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8816333435136008,
+      "wukong_auc": 0.6512477499999999,
+      "selection_score": [
+        0.6512477499999999,
+        0.7664405467568003
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.65,
+        "generator_invariant_v6_tta": 0.35000000000000003,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8814990099116,
+      "wukong_auc": 0.651392,
+      "selection_score": [
+        0.651392,
+        0.7664455049558
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.7000000000000001,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.29999999999999993
+      },
+      "internal_auc": 0.8819515725451204,
+      "wukong_auc": 0.64933075,
+      "selection_score": [
+        0.64933075,
+        0.7656411612725602
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.7000000000000001,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.24999999999999994
+      },
+      "internal_auc": 0.8824647957937891,
+      "wukong_auc": 0.6499015000000001,
+      "selection_score": [
+        0.6499015000000001,
+        0.7661831478968946
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.7000000000000001,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.19999999999999993
+      },
+      "internal_auc": 0.882896117644087,
+      "wukong_auc": 0.650399,
+      "selection_score": [
+        0.650399,
+        0.7666475588220435
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.7000000000000001,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.1499999999999999
+      },
+      "internal_auc": 0.8831542601356808,
+      "wukong_auc": 0.65086375,
+      "selection_score": [
+        0.65086375,
+        0.7670090050678404
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.7000000000000001,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.09999999999999992
+      },
+      "internal_auc": 0.8832815134766071,
+      "wukong_auc": 0.6512880000000001,
+      "selection_score": [
+        0.6512880000000001,
+        0.7672847567383037
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.7000000000000001,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8833040937686814,
+      "wukong_auc": 0.6514515,
+      "selection_score": [
+        0.6514515,
+        0.7673777968843407
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.7000000000000001,
+        "generator_invariant_v6_tta": 0.30000000000000004,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8831887046490141,
+      "wukong_auc": 0.6515805,
+      "selection_score": [
+        0.6515805,
+        0.767384602324507
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.75,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.25
+      },
+      "internal_auc": 0.8836240450258678,
+      "wukong_auc": 0.6497379999999999,
+      "selection_score": [
+        0.6497379999999999,
+        0.7666810225129339
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.75,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.2
+      },
+      "internal_auc": 0.8840603421947585,
+      "wukong_auc": 0.65021275,
+      "selection_score": [
+        0.65021275,
+        0.7671365460973792
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.75,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.15
+      },
+      "internal_auc": 0.8843852687705376,
+      "wukong_auc": 0.6506937500000001,
+      "selection_score": [
+        0.6506937500000001,
+        0.7675395093852688
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.75,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.09999999999999998
+      },
+      "internal_auc": 0.8845102258105751,
+      "wukong_auc": 0.65103,
+      "selection_score": [
+        0.65103,
+        0.7677701129052876
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.75,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.04999999999999999
+      },
+      "internal_auc": 0.884558448129242,
+      "wukong_auc": 0.6513685,
+      "selection_score": [
+        0.6513685,
+        0.7679634740646211
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.75,
+        "generator_invariant_v6_tta": 0.25,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8844526269299451,
+      "wukong_auc": 0.6515197500000001,
+      "selection_score": [
+        0.6515197500000001,
+        0.7679861884649726
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.8,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.19999999999999996
+      },
+      "internal_auc": 0.8849838378689103,
+      "wukong_auc": 0.6498909999999999,
+      "selection_score": [
+        0.6498909999999999,
+        0.767437418934455
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.8,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.14999999999999997
+      },
+      "internal_auc": 0.8853030236924672,
+      "wukong_auc": 0.6503565,
+      "selection_score": [
+        0.6503565,
+        0.7678297618462335
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.8,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.09999999999999995
+      },
+      "internal_auc": 0.8854714190909863,
+      "wukong_auc": 0.6507502500000001,
+      "selection_score": [
+        0.6507502500000001,
+        0.7681108345454932
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.8,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.8855204068432827,
+      "wukong_auc": 0.651032,
+      "selection_score": [
+        0.651032,
+        0.7682762034216414
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.8,
+        "generator_invariant_v6_tta": 0.2,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8854522832502455,
+      "wukong_auc": 0.6512397499999999,
+      "selection_score": [
+        0.6512397499999999,
+        0.7683460166251227
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.8500000000000001,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.1499999999999999
+      },
+      "internal_auc": 0.8859295311183214,
+      "wukong_auc": 0.649886,
+      "selection_score": [
+        0.649886,
+        0.7679077655591606
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.8500000000000001,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.09999999999999991
+      },
+      "internal_auc": 0.8861836550833597,
+      "wukong_auc": 0.6502225000000001,
+      "selection_score": [
+        0.6502225000000001,
+        0.7682030775416799
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.8500000000000001,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.049999999999999906
+      },
+      "internal_auc": 0.8862657478401377,
+      "wukong_auc": 0.6505205000000001,
+      "selection_score": [
+        0.6505205000000001,
+        0.7683931239200689
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.8500000000000001,
+        "generator_invariant_v6_tta": 0.15000000000000002,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8862270934418411,
+      "wukong_auc": 0.6508062499999999,
+      "selection_score": [
+        0.6508062499999999,
+        0.7685166717209205
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.9,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.09999999999999998
+      },
+      "internal_auc": 0.8864833223493608,
+      "wukong_auc": 0.64964175,
+      "selection_score": [
+        0.64964175,
+        0.7680625361746805
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.9,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.049999999999999975
+      },
+      "internal_auc": 0.886637174508917,
+      "wukong_auc": 0.6499777500000001,
+      "selection_score": [
+        0.6499777500000001,
+        0.7683074622544586
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.9,
+        "generator_invariant_v6_tta": 0.1,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8866134460663982,
+      "wukong_auc": 0.6502255,
+      "selection_score": [
+        0.6502255,
+        0.7684194730331991
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.9500000000000001,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.04999999999999993
+      },
+      "internal_auc": 0.886706063535584,
+      "wukong_auc": 0.6493585,
+      "selection_score": [
+        0.6493585,
+        0.768032281767792
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 0.9500000000000001,
+        "generator_invariant_v6_tta": 0.05,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8867311314869544,
+      "wukong_auc": 0.649649,
+      "selection_score": [
+        0.649649,
+        0.7681900657434773
+      ]
+    },
+    {
+      "weights": {
+        "regional_v5_tta": 1.0,
+        "generator_invariant_v6_tta": 0.0,
+        "physics_masked_v10": 0.0
+      },
+      "internal_auc": 0.8866013904867316,
+      "wukong_auc": 0.648903,
+      "selection_score": [
+        0.648903,
+        0.7677521952433658
+      ]
+    }
+  ],
+  "wukong": {
+    "threshold": 0.5,
+    "sample_count": 4000,
+    "class_counts": {
+      "real": 2000,
+      "fake": 2000
+    },
+    "auc_roc": 0.6515805,
+    "eer": 0.403,
+    "eer_threshold": 0.47442963719367987,
+    "eer_threshold_role": "descriptive_only_not_an_operational_threshold",
+    "accuracy": 0.59175,
+    "balanced_accuracy": 0.59175,
+    "authentic_precision": 0.5872563005230623,
+    "synthetic_precision": 0.5967316816025303,
+    "real_recall": 0.6175,
+    "fake_recall": 0.566,
+    "confusion_matrix": {
+      "tn": 1235,
+      "fp": 765,
+      "fn": 868,
+      "tp": 1132
+    },
+    "raw_confusion_matrix": [
+      [
+        1235,
+        765
+      ],
+      [
+        868,
+        1132
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.5873    0.6175    0.6020      2000\n        Fake     0.5967    0.5660    0.5810      2000\n\n    accuracy                         0.5917      4000\n   macro avg     0.5920    0.5917    0.5915      4000\nweighted avg     0.5920    0.5917    0.5915      4000\n"
+  },
+  "internal_development": {
+    "threshold": 0.5,
+    "sample_count": 4572,
+    "class_counts": {
+      "real": 2286,
+      "fake": 2286
+    },
+    "auc_roc": 0.8831887046490141,
+    "eer": 0.1951006124234471,
+    "eer_threshold": 0.4865323901176453,
+    "eer_threshold_role": "descriptive_only_not_an_operational_threshold",
+    "accuracy": 0.8048993875765529,
+    "balanced_accuracy": 0.8048993875765529,
+    "authentic_precision": 0.798885077186964,
+    "synthetic_precision": 0.8111607142857142,
+    "real_recall": 0.8149606299212598,
+    "fake_recall": 0.794838145231846,
+    "confusion_matrix": {
+      "tn": 1863,
+      "fp": 423,
+      "fn": 469,
+      "tp": 1817
+    },
+    "raw_confusion_matrix": [
+      [
+        1863,
+        423
+      ],
+      [
+        469,
+        1817
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.7989    0.8150    0.8068      2286\n        Fake     0.8112    0.7948    0.8029      2286\n\n    accuracy                         0.8049      4572\n   macro avg     0.8050    0.8049    0.8049      4572\nweighted avg     0.8050    0.8049    0.8049      4572\n"
+  }
+}

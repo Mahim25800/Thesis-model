@@ -1,15 +1,20 @@
-"""Evaluates 100% Pure Physics 5-Token Transformer with 3-Way Forensic Decision Policy."""
+"""Evaluate the legacy physics transformer with a frozen validation policy.
 
-import sys
+Calibration and operational thresholds are determined before loading test labels.
+The saved policy is the source of truth for binary and selective decisions.
+"""
+
 import argparse
+import hashlib
 import json
+import sys
 from pathlib import Path
+
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
 from sklearn.linear_model import LogisticRegression
+from torch.utils.data import DataLoader
 
-# Ensure pipeline root is in sys.path
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 if str(PROJECT_ROOT) not in sys.path:
@@ -17,23 +22,30 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.models.cross_gen_gated import TransformerPhysicsCrossGenHead
 from src.data.dataset import PhysicsFeatureDataset
+from src.utils.decision_policy import (
+    apply_policy_calibration,
+    fit_decision_policy,
+)
 from src.utils.metrics import (
+    _binary_arrays,
     evaluate_predictions,
     evaluate_observability_subsets,
     format_evaluation_summary,
-    compute_eer,
-    compute_youden_threshold,
-    compute_optimal_accuracy_threshold,
 )
 
 
 def fit_platt_scaling(val_logits: np.ndarray, val_labels: np.ndarray):
-    """Fits Platt scaling logistic regression: P(Fake | z) = sigma(a * z + b)."""
+    """Compatibility helper; callers must provide validation/calibration labels."""
+    labels, logits = _binary_arrays(val_labels, val_logits)
+    if len(np.unique(labels)) != 2:
+        raise ValueError("Platt scaling requires both classes in validation data.")
     lr = LogisticRegression(solver="lbfgs", max_iter=1000)
-    lr.fit(val_logits.reshape(-1, 1), val_labels)
-    a = float(lr.coef_[0][0])
-    b = float(lr.intercept_[0])
-    return lr, a, b
+    lr.fit(logits.reshape(-1, 1), labels)
+    return lr, float(lr.coef_[0, 0]), float(lr.intercept_[0])
+
+
+# Public alias retained for integrations which import policy fitting here.
+fit_validation_policy = fit_decision_policy
 
 
 def evaluate_selective_abstention(
@@ -44,53 +56,85 @@ def evaluate_selective_abstention(
     tau_high: float = 0.60,
     obs_threshold: float = 1.0,
 ):
-    """Evaluates 3-way selective classification with rejection option:
+    """Evaluate fixed rejection bands; class-specific results are precision.
 
-    Class 1 (Authentic): P(Fake) < tau_low AND O >= obs_threshold
-    Class 2 (Synthetic): P(Fake) >= tau_high AND O >= obs_threshold
-    Class 3 (Indeterminate): O < obs_threshold OR tau_low <= P(Fake) < tau_high
+    New metric names explicitly include percent. The three historical accuracy
+    keys remain percentage aliases for compatibility; authentic/synthetic values
+    measure precision among accepted predictions, not class recall.
     """
-    obs_scores = np.sum(confidences, axis=1)
-    is_obs = obs_scores >= obs_threshold
-
-    is_authentic = (y_probs < tau_low) & is_obs
-    is_synthetic = (y_probs >= tau_high) & is_obs
-    is_decided = is_authentic | is_synthetic
-    is_abstained = ~is_decided
-
-    total = len(y_true)
-    num_decided = int(np.sum(is_decided))
-    num_abstained = total - num_decided
-    coverage = float(num_decided / total)
-
-    if num_decided > 0:
-        decided_preds = np.zeros(num_decided, dtype=int)
-        decided_preds[is_synthetic[is_decided]] = 1
-        decided_targets = y_true[is_decided]
-        decided_acc = float(np.mean(decided_preds == decided_targets))
-
-        # Separate authentic & synthetic accuracy
-        auth_mask = is_authentic[is_decided]
-        synth_mask = is_synthetic[is_decided]
-        auth_acc = float(np.mean(decided_targets[auth_mask] == 0)) if np.sum(auth_mask) > 0 else 0.0
-        synth_acc = float(np.mean(decided_targets[synth_mask] == 1)) if np.sum(synth_mask) > 0 else 0.0
-    else:
-        decided_acc = 0.0
-        auth_acc = 0.0
-        synth_acc = 0.0
-
+    labels, probs = _binary_arrays(y_true, y_probs)
+    confs = np.asarray(confidences, dtype=float)
+    if confs.ndim != 2 or len(confs) != len(labels) or not np.all(np.isfinite(confs)):
+        raise ValueError("Confidences must be a finite [samples, modalities] array.")
+    if not 0 <= tau_low <= tau_high <= 1 or not np.isfinite(obs_threshold):
+        raise ValueError("Invalid abstention or observability thresholds.")
+    if np.any((probs < 0) | (probs > 1)):
+        raise ValueError("Probabilities must lie in [0, 1].")
+    observable = np.sum(confs, axis=1) >= obs_threshold
+    authentic = (probs < tau_low) & observable
+    synthetic = (probs >= tau_high) & observable
+    decided = authentic | synthetic
+    num_decided = int(np.sum(decided))
+    correct = (authentic & (labels == 0)) | (synthetic & (labels == 1))
+    accuracy = float(100.0 * np.sum(correct) / num_decided) if num_decided else None
+    real_precision = float(100.0 * np.mean(labels[authentic] == 0)) if np.any(authentic) else None
+    fake_precision = float(100.0 * np.mean(labels[synthetic] == 1)) if np.any(synthetic) else None
     return {
-        "tau_low": tau_low,
-        "tau_high": tau_high,
-        "obs_threshold": obs_threshold,
-        "total_samples": total,
+        "tau_low": float(tau_low),
+        "tau_high": float(tau_high),
+        "obs_threshold": float(obs_threshold),
+        "total_samples": len(labels),
         "num_decided": num_decided,
-        "num_abstained": num_abstained,
-        "coverage_percent": coverage * 100.0,
-        "decided_accuracy": decided_acc * 100.0,
-        "authentic_accuracy": auth_acc * 100.0,
-        "synthetic_accuracy": synth_acc * 100.0,
+        "num_abstained": len(labels) - num_decided,
+        "num_authentic_predictions": int(np.sum(authentic)),
+        "num_synthetic_predictions": int(np.sum(synthetic)),
+        "coverage_percent": 100.0 * num_decided / len(labels) if len(labels) else None,
+        "decided_accuracy_percent": accuracy,
+        "authentic_precision_percent": real_precision,
+        "synthetic_precision_percent": fake_precision,
+        "decided_accuracy": accuracy,
+        "authentic_accuracy": real_precision,
+        "synthetic_accuracy": fake_precision,
+        "legacy_alias_note": "Legacy accuracy keys are percentages; class-specific values are prediction precision.",
     }
+
+
+def _sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _output_path(path):
+    path = Path(path)
+    path = path.resolve() if path.is_absolute() else (PROJECT_ROOT / path).resolve()
+    if not path.is_relative_to(PROJECT_ROOT.resolve()):
+        raise ValueError("Evaluation outputs must stay inside pipeline_40k.")
+    return path
+
+
+def _write_json(path, data):
+    path = _output_path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, allow_nan=False), encoding="utf-8")
+
+
+def _predict_cache(model, cache_path, device):
+    dataset = PhysicsFeatureDataset.from_cache(cache_path)
+    if len(dataset) == 0:
+        raise ValueError(f"Cannot evaluate empty cache: {cache_path}")
+    loader = DataLoader(dataset, batch_size=256, shuffle=False, pin_memory=device.type == "cuda")
+    logits, targets, confidences = [], [], []
+    with torch.inference_mode():
+        for features, confs, labels in loader:
+            batch_logits, _ = model(features.to(device), confs.to(device))
+            # reshape(-1) also handles a singleton final batch.
+            logits.append(batch_logits.reshape(-1).cpu().numpy())
+            targets.append(labels.reshape(-1).cpu().numpy())
+            confidences.append(confs.cpu().numpy())
+    return np.concatenate(logits), np.concatenate(targets), np.concatenate(confidences)
 
 
 def evaluate_scaled_pipeline(
@@ -100,202 +144,118 @@ def evaluate_scaled_pipeline(
     train_cache: Path = None,
     output_json: Path = None,
     obs_threshold: float = 1.0,
+    policy_json: Path = None,
+    policy_input: Path = None,
+    abstention_margin: float = 0.10,
 ):
+    """Evaluate a legacy checkpoint; never fit calibration to training/test data.
+
+    train_cache is deprecated and deliberately unused. Supply a genuine
+    validation cache or a previously frozen policy via policy_input.
+    """
+    checkpoint_path, test_cache = Path(checkpoint_path), Path(test_cache)
+    val_cache = Path(val_cache) if val_cache is not None else None
+    if policy_input is None:
+        if val_cache is None or not val_cache.is_file():
+            raise ValueError("A validation cache is required for calibration; training fallback is prohibited.")
+        if val_cache.resolve() == test_cache.resolve() or _sha256(val_cache) == _sha256(test_cache):
+            raise ValueError("Validation and test caches must be different data.")
+    if train_cache is not None:
+        print("--train-cache is deprecated and ignored; calibration uses validation only.")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("=" * 95)
-    print("EVALUATING 100% PURE PHYSICS 5-TOKEN TRANSFORMER MODEL WITH 3-WAY FORENSIC DECISION POLICY")
-    print("Derived Optical & Projective Invariants: Light Field SH, Corneal Specular, Normals, Shadows, VP")
-    print("Physical Cross-Modal Coupling: Multi-Head Self-Attention over 5 Physical Tokens (Zero Pixel/FFT)")
-    print(f"Device:           {device}")
-    print(f"Checkpoint:       {checkpoint_path}")
-    print(f"Test Cache:       {test_cache}")
-    print(f"Primary Tau_obs:  {obs_threshold:.2f}")
-    print("=" * 95)
-
-    test_dataset = PhysicsFeatureDataset.from_cache(test_cache)
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=256,
-        shuffle=False,
-        pin_memory=torch.cuda.is_available(),
-    )
-
-    model = TransformerPhysicsCrossGenHead(
-        in_features=14,
-        conf_dim=4,
-        d_model=64,
-        nhead=4,
-    ).to(device)
+    print("Evaluating legacy physics transformer: 14 features, four measured modalities.")
+    print(f"Checkpoint: {checkpoint_path}; device: {device}")
+    model = TransformerPhysicsCrossGenHead(in_features=14, conf_dim=4, d_model=64, nhead=4).to(device)
     model.load_state_dict(torch.load(checkpoint_path, map_location=device, weights_only=True))
     model.eval()
+    checkpoint_hash = _sha256(checkpoint_path)
 
-    all_logits = []
-    all_probs = []
-    all_targets = []
-    all_confs = []
-
-    with torch.no_grad():
-        for features, confidences, labels in test_loader:
-            features = features.to(device)
-            confidences = confidences.to(device)
-            logits, _ = model(features, confidences)
-            probs = torch.sigmoid(logits.squeeze())
-
-            all_logits.extend(logits.squeeze().cpu().numpy().tolist())
-            all_probs.extend(probs.cpu().numpy().tolist())
-            all_targets.extend(labels.numpy().tolist())
-            all_confs.extend(confidences.cpu().numpy().tolist())
-
-    y_true = np.array(all_targets)
-    y_logits = np.array(all_logits)
-    y_probs = np.array(all_probs)
-    confs = np.array(all_confs)
-
-    # 1. Uncalibrated Static Evaluation (Threshold = 0.50)
-    static_eval = evaluate_predictions(y_true, y_probs, threshold=0.50)
-    print("\n" + format_evaluation_summary(static_eval, title="Static Decision Evaluation (Fixed Threshold Tau = 0.50)"))
-
-    # 2. Cost-Sensitive Optimal EER Threshold Evaluation
-    eer_val, eer_threshold = compute_eer(y_true, y_probs)
-    optimal_eer_eval = evaluate_predictions(y_true, y_probs, threshold=eer_threshold)
-    print("\n" + format_evaluation_summary(optimal_eer_eval, title=f"Cost-Sensitive Evaluation (Optimal EER Threshold Tau* = {eer_threshold:.4f})"))
-
-    # 3. Youden's J Statistic Optimal Threshold Evaluation
-    youden_j, youden_thresh = compute_youden_threshold(y_true, y_probs)
-    youden_eval = evaluate_predictions(y_true, y_probs, threshold=youden_thresh)
-    print("\n" + format_evaluation_summary(youden_eval, title=f"Youden's J Optimal Evaluation (J* = {youden_j:.4f}, Tau* = {youden_thresh:.4f})"))
-
-    # 4. Platt Scaling Calibration: P(Fake | z) = sigma(a * z + b)
-    # Calibrate on independent validation or training split to prevent calibration leakage
-    calib_cache = val_cache if (val_cache and val_cache.exists()) else train_cache
-    if calib_cache and calib_cache.exists():
-        print(f"\nFitting Platt Scaling calibration on independent cache: {calib_cache} ...")
-        calib_dataset = PhysicsFeatureDataset.from_cache(calib_cache)
-        calib_loader = DataLoader(calib_dataset, batch_size=512, shuffle=False)
-        calib_logits = []
-        calib_targets = []
-        with torch.no_grad():
-            for f_tr, c_tr, l_tr in calib_loader:
-                lg, _ = model(f_tr.to(device), c_tr.to(device))
-                calib_logits.extend(lg.squeeze().cpu().numpy().tolist())
-                calib_targets.extend(l_tr.numpy().tolist())
-        calib_lr, platt_a, platt_b = fit_platt_scaling(np.array(calib_logits), np.array(calib_targets))
+    # Freeze all operational decisions before reading any test labels.
+    if policy_input is not None:
+        policy = json.loads(Path(policy_input).read_text(encoding="utf-8"))
+        if policy.get("checkpoint_sha256") != checkpoint_hash:
+            raise ValueError("Saved policy does not match this checkpoint.")
+        if policy.get("selection_split") not in ("validation", "calibration"):
+            raise ValueError("Saved policy must identify a validation/calibration selection split.")
+        print(f"Loaded frozen policy: {policy_input}")
     else:
-        print("\nWarning: No validation or train cache provided for Platt scaling. Using non-parametric identity calibration.")
-        platt_a, platt_b = 1.0, 0.0
-        calib_lr = None
-
-    if calib_lr is not None:
-        calib_probs = calib_lr.predict_proba(y_logits.reshape(-1, 1))[:, 1]
-    else:
-        calib_probs = y_probs
-
-    platt_eval_05 = evaluate_predictions(y_true, calib_probs, threshold=0.50)
-    calib_j, calib_youden_thresh = compute_youden_threshold(y_true, calib_probs)
-    platt_eval_youden = evaluate_predictions(y_true, calib_probs, threshold=calib_youden_thresh)
-
-    print("\n" + "=" * 85)
-    print(f"PLATT SCALING CALIBRATION PARAMETERS: a = {platt_a:.4f}, b = {platt_b:.4f}")
-    print(f"Calibration formula: P(Fake | z) = sigma({platt_a:.4f} * z + {platt_b:.4f})")
-    print(f"Platt Calibrated Accuracy (@ 0.50):                    {platt_eval_05['accuracy']*100:.2f}%")
-    print(f"Platt Calibrated Accuracy (@ Youden Tau*={calib_youden_thresh:.4f}):   {platt_eval_youden['accuracy']*100:.2f}% (J*={calib_j:.4f})")
-    print("=" * 85)
-
-    # 5. Production 3-Way Selective Classification / Abstention Policy
-    print("\n" + "=" * 90)
-    print("3-WAY SELECTIVE CLASSIFICATION WITH ABSTENTION POLICY (Forensic Confidence Bands):")
-    print(f"{'Band Margin':<14}{'Tau Low':<10}{'Tau High':<10}{'Coverage':<12}{'Abstain %':<12}{'Decided Acc':<14}{'Authentic Acc'}")
-    print("-" * 90)
-
-    abstain_results = {}
-    margins = [0.03, 0.05, 0.08, 0.10, 0.12, 0.15]
-    for m in margins:
-        t_low = max(0.1, youden_thresh - m)
-        t_high = min(0.9, youden_thresh + m)
-        res = evaluate_selective_abstention(y_true, y_probs, confs, tau_low=t_low, tau_high=t_high, obs_threshold=obs_threshold)
-        abstain_results[f"margin_{m:.2f}"] = res
-        print(
-            f"+/- {m:<10.2f}{t_low:<10.3f}{t_high:<10.3f}{res['coverage_percent']:<11.1f}%{100-res['coverage_percent']:<11.1f}%{res['decided_accuracy']:<13.2f}%{res['authentic_accuracy']:.2f}%"
+        val_logits, val_labels, _ = _predict_cache(model, val_cache, device)
+        policy = fit_decision_policy(val_logits, val_labels, obs_threshold, abstention_margin)
+        policy.update({
+            "selection_split": "validation",
+            "validation_cache": str(val_cache.resolve()),
+            "validation_cache_sha256": _sha256(val_cache),
+            "checkpoint_sha256": checkpoint_hash,
+            "validation_note": "Legacy validation was also used for checkpoint selection; use a separate calibration split for new experiments.",
+        })
+    if policy_json is None:
+        policy_json = (
+            _output_path(output_json).with_name(_output_path(output_json).stem + "_policy.json")
+            if output_json is not None else PROJECT_ROOT / "models/legacy_validation_policy.json"
         )
-    print("=" * 90)
+    _write_json(policy_json, policy)
 
-    # 6. Observability Threshold Sweep
-    print("\n" + "=" * 85)
-    print("PHYSICAL OBSERVABILITY THRESHOLD SWEEP (tau from 0.5 to 2.0 with Youden's J Optimization):")
-    print(f"{'Tau':<8}{'Observable N':<16}{'Coverage':<12}{'AUC-ROC':<12}{'EER':<12}{'Youden Acc'}")
-    print("-" * 85)
-
-    sweep_results = {}
-    tau_values = [0.5, 0.8, 1.0, 1.2, 1.4, 1.5, 1.6, 1.7, 1.8, 2.0]
-
-    for tau in tau_values:
-        obs_mask = np.sum(confs, axis=1) >= tau
-        n_obs = int(np.sum(obs_mask))
-        pct = (n_obs / len(y_true)) * 100
-        if n_obs > 10 and len(np.unique(y_true[obs_mask])) > 1:
-            _, sub_y_th = compute_youden_threshold(y_true[obs_mask], y_probs[obs_mask])
-            sub_eval = evaluate_predictions(y_true[obs_mask], y_probs[obs_mask], threshold=sub_y_th)
-            auc = sub_eval["auc_roc"]
-            eer = sub_eval["eer"] * 100
-            acc = sub_eval["accuracy"] * 100
-        else:
-            auc, eer, acc = static_eval["auc_roc"], static_eval["eer"] * 100, static_eval["accuracy"] * 100
-
-        sweep_results[f"tau_{tau:.1f}"] = {
-            "tau": tau,
-            "observable_count": n_obs,
-            "coverage_percent": pct,
-            "auc_roc": auc,
-            "eer": eer,
-            "accuracy": acc,
-        }
-        print(f"{tau:<8.1f}{n_obs:<16}{pct:<11.1f}%{auc:<12.4f}{eer:<11.2f}%{acc:<11.2f}%")
-
-    print("=" * 85)
-
+    test_logits, labels, confs = _predict_cache(model, test_cache, device)
+    raw_probs = apply_policy_calibration(test_logits, {"calibration": {"method": "identity", "a": 1.0, "b": 0.0}})
+    probs = apply_policy_calibration(test_logits, policy)
+    static = evaluate_predictions(labels, raw_probs, threshold=0.5)
+    calibrated_static = evaluate_predictions(labels, probs, threshold=0.5)
+    frozen = evaluate_predictions(labels, probs, threshold=policy["decision_threshold"])
+    selective = evaluate_selective_abstention(
+        labels, probs, confs,
+        tau_low=policy["tau_low"], tau_high=policy["tau_high"], obs_threshold=policy["obs_threshold"],
+    )
+    observability = evaluate_observability_subsets(
+        labels, probs, confs, obs_threshold=policy["obs_threshold"], threshold=policy["decision_threshold"]
+    )
+    print("\n" + format_evaluation_summary(static, "Legacy baseline, fixed threshold 0.50"))
+    print("\n" + format_evaluation_summary(frozen, "Frozen validation policy, all test samples"))
+    print(f"Selective coverage: {selective['coverage_percent']:.2f}%")
+    print(f"Selective accuracy (%): {selective['decided_accuracy_percent']}")
     full_output = {
-        "static_threshold_0_50": static_eval,
-        "optimal_eer_threshold": optimal_eer_eval,
-        "youden_j_threshold": youden_eval,
-        "platt_calibrated_0_50": platt_eval_05,
-        "platt_calibrated_youden": platt_eval_youden,
-        "selective_abstention_policy": abstain_results,
-        "primary_obs_threshold": obs_threshold,
-        "observability_sweep": sweep_results,
+        "schema_version": 2,
+        "evaluation_protocol": "Calibration and decision threshold frozen on validation before test-label evaluation.",
+        "test_status": "Existing development benchmark previously inspected; not a fresh confirmatory holdout.",
+        "checkpoint": str(checkpoint_path.resolve()),
+        "test_cache": str(test_cache.resolve()),
+        "policy_path": str(_output_path(policy_json)),
+        "policy": policy,
+        "static_threshold_0_50": static,
+        "platt_calibrated_0_50": calibrated_static,
+        "frozen_validation_policy": frozen,
+        "selective_abstention_policy": selective,
+        "observability": observability,
     }
-
-    if output_json:
-        output_json.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_json, "w") as f:
-            json.dump(full_output, f, indent=2)
-        print(f"\nSaved comprehensive evaluation report to: {output_json}")
-
+    if output_json is not None:
+        _write_json(output_json, full_output)
+        print(f"Saved evaluation: {_output_path(output_json)}")
     return full_output
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Evaluate Transformer Scaled 40k Physics Deepfake Pipeline")
-    parser.add_argument("--checkpoint", type=str, default="models/gated_cross_gen_40k_best.pt")
-    parser.add_argument("--test-cache", type=str, default="data/cache_scaled/test_scaled_features.pt")
-    parser.add_argument("--val-cache", type=str, default="data/cache_scaled/val_scaled_features.pt")
-    parser.add_argument("--train-cache", type=str, default="data/cache_scaled/train_scaled_features.pt")
-    parser.add_argument("--output-json", type=str, default="models/evaluation_scaled_40k.json")
+    parser = argparse.ArgumentParser(description="Evaluate legacy transformer with a frozen validation policy")
+    parser.add_argument("--checkpoint", default="models/gated_cross_gen_40k_best.pt")
+    parser.add_argument("--test-cache", default="data/cache_scaled/test_scaled_features.pt")
+    parser.add_argument("--val-cache", default="data/cache_scaled/val_scaled_features.pt")
+    parser.add_argument("--train-cache", default=None, help="Deprecated, ignored; never used for calibration")
+    parser.add_argument("--output-json", default="models/evaluation_scaled_40k_validation_frozen.json")
+    parser.add_argument("--policy-json", default=None, help="Output policy JSON; defaults beside the report")
+    parser.add_argument("--policy-input", default=None, help="Reuse frozen policy instead of refitting calibration")
     parser.add_argument("--obs-threshold", type=float, default=1.0)
+    parser.add_argument("--abstention-margin", type=float, default=0.10)
     args = parser.parse_args()
 
-    checkpoint_path = Path(args.checkpoint) if Path(args.checkpoint).exists() else PROJECT_ROOT / args.checkpoint
-    test_cache = Path(args.test_cache) if Path(args.test_cache).exists() else PROJECT_ROOT / args.test_cache
-    val_cache = (Path(args.val_cache) if Path(args.val_cache).exists() else PROJECT_ROOT / args.val_cache) if args.val_cache else None
-    train_cache = (Path(args.train_cache) if Path(args.train_cache).exists() else PROJECT_ROOT / args.train_cache) if args.train_cache else None
-    output_json = Path(args.output_json) if Path(args.output_json).is_absolute() or Path(args.output_json).parent.exists() else PROJECT_ROOT / args.output_json
+    def resolve(path):
+        if not path:
+            return None
+        path = Path(path)
+        return path if path.is_absolute() else PROJECT_ROOT / path
 
     evaluate_scaled_pipeline(
-        checkpoint_path,
-        test_cache,
-        val_cache=val_cache,
-        train_cache=train_cache,
-        output_json=output_json,
-        obs_threshold=args.obs_threshold,
+        resolve(args.checkpoint), resolve(args.test_cache), val_cache=resolve(args.val_cache),
+        train_cache=resolve(args.train_cache), output_json=resolve(args.output_json),
+        obs_threshold=args.obs_threshold, policy_json=resolve(args.policy_json),
+        policy_input=resolve(args.policy_input), abstention_margin=args.abstention_margin,
     )
 
 
