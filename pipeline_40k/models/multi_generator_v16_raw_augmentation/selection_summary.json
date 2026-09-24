@@ -1,0 +1,67 @@
+{
+  "protocol": "rotated held-generator development selection; no Synthbuster or confirmatory labels read",
+  "created_at_utc": "2026-09-24T08:32:57.045558+00:00",
+  "candidate": "multi_generator_v16_raw_augmentation",
+  "raw_image_augmentation": true,
+  "folds": {
+    "adm": {
+      "source_domains": [
+        "biggan",
+        "vqdm",
+        "wukong"
+      ],
+      "held_out_domain": "adm",
+      "internal_auc": 0.8090524390925325,
+      "held_out_auc": 0.72243575,
+      "internal_accuracy": 0.7191601049868767,
+      "held_out_accuracy": 0.65875,
+      "selection_artifact": "models/multi_generator_v16_raw_augmentation/adm/selection.json"
+    },
+    "biggan": {
+      "source_domains": [
+        "adm",
+        "vqdm",
+        "wukong"
+      ],
+      "held_out_domain": "biggan",
+      "internal_auc": 0.818570606277015,
+      "held_out_auc": 0.82295975,
+      "internal_accuracy": 0.6961942257217848,
+      "held_out_accuracy": 0.729,
+      "selection_artifact": "models/multi_generator_v16_raw_augmentation/biggan/selection.json"
+    },
+    "vqdm": {
+      "source_domains": [
+        "adm",
+        "biggan",
+        "wukong"
+      ],
+      "held_out_domain": "vqdm",
+      "internal_auc": 0.8167777693580077,
+      "held_out_auc": 0.78304825,
+      "internal_accuracy": 0.7139107611548556,
+      "held_out_accuracy": 0.70725,
+      "selection_artifact": "models/multi_generator_v16_raw_augmentation/vqdm/selection.json"
+    },
+    "wukong": {
+      "source_domains": [
+        "adm",
+        "biggan",
+        "vqdm"
+      ],
+      "held_out_domain": "wukong",
+      "internal_auc": 0.8325945942015341,
+      "held_out_auc": 0.65657975,
+      "internal_accuracy": 0.7250656167979003,
+      "held_out_accuracy": 0.5865,
+      "selection_artifact": "models/multi_generator_v16_raw_augmentation/wukong/selection.json"
+    }
+  },
+  "missing_folds": [],
+  "selection_score": {
+    "minimum_held_generator_auc": 0.65657975,
+    "mean_held_generator_auc": 0.746255875,
+    "mean_internal_development_auc": 0.8192488522322723,
+    "ranking": "maximize minimum held-generator AUC, then mean held-generator AUC"
+  }
+}

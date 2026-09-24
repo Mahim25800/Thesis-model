@@ -1,0 +1,66 @@
+{
+  "protocol": "rotated held-generator development selection; no Synthbuster or confirmatory labels read",
+  "created_at_utc": "2026-09-24T02:27:45.016559+00:00",
+  "candidate": "multi_generator_v16_control",
+  "folds": {
+    "adm": {
+      "source_domains": [
+        "biggan",
+        "vqdm",
+        "wukong"
+      ],
+      "held_out_domain": "adm",
+      "internal_auc": 0.8012161209507604,
+      "held_out_auc": 0.735577875,
+      "internal_accuracy": 0.7062554680664916,
+      "held_out_accuracy": 0.675,
+      "selection_artifact": "models/multi_generator_v16_control/adm/selection.json"
+    },
+    "biggan": {
+      "source_domains": [
+        "adm",
+        "vqdm",
+        "wukong"
+      ],
+      "held_out_domain": "biggan",
+      "internal_auc": 0.8142963292099423,
+      "held_out_auc": 0.821857,
+      "internal_accuracy": 0.723753280839895,
+      "held_out_accuracy": 0.74475,
+      "selection_artifact": "models/multi_generator_v16_control/biggan/selection.json"
+    },
+    "vqdm": {
+      "source_domains": [
+        "adm",
+        "biggan",
+        "wukong"
+      ],
+      "held_out_domain": "vqdm",
+      "internal_auc": 0.7991196939184002,
+      "held_out_auc": 0.78415425,
+      "internal_accuracy": 0.713254593175853,
+      "held_out_accuracy": 0.7035,
+      "selection_artifact": "models/multi_generator_v16_control/vqdm/selection.json"
+    },
+    "wukong": {
+      "source_domains": [
+        "adm",
+        "biggan",
+        "vqdm"
+      ],
+      "held_out_domain": "wukong",
+      "internal_auc": 0.8172263134649727,
+      "held_out_auc": 0.6321880000000001,
+      "internal_accuracy": 0.7211286089238845,
+      "held_out_accuracy": 0.57625,
+      "selection_artifact": "models/multi_generator_v16_control/wukong/selection.json"
+    }
+  },
+  "missing_folds": [],
+  "selection_score": {
+    "minimum_held_generator_auc": 0.6321880000000001,
+    "mean_held_generator_auc": 0.7434442812500001,
+    "mean_internal_development_auc": 0.8079646143860189,
+    "ranking": "maximize minimum held-generator AUC, then mean held-generator AUC"
+  }
+}

@@ -1,0 +1,3 @@
+# The CUDA inference stack remains pinned by the project lock file.
+-r ../requirements-lock.txt
+gradio>=5,<7
