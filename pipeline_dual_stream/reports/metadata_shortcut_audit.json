@@ -1,0 +1,118 @@
+{
+  "overall_correlations": {
+    "Width": {
+      "dinov2_pearson_r": 0.05794105194663898,
+      "dinov2_pearson_p": 2.1491385697345875e-07,
+      "dinov2_spearman_rho": -0.029474150917250874,
+      "dinov2_spearman_p": 0.008378867376431124,
+      "physics_spearman_rho": -0.035157126311577726,
+      "physics_spearman_p": 0.001660699154420195,
+      "label_spearman_rho": -0.025177408802763732,
+      "label_spearman_p": 0.024326003242407114
+    },
+    "Height": {
+      "dinov2_pearson_r": 0.4193346115641834,
+      "dinov2_pearson_p": 0.0,
+      "dinov2_spearman_rho": 0.5261534280058072,
+      "dinov2_spearman_p": 0.0,
+      "physics_spearman_rho": 0.3932822308501758,
+      "physics_spearman_p": 3.4014248519754205e-294,
+      "label_spearman_rho": 0.5654044746287941,
+      "label_spearman_p": 0.0
+    },
+    "Aspect Ratio": {
+      "dinov2_pearson_r": -0.30627601501013846,
+      "dinov2_pearson_p": 2.473031820353073e-173,
+      "dinov2_spearman_rho": -0.3210634974211489,
+      "dinov2_spearman_p": 3.177071300407923e-191,
+      "physics_spearman_rho": -0.2527881557273551,
+      "physics_spearman_p": 7.262911262223281e-117,
+      "label_spearman_rho": -0.3364232134813572,
+      "label_spearman_p": 6.547460120365439e-211
+    },
+    "Total Pixels (Res)": {
+      "dinov2_pearson_r": 0.33759457752659294,
+      "dinov2_pearson_p": 1.8521866133405435e-212,
+      "dinov2_spearman_rho": 0.14540389412897942,
+      "dinov2_spearman_p": 4.708921561374107e-39,
+      "physics_spearman_rho": 0.11840544805741145,
+      "physics_spearman_p": 2.2498062550526e-26,
+      "label_spearman_rho": 0.13511604232775484,
+      "label_spearman_p": 6.565557189764533e-34
+    },
+    "File Size (Bytes)": {
+      "dinov2_pearson_r": 0.13442674574148827,
+      "dinov2_pearson_p": 1.4064061402513467e-33,
+      "dinov2_spearman_rho": 0.035262355438569266,
+      "dinov2_spearman_p": 0.001608014455328116,
+      "physics_spearman_rho": 0.00922210119977032,
+      "physics_spearman_p": 0.40952009667990713,
+      "label_spearman_rho": 0.03710518351325449,
+      "label_spearman_p": 0.0009020693508462981
+    },
+    "Bytes per Pixel": {
+      "dinov2_pearson_r": -0.2228698581658363,
+      "dinov2_pearson_p": 1.316604137455565e-90,
+      "dinov2_spearman_rho": -0.21241832947408007,
+      "dinov2_spearman_p": 2.719750070126886e-82,
+      "physics_spearman_rho": -0.1854883166813654,
+      "physics_spearman_p": 7.485140232704313e-63,
+      "label_spearman_rho": -0.22832007596137535,
+      "label_spearman_p": 4.066016948638036e-95
+    },
+    "JPEG Quant Table Mean": {
+      "dinov2_pearson_r": NaN,
+      "dinov2_pearson_p": NaN,
+      "dinov2_spearman_rho": NaN,
+      "dinov2_spearman_p": NaN,
+      "physics_spearman_rho": NaN,
+      "physics_spearman_p": NaN,
+      "label_spearman_rho": NaN,
+      "label_spearman_p": NaN
+    }
+  },
+  "within_class_correlations": {
+    "Width": {
+      "real_dinov2_r": -0.02069471236205074,
+      "real_phys_r": -0.01055730297368154,
+      "fake_dinov2_r": 0.005548145389125376,
+      "fake_phys_r": -0.02248054935493239
+    },
+    "Height": {
+      "real_dinov2_r": 0.017995070326935945,
+      "real_phys_r": 0.0063769612280785174,
+      "fake_dinov2_r": 0.10737997812529768,
+      "fake_phys_r": 0.1293580795707782
+    },
+    "Aspect Ratio": {
+      "real_dinov2_r": -0.01512072457630003,
+      "real_phys_r": -0.004210336748412204,
+      "fake_dinov2_r": -0.06395662522818932,
+      "fake_phys_r": -0.09037954475534071
+    },
+    "Total Pixels (Res)": {
+      "real_dinov2_r": 0.003914058492677376,
+      "real_phys_r": 0.010631408220800255,
+      "fake_dinov2_r": 0.06740508000842904,
+      "fake_phys_r": 0.051118366985854695
+    },
+    "File Size (Bytes)": {
+      "real_dinov2_r": -0.049111820189355615,
+      "real_phys_r": -0.087483520346262,
+      "fake_dinov2_r": 0.037554455848117424,
+      "fake_phys_r": 0.007774310188680061
+    },
+    "Bytes per Pixel": {
+      "real_dinov2_r": -0.0625430953837629,
+      "real_phys_r": -0.1023588500756375,
+      "fake_dinov2_r": -0.024513549933835574,
+      "fake_phys_r": -4.437665394403656e-05
+    },
+    "JPEG Quant Table Mean": {
+      "real_dinov2_r": NaN,
+      "real_phys_r": NaN,
+      "fake_dinov2_r": NaN,
+      "fake_phys_r": NaN
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "novel_architectures": {
+    "mean_physics": 0.617164225,
+    "mean_dinov2": 0.737439025,
+    "mean_hybrid": 0.79043105,
+    "mean_delta": 0.052992025,
+    "total_samples": 16000
+  },
+  "sd_family": {
+    "mean_physics": 0.60502375,
+    "mean_dinov2": 0.8180501666666666,
+    "mean_hybrid": 0.8839200416666667,
+    "mean_delta": 0.06586987500000001,
+    "total_samples": 8000
+  }
+}
