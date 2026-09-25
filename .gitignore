@@ -34,6 +34,21 @@ Thumbs.db
 *.swp
 *.swo
 
+# Large Model Checkpoints & Weights (>50MB)
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+
+# Cache directories & Intermediate Features
+**/cache_*/
+pipeline_40k/data/cache_*/
+pipeline_40k/data/external_*/
+pipeline_dual_stream/data/*.pt
+pipeline_dual_stream/data/*.png
+
 # Temporary & Log Files
 *.tmp
 *.log

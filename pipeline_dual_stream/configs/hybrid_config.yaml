@@ -1,0 +1,44 @@
+# Dual-Stream Hybrid Detector Configuration
+
+experiment_name: "dual_stream_dinov2_physics_v1"
+seed: 42
+
+data:
+  manifest_train: "G:/Thesis/pipeline_40k/data/cache_regional_dsine_v2/train_manifest.jsonl"
+  manifest_test: "G:/Thesis/pipeline_40k/data/cache_regional_dsine_v2/test_unseen_manifest.jsonl"
+  physics_cache_train: "G:/Thesis/pipeline_40k/data/cache_regional_dsine_v2/train_features.pt"
+  physics_cache_test: "G:/Thesis/pipeline_40k/data/cache_regional_dsine_v2/test_unseen_features.pt"
+  dinov2_cache_train: "G:/Thesis/pipeline_dual_stream/data/dinov2_cache_train.pt"
+  dinov2_cache_test: "G:/Thesis/pipeline_dual_stream/data/dinov2_cache_test.pt"
+  val_ratio: 0.15
+
+model:
+  foundation_backbone: "vit_base_patch14_dinov2"
+  freeze_dinov2: true
+  img_size: 224
+  physics:
+    d_model: 64
+    dropout: 0.15
+    entity_dims: [5, 4, 3, 2]
+    num_regions: 5
+  fusion:
+    proj_dim: 128
+    num_heads: 4
+    dropout: 0.15
+  loss_weights:
+    final: 1.0
+    semantic: 0.25
+    physics: 0.25
+    joint: 0.20
+
+training:
+  batch_size: 128
+  epochs: 30
+  lr_physics: 2.5e-4
+  lr_fusion: 5.0e-4
+  weight_decay: 1.0e-4
+  patience: 7
+  device: "cuda"
+
+output:
+  model_dir: "G:/Thesis/pipeline_dual_stream/models/dual_stream_v1"
