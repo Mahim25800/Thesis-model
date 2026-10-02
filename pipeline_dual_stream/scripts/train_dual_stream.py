@@ -200,10 +200,18 @@ def main():
     patience_counter = 0
     history = []
 
-    print("\nStarting training...")
+    print("\nStarting training with Loss Weight Annealing & Oracle Gate Supervision...")
     for epoch in range(1, args.epochs + 1):
         model.train()
         epoch_losses = []
+        epoch_gate_losses = []
+
+        # Annealing schedule: Transition from standalone stream training to cooperative fusion
+        progress = (epoch - 1) / max(1, args.epochs - 1)
+        sem_weight = 0.25 * (1.0 - progress) + 0.02 * progress
+        phys_weight = 0.25 * (1.0 - progress) + 0.02 * progress
+        joint_weight = 0.20 * (1.0 - progress) + 0.05 * progress
+        gate_weight = 0.10 * (1.0 - progress) + 0.30 * progress
 
         for batch in train_loader:
             labels = batch["label"].to(args.device)
@@ -220,25 +228,38 @@ def main():
                 dinov2_regional=dinov2_reg,
             )
 
-            loss_dict = dual_stream_hybrid_loss(out, labels)
+            loss_dict = dual_stream_hybrid_loss(
+                out,
+                labels,
+                sem_weight=sem_weight,
+                phys_weight=phys_weight,
+                joint_weight=joint_weight,
+                gate_weight=gate_weight,
+            )
             loss_dict["total_loss"].backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             optimizer.step()
 
             epoch_losses.append(loss_dict["total_loss"].item())
+            epoch_gate_losses.append(loss_dict["loss_gate"].item())
 
         scheduler.step()
         train_loss = float(np.mean(epoch_losses))
+        gate_loss = float(np.mean(epoch_gate_losses))
 
         # Evaluate on validation
         val_metrics = evaluate(model, val_loader, standardizer, args.device)
         val_metrics["epoch"] = epoch
         val_metrics["train_loss"] = train_loss
+        val_metrics["gate_loss"] = gate_loss
+        val_metrics["sem_weight"] = sem_weight
+        val_metrics["phys_weight"] = phys_weight
         history.append(val_metrics)
 
         print(
             f"Epoch [{epoch:02d}/{args.epochs:02d}] "
-            f"Loss: {train_loss:.4f} | "
+            f"Loss: {train_loss:.4f} (Gate: {gate_loss:.4f}) | "
+            f"W_sem/phys: {sem_weight:.2f} | "
             f"Hybrid AUC: {val_metrics['auc_final']:.4f} | "
             f"DINOv2 AUC: {val_metrics['auc_semantic']:.4f} | "
             f"Physics AUC: {val_metrics['auc_physics']:.4f} | "
@@ -246,9 +267,11 @@ def main():
             f"Alpha: {val_metrics['mean_alpha']:.2f}"
         )
 
-        # Checkpoint if best
-        if val_metrics["auc_final"] > best_val_auc:
-            best_val_auc = val_metrics["auc_final"]
+        # Checkpoint selection: Composite score of Hybrid AUC + Physics sensitivity
+        # Ensures model maintains near-perfect hybrid accuracy while maximizing physical generalization
+        composite_score = val_metrics["auc_final"] + 0.5 * val_metrics["auc_physics"]
+        if composite_score > best_val_auc:
+            best_val_auc = composite_score
             best_epoch = epoch
             patience_counter = 0
             torch.save(
@@ -262,10 +285,11 @@ def main():
                 output_dir / "best_model.pt",
             )
         else:
-            patience_counter += 1
-            if patience_counter >= args.patience:
-                print(f"\nEarly stopping triggered after {epoch} epochs (Best Epoch: {best_epoch}).")
-                break
+            if epoch > 12:  # Allow full loss weight annealing before early stopping
+                patience_counter += 1
+                if patience_counter >= args.patience:
+                    print(f"\nEarly stopping triggered after {epoch} epochs (Best Epoch: {best_epoch}).")
+                    break
 
     # Save final history
     with open(output_dir / "training_history.json", "w", encoding="utf-8") as f:

@@ -1,0 +1,47 @@
+{
+  "sample_count": 4000,
+  "metrics": {
+    "hybrid": {
+      "roc_auc": 0.75117875,
+      "accuracy": 0.69075
+    },
+    "semantic_dinov2_alone": {
+      "roc_auc": 0.74743575,
+      "accuracy": 0.67775
+    },
+    "physics_alone": {
+      "roc_auc": 0.6087852500000001,
+      "accuracy": 0.56975
+    },
+    "synergy_delta": 0.003743000000000052
+  },
+  "bootstrap_analysis": {
+    "hybrid_auc_mean": 0.7509031384452435,
+    "hybrid_auc_ci": [
+      0.7358900146526794,
+      0.7656727720715802
+    ],
+    "semantic_auc_mean": 0.7471966668680227,
+    "semantic_auc_ci": [
+      0.7324650581162645,
+      0.7627081447720496
+    ],
+    "delta_synergy_mean": 0.0037064715772207025,
+    "delta_synergy_ci": [
+      0.0014049343584765506,
+      0.006104925969568686
+    ],
+    "p_value_synergy": 0.005
+  },
+  "trust_gating": {
+    "mean_alpha": 0.7209492325782776,
+    "std_alpha": 0.15519869327545166,
+    "median_alpha": 0.692129373550415
+  },
+  "spatial_discrepancy_by_quadrant": {
+    "top_left": 0.7944906949996948,
+    "top_right": 0.7672057151794434,
+    "bottom_left": 0.8052271604537964,
+    "bottom_right": 0.7793390154838562
+  }
+}

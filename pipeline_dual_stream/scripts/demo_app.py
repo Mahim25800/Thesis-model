@@ -75,6 +75,7 @@ def create_demo(predictor: DualStreamPredictor):
         tech_details = {
             "Final Decision": "AI-Generated" if is_fake else "Real",
             "Confidence": f"{percentage:.2f}%",
+            "Forensic Mechanism": result.get("forensic_finding", "Multimodal Consensus"),
             "DINOv2 Semantic Score": f"{result['semantic_prob_fake']*100:.1f}% fake",
             "Physics Consistency Score": f"{result['physics_prob_fake']*100:.1f}% fake",
             "Dynamic Trust Weight": result["trust_interpretation"],
@@ -118,7 +119,7 @@ def main():
     parser.add_argument(
         "--checkpoint",
         type=str,
-        default="G:/Thesis/pipeline_dual_stream/models/dual_stream_v1/best_model.pt",
+        default="G:/Thesis/pipeline_dual_stream/models/dual_stream_v2/best_model.pt",
     )
     parser.add_argument("--port", type=int, default=7865)
     parser.add_argument("--share", action="store_true", help="Create public Gradio share link")

@@ -34,6 +34,7 @@ class DualStreamHybridDetector(nn.Module):
         num_heads: int = 4,
         dropout: float = 0.15,
         load_pretrained_dinov2: bool = True,
+        gate_mode: str = "v2",
     ):
         super().__init__()
         self.img_size = img_size
@@ -59,6 +60,7 @@ class DualStreamHybridDetector(nn.Module):
             proj_dim=proj_dim,
             num_heads=num_heads,
             dropout=dropout,
+            gate_mode=gate_mode,
         )
 
     def forward(

@@ -44,6 +44,9 @@ class DualStreamPredictor:
         self.standardizer = ckpt["standardizer"]
         config = ckpt.get("config", {})
 
+        gate_w = ckpt["model_state_dict"].get("fusion_head.gate_net.0.weight", None)
+        gate_mode = "v1" if (gate_w is not None and gate_w.shape[1] == 901) else "v2"
+
         # Initialize detector with DINOv2 weights loaded
         self.model = DualStreamHybridDetector(
             dinov2_model_name="vit_base_patch14_dinov2",
@@ -54,6 +57,7 @@ class DualStreamPredictor:
             num_heads=config.get("num_heads", 4),
             dropout=0.0,
             load_pretrained_dinov2=True,
+            gate_mode=gate_mode,
         ).to(self.device)
 
         # Load only trained head and physics parameters, preserving official pretrained DINOv2
@@ -126,14 +130,25 @@ class DualStreamPredictor:
         prob_phys = float(out["prob_physics"].item())
         alpha = float(out["alpha"].item())
 
-        # Forensic Evidence Asymmetry Rule:
-        # A real camera photograph is never an anime/digital illustration.
-        # If DINOv2 identifies synthetic/digital art with high confidence (prob_sem >= 0.70)
-        # while the scene geometry/lighting happens to be mathematically smooth (prob_phys < 0.40),
-        # smooth physics cannot veto the fake detection.
-        if prob_sem >= 0.70 and prob_phys < 0.40:
-            alpha = max(alpha, 0.95)
-            prob_final = alpha * prob_sem + (1.0 - alpha) * prob_phys
+        # Symmetric Forensic Verification Principle:
+        # An authentic camera photograph requires BOTH natural semantic features AND physical illumination consistency.
+        # If either stream independently detects synthetic manipulation with high confidence,
+        # that forensic anomaly cannot be vetoed by the other stream being fooled or flat:
+        # 1. Digital Art / Anime / Synthetic Texture:
+        #    Semantic stream identifies synthetic artifacts (prob_sem >= 0.60) while physics appears smooth (prob_phys < 0.50):
+        #    Shift trust to Semantic (alpha >= 0.90).
+        # 2. Photorealistic Diffusion / 3D Illumination Violation:
+        #    Physics stream detects physical/normal contradiction (prob_phys >= 0.52) while semantic stream is fooled (prob_sem < 0.50):
+        #    Shift trust to Physics (alpha <= 0.05, ensuring physical violation is preserved).
+        forensic_reason = "Multimodal Consensus"
+        if prob_sem >= 0.60 and prob_phys < 0.50:
+            alpha = max(alpha, 0.90)
+            prob_final = max(prob_final, alpha * prob_sem + (1.0 - alpha) * prob_phys)
+            forensic_reason = "Semantic Art / Synthetic Frequency Anomaly"
+        elif prob_phys >= 0.52 and prob_sem < 0.50:
+            alpha = min(alpha, 0.05)
+            prob_final = max(prob_final, alpha * prob_sem + (1.0 - alpha) * prob_phys)
+            forensic_reason = "Physical Illumination / Surface Normal Violation"
 
         discrepancies = out["quad_discrepancy"].squeeze(0).cpu().numpy().tolist()
 
@@ -150,5 +165,6 @@ class DualStreamPredictor:
             "trust_interpretation": (
                 f"{alpha*100:.1f}% Semantic Foundation vs {(1.0-alpha)*100:.1f}% Physical Consistency"
             ),
+            "forensic_finding": forensic_reason,
             "quadrant_inconsistencies": quad_dict,
         }

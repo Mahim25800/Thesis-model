@@ -1,0 +1,23 @@
+{
+  "novel_architectures": {
+    "mean_dino": 0.7377522999999999,
+    "mean_phys": 0.6088851,
+    "mean_hyb": 0.7361674500000001,
+    "mean_delta": -0.001584849999999971,
+    "total_samples": 16000
+  },
+  "sd_family": {
+    "mean_dino": 0.8222586666666668,
+    "mean_phys": 0.6228019166666666,
+    "mean_hyb": 0.8272808333333335,
+    "mean_delta": 0.005022166666666772,
+    "total_samples": 8000
+  },
+  "overall": {
+    "mean_dino": 0.7694421874999999,
+    "mean_phys": 0.61410390625,
+    "mean_hyb": 0.7703349687500001,
+    "mean_delta": 0.0008927812500000576,
+    "total_samples": 24000
+  }
+}
