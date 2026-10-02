@@ -226,6 +226,11 @@ def main():
 
     wild_tests = [
         {
+            "name": "Toddler Photo (Directional Window Light)",
+            "path": r"C:\Users\laptop villa\.gemini\antigravity\brain\b7cb5a33-a10e-4028-a138-fa394175e4ff\.user_uploaded\media_1790960672770.jpg",
+            "gt": "Real Camera",
+        },
+        {
             "name": "DSC03398.JPG (24MP DSLR Blur)",
             "path": r"C:\Users\laptop villa\AppData\Local\Temp\gradio\e87b25f52193471154a16b20d382713c8b7e983c30a39fa25a88af2e3db9b751\DSC03398.JPG",
             "gt": "Real Camera",

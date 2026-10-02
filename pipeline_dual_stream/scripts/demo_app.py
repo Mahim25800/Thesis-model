@@ -101,6 +101,8 @@ def create_demo(predictor: DualStreamPredictor):
             "Hardware Sensor Verified": "Yes" if is_cam else "No",
             "Optical / Bokeh Blur": "Yes" if is_bokeh else "No",
             "Portrait Subject Detected": "Yes" if sensor_details.get("portrait_subject_detected", False) else "No",
+            "Directional Lighting Verified": "Yes" if sensor_details.get("directional_lighting_verified", False) else "No",
+            "Directional Correlation (r)": f"{sensor_details.get('directional_correlation', 0.0):+.2f}",
         }
 
         return verdict_html, confidence_chart, tech_details

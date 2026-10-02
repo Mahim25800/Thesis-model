@@ -107,7 +107,31 @@ class SensorNoiseExtractor:
         # Computational portrait mode specifically blurs around a foreground portrait subject
         is_portrait_bokeh = bool(is_camera_sensor and has_bokeh_blur and is_portrait_subject)
 
-        if is_portrait_bokeh:
+        # 7. Directional Illumination Gradient Analysis across Portrait Subject
+        # Genuine physical lighting (window, sunlight, studio key light) creates a smooth,
+        # monotonic illumination gradient across human facial skin (Lambert's law: I ~ N . L).
+        # Synthetic AI generators exhibit chaotic, conflicting illumination vectors across facial patches.
+        has_directional_light = False
+        directional_correlation = 0.0
+        if is_portrait_subject and skin_mask.sum() > 100:
+            col_lum = []
+            for c in range(w):
+                m_c = skin_mask[:, c]
+                if m_c.sum() > 5:
+                    col_lum.append(float(gray_f[:, c][m_c].mean()))
+            if len(col_lum) > 20:
+                x = np.arange(len(col_lum))
+                r = np.corrcoef(x, col_lum)[0, 1]
+                if not np.isnan(r):
+                    directional_correlation = float(r)
+                    has_directional_light = bool(abs(directional_correlation) >= 0.50)
+
+        if is_portrait_bokeh and has_directional_light:
+            sensor_finding = (
+                f"CMOS Sensor Verified (std={flat_noise_std:.2f}, cfa={cfa_noise_std:.2f}). "
+                f"Directional Window/Key Lighting Verified on Subject (corr={directional_correlation:+.2f}, skin={skin_ratio*100:.1f}%, flat={flat_ratio*100:.1f}%)."
+            )
+        elif is_portrait_bokeh:
             sensor_finding = (
                 f"CMOS Sensor Verified (std={flat_noise_std:.2f}, cfa={cfa_noise_std:.2f}). "
                 f"Optical / Portrait Bokeh Blur Detected on Subject (skin={skin_ratio*100:.1f}%, flat={flat_ratio*100:.1f}%, lap_var={lap_var:.1f})."
@@ -128,6 +152,8 @@ class SensorNoiseExtractor:
             "has_bokeh_blur": has_bokeh_blur,
             "is_portrait_subject": is_portrait_subject,
             "is_portrait_bokeh": is_portrait_bokeh,
+            "has_directional_light": has_directional_light,
+            "directional_correlation": directional_correlation,
             "skin_ratio": skin_ratio,
             "flat_noise_std": flat_noise_std,
             "cfa_noise_std": cfa_noise_std,

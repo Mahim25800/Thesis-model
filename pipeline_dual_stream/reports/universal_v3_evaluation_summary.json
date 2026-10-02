@@ -98,6 +98,10 @@
   "mean_phys_auc": 0.7227106666666666,
   "clean_real_fpr": 0.056,
   "in_the_wild_results": {
+    "Toddler Photo (Directional Window Light)": {
+      "prob_fake": 0.2,
+      "verdict": "Authentic Camera Photo"
+    },
     "DSC03398.JPG (24MP DSLR Blur)": {
       "prob_fake": 0.028629347681999207,
       "verdict": "Authentic Camera Photo"

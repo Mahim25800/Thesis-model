@@ -7,6 +7,7 @@ from src.inference.predict import DualStreamPredictor
 p = DualStreamPredictor(checkpoint_path="models/universal_v3/best_model.pt")
 
 imgs = [
+    ("Toddler Photo (Real)", r"C:/Users/laptop villa/.gemini/antigravity/brain/b7cb5a33-a10e-4028-a138-fa394175e4ff/.user_uploaded/media_1790960672770.jpg"),
     ("DSLR Blur (Real)", r"C:\Users\laptop villa\AppData\Local\Temp\gradio\e87b25f52193471154a16b20d382713c8b7e983c30a39fa25a88af2e3db9b751\DSC03398.JPG"),
     ("Smartphone Portrait (Real)", "data/test_smartphone_portrait_clean.png"),
     ("Catwoman (AI)", "data/catwoman_extracted.png"),

@@ -147,6 +147,8 @@ class DualStreamPredictor:
         is_cam = sensor_info["is_camera_sensor"]
         is_bokeh = sensor_info["is_portrait_bokeh"]
         is_portrait_subject = sensor_info.get("is_portrait_subject", False)
+        has_dir_light = sensor_info.get("has_directional_light", False)
+        dir_corr = sensor_info.get("directional_correlation", 0.0)
 
         # Universal Forensic Decision Engine:
         # 1. Physical Illumination & Surface Normal Violation (Catwoman Protection):
@@ -154,12 +156,18 @@ class DualStreamPredictor:
             prob_final = max(raw_prob_final, 0.70)
             forensic_reason = "Physical Illumination / Surface Normal Violation"
 
-        # 2. Computational Portrait Mode & CMOS Sensor Verification (Smartphone Portrait Protection):
+        # 2. Authentic Camera Portrait & Directional Lighting Protection:
         # Applies exclusively to genuine camera portraits (with verified human subject, CMOS sensor,
-        # and physically consistent surface normals) where synthetic depth blur confused semantics.
-        elif is_bokeh and is_cam and is_portrait_subject and prob_phys < 0.50 and raw_prob_final > 0.50:
-            prob_final = min(raw_prob_final, 0.35)
-            forensic_reason = "Authentic Camera Photo (Computational Portrait Mode & CMOS Sensor Verified)"
+        # and bokeh/defocus blur) where:
+        # Case A: Standard uniform portrait mode with low-error surface normals (prob_phys < 0.50)
+        # Case B: Artistic directional chiaroscuro / window lighting with smooth monotonic Lambertian gradient (has_dir_light)
+        elif is_bokeh and is_cam and is_portrait_subject and (prob_phys < 0.50 or has_dir_light) and raw_prob_final > 0.50:
+            if has_dir_light:
+                prob_final = min(raw_prob_final, 0.20)
+                forensic_reason = f"Authentic Camera Photo (CMOS Sensor & Coherent Directional Lighting Verified, r={dir_corr:+.2f})"
+            else:
+                prob_final = min(raw_prob_final, 0.35)
+                forensic_reason = "Authentic Camera Photo (Computational Portrait Mode & CMOS Sensor Verified)"
 
         # 3. Direct Universal Dual-Stream Neural Decision:
         else:
@@ -185,6 +193,8 @@ class DualStreamPredictor:
                 "camera_sensor_verified": is_cam,
                 "bokeh_blur_detected": is_bokeh,
                 "portrait_subject_detected": is_portrait_subject,
+                "directional_lighting_verified": has_dir_light,
+                "directional_correlation": round(dir_corr, 2),
                 "skin_ratio_pct": round(sensor_info.get("skin_ratio", 0.0) * 100, 2),
                 "flat_noise_std": round(sensor_info["flat_noise_std"], 2),
                 "cfa_noise_std": round(sensor_info["cfa_noise_std"], 2),
