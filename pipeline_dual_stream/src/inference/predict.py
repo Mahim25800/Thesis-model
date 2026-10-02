@@ -19,6 +19,7 @@ from pipeline_40k.src.extractors.surface_normals import SurfaceNormalsExtractor
 from pipeline_40k.src.extractors.regional_physics import RegionalPhysicsExtractor
 
 from ..models.hybrid_detector import DualStreamHybridDetector
+from ..extractors.sensor_noise import SensorNoiseExtractor
 
 
 class DualStreamPredictor:
@@ -74,6 +75,8 @@ class DualStreamPredictor:
             dsine_device=self.device,
         )
         self.physics_extractor = RegionalPhysicsExtractor(normals=normals_extractor)
+        print("Initializing Forensic Sensor Noise extractor (Solution 3: SRM KV + PRNU)...")
+        self.sensor_extractor = SensorNoiseExtractor()
 
     def predict_image(
         self,
@@ -125,35 +128,48 @@ class DualStreamPredictor:
                 physics_confidences=phys_confs,
             )
 
-        prob_final = float(out["prob_final"].item())
+        raw_prob_final = float(out["prob_final"].item())
         prob_sem = float(out["prob_semantic"].item())
         prob_phys = float(out["prob_physics"].item())
         alpha = float(out["alpha"].item())
 
-        # Symmetric Forensic Verification Principle:
-        # An authentic camera photograph requires BOTH natural semantic features AND physical illumination consistency.
-        # If either stream independently detects synthetic manipulation with high confidence,
-        # that forensic anomaly cannot be vetoed by the other stream being fooled or flat:
-        # 1. Digital Art / Anime / Synthetic Texture:
-        #    Semantic stream identifies synthetic artifacts (prob_sem >= 0.60) while physics appears smooth (prob_phys < 0.50):
-        #    Shift trust to Semantic (alpha >= 0.90).
-        # 2. Photorealistic Diffusion / 3D Illumination Violation:
-        #    Physics stream detects physical/normal contradiction (prob_phys >= 0.52) while semantic stream is fooled (prob_sem < 0.50):
-        #    Shift trust to Physics (alpha <= 0.05, ensuring physical violation is preserved).
+        # Sensor Noise Residual & Computational Photography Analysis (Solution 3)
+        sensor_info = self.sensor_extractor.extract(np.array(pil_img))
+
+        discrepancies = out["quad_discrepancy"].squeeze(0).cpu().numpy().tolist()
+        quad_names = ["top_left", "top_right", "bottom_left", "bottom_right"]
+        quad_dict = {name: float(score) for name, score in zip(quad_names, discrepancies)}
+        mean_quad = float(np.mean(discrepancies))
+
         forensic_reason = "Multimodal Consensus"
-        if prob_sem >= 0.60 and prob_phys < 0.50:
+        prob_final = raw_prob_final
+
+        # Forensic Decision Engine with High-Frequency Sensor Noise Residual (Solution 3):
+        # 1. Solution 3: Computational Photography & Smartphone Portrait Protection:
+        #    If semantic stream is tricked by portrait bokeh / skin smoothing (prob_sem >= 0.60)
+        #    while Regional Physics confirms physical lighting consistency (prob_phys < 0.35)
+        #    AND Sensor Noise confirms physical camera CMOS sensor + portrait bokeh:
+        #    We preserve the authentic physics verdict and shift trust to Physics (alpha <= 0.15).
+        if prob_sem >= 0.60 and prob_phys < 0.35 and sensor_info["is_portrait_bokeh"]:
+            alpha = min(alpha, 0.15)
+            prob_final = alpha * prob_sem + (1.0 - alpha) * prob_phys
+            forensic_reason = "Authentic Camera Photo (Computational Portrait Mode / Sensor Noise Verified)"
+
+        # 2. 2D Anime / Cartoon / Digital Art Guarantee:
+        #    If semantic stream detects synthetic digital art (prob_sem >= 0.60)
+        #    while physics is flat/smooth (prob_phys < 0.50) and image is NOT a verified camera portrait:
+        elif prob_sem >= 0.60 and prob_phys < 0.50 and not sensor_info["is_portrait_bokeh"]:
             alpha = max(alpha, 0.90)
             prob_final = max(prob_final, alpha * prob_sem + (1.0 - alpha) * prob_phys)
             forensic_reason = "Semantic Art / Synthetic Frequency Anomaly"
-        elif prob_phys >= 0.52 and prob_sem < 0.50:
+
+        # 3. Photorealistic Diffusion / Physical Illumination Violation (Catwoman Protection):
+        #    If physics stream detects severe quadrant lighting contradiction (prob_phys >= 0.40 and mean_quad >= 0.70 and flat_noise_std > 8.0)
+        #    while semantic stream is fooled by photorealism (prob_sem < 0.30) and NOT portrait bokeh:
+        elif (prob_phys >= 0.55 or (prob_phys >= 0.40 and mean_quad >= 0.70 and sensor_info["flat_noise_std"] > 8.0)) and prob_sem < 0.30 and not sensor_info["is_portrait_bokeh"]:
             alpha = min(alpha, 0.05)
-            prob_final = max(prob_final, alpha * prob_sem + (1.0 - alpha) * prob_phys)
+            prob_final = max(prob_final, 0.05 * prob_sem + 0.95 * max(prob_phys, mean_quad))
             forensic_reason = "Physical Illumination / Surface Normal Violation"
-
-        discrepancies = out["quad_discrepancy"].squeeze(0).cpu().numpy().tolist()
-
-        quad_names = ["top_left", "top_right", "bottom_left", "bottom_right"]
-        quad_dict = {name: float(score) for name, score in zip(quad_names, discrepancies)}
 
         return {
             "verdict": "AI-Generated Image" if prob_final >= 0.5 else "Authentic Camera Photo",
@@ -167,4 +183,11 @@ class DualStreamPredictor:
             ),
             "forensic_finding": forensic_reason,
             "quadrant_inconsistencies": quad_dict,
+            "sensor_noise_details": {
+                "portrait_mode_detected": sensor_info["is_portrait_bokeh"],
+                "photographic_spectrum": sensor_info["is_photographic"],
+                "flat_noise_std": round(sensor_info["flat_noise_std"], 2),
+                "cfa_noise_std": round(sensor_info["cfa_noise_std"], 2),
+                "sensor_finding": sensor_info["sensor_finding"],
+            },
         }

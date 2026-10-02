@@ -36,6 +36,18 @@ def create_demo(predictor: DualStreamPredictor):
         is_fake = prob_fake >= 0.5
         percentage = (prob_fake if is_fake else prob_real) * 100.0
 
+        sensor_details = result.get("sensor_noise_details", {})
+        is_portrait = sensor_details.get("portrait_mode_detected", False)
+        finding = result.get("forensic_finding", "Multimodal Consensus")
+
+        portrait_badge = ""
+        if is_portrait and not is_fake:
+            portrait_badge = """
+            <div style="margin-top: 12px; display: inline-block; padding: 6px 16px; background-color: #dcfce7; color: #15803d; border-radius: 9999px; font-size: 0.95rem; font-weight: 700; border: 1px solid #86efac;">
+                📸 Computational Portrait Mode & CMOS Sensor Verified
+            </div>
+            """
+
         if is_fake:
             verdict_html = f"""
             <div style="padding: 28px; border-radius: 16px; background-color: #fef2f2; border: 2px solid #ef4444; text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
@@ -49,6 +61,9 @@ def create_demo(predictor: DualStreamPredictor):
                 <p style="color: #991b1b; margin-top: 8px; font-size: 1.1rem; font-weight: 500;">
                     (Probability Real: {prob_real*100:.1f}%)
                 </p>
+                <div style="margin-top: 10px; font-size: 0.95rem; color: #7f1d1d; font-weight: 600;">
+                    Finding: {finding}
+                </div>
             </div>
             """
         else:
@@ -64,6 +79,7 @@ def create_demo(predictor: DualStreamPredictor):
                 <p style="color: #166534; margin-top: 8px; font-size: 1.1rem; font-weight: 500;">
                     (Probability AI-Generated: {prob_fake*100:.1f}%)
                 </p>
+                {portrait_badge}
             </div>
             """
 
@@ -75,10 +91,12 @@ def create_demo(predictor: DualStreamPredictor):
         tech_details = {
             "Final Decision": "AI-Generated" if is_fake else "Real",
             "Confidence": f"{percentage:.2f}%",
-            "Forensic Mechanism": result.get("forensic_finding", "Multimodal Consensus"),
+            "Forensic Finding": finding,
             "DINOv2 Semantic Score": f"{result['semantic_prob_fake']*100:.1f}% fake",
             "Physics Consistency Score": f"{result['physics_prob_fake']*100:.1f}% fake",
             "Dynamic Trust Weight": result["trust_interpretation"],
+            "Sensor Noise Residual": sensor_details.get("sensor_finding", "N/A"),
+            "Portrait Bokeh Detected": "Yes" if is_portrait else "No",
         }
 
         return verdict_html, confidence_chart, tech_details
