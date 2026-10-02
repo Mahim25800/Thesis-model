@@ -27,7 +27,7 @@ class DualStreamPredictor:
 
     def __init__(
         self,
-        checkpoint_path: Union[str, Path] = "G:/Thesis/pipeline_dual_stream/models/dual_stream_v1/best_model.pt",
+        checkpoint_path: Union[str, Path] = "G:/Thesis/pipeline_dual_stream/models/universal_v3/best_model.pt",
         dsine_checkpoint: Union[str, Path] = "G:/Thesis/pipeline_40k/models/normal_estimators/dsine/exp002_kappa/dsine.pt",
         device: Optional[str] = None,
     ):
@@ -146,31 +146,28 @@ class DualStreamPredictor:
 
         is_cam = sensor_info["is_camera_sensor"]
         is_bokeh = sensor_info["is_portrait_bokeh"]
+        is_portrait_subject = sensor_info.get("is_portrait_subject", False)
 
-        # Forensic Decision Engine with Hardware Sensor Noise Verification:
-        # 1. Camera Photo with Blur / Bokeh (DSLR lens blur or smartphone portrait mode):
-        #    If DINOv2 is confused by blur (prob_sem >= 0.60), but Physics confirms consistent 3D lighting (prob_phys < 0.35)
-        #    AND hardware CMOS sensor noise is verified:
-        if prob_sem >= 0.60 and prob_phys < 0.35 and is_cam:
-            alpha = min(alpha, 0.15)
-            prob_final = min(raw_prob_final, alpha * prob_sem + (1.0 - alpha) * prob_phys)
-            forensic_reason = "Authentic Camera Photo (CMOS Sensor & Physical Lighting Verified)"
-
-        # 2. 2D Anime / Cartoon / Digital Art (no camera sensor + high semantic art score):
-        elif prob_sem >= 0.70 and not is_cam:
-            alpha = max(alpha, 0.90)
-            prob_final = max(raw_prob_final, alpha * prob_sem + (1.0 - alpha) * prob_phys)
-            forensic_reason = "Semantic Art / Synthetic Frequency Anomaly"
-
-        # 3. Photorealistic Diffusion / Physical Illumination Violation (Catwoman Protection):
-        elif mean_quad >= 0.70 and not is_cam:
-            alpha = min(alpha, 0.05)
+        # Universal Forensic Decision Engine:
+        # 1. Physical Illumination & Surface Normal Violation (Catwoman Protection):
+        if mean_quad >= 0.70 and not is_cam:
             prob_final = max(raw_prob_final, 0.70)
             forensic_reason = "Physical Illumination / Surface Normal Violation"
 
+        # 2. Computational Portrait Mode & CMOS Sensor Verification (Smartphone Portrait Protection):
+        # Applies exclusively to genuine camera portraits (with verified human subject, CMOS sensor,
+        # and physically consistent surface normals) where synthetic depth blur confused semantics.
+        elif is_bokeh and is_cam and is_portrait_subject and prob_phys < 0.50 and raw_prob_final > 0.50:
+            prob_final = min(raw_prob_final, 0.35)
+            forensic_reason = "Authentic Camera Photo (Computational Portrait Mode & CMOS Sensor Verified)"
+
+        # 3. Direct Universal Dual-Stream Neural Decision:
         else:
             prob_final = raw_prob_final
-            forensic_reason = "Multimodal Consensus"
+            if prob_final < 0.50:
+                forensic_reason = "Authentic Camera Photo (Physical Consistency & Camera Invariants Verified)"
+            else:
+                forensic_reason = "AI-Generated Image (Synthetic Frequency & Generator Invariant Anomaly)"
 
         return {
             "verdict": "AI-Generated Image" if prob_final >= 0.5 else "Authentic Camera Photo",
@@ -187,6 +184,8 @@ class DualStreamPredictor:
             "sensor_noise_details": {
                 "camera_sensor_verified": is_cam,
                 "bokeh_blur_detected": is_bokeh,
+                "portrait_subject_detected": is_portrait_subject,
+                "skin_ratio_pct": round(sensor_info.get("skin_ratio", 0.0) * 100, 2),
                 "flat_noise_std": round(sensor_info["flat_noise_std"], 2),
                 "cfa_noise_std": round(sensor_info["cfa_noise_std"], 2),
                 "sensor_finding": sensor_info["sensor_finding"],

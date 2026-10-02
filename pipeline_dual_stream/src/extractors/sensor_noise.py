@@ -89,7 +89,13 @@ class SensorNoiseExtractor:
         # 4. Global Sharpness (Laplacian Variance)
         lap_var = float(cv2.Laplacian(gray, cv2.CV_64F).var())
 
-        # 5. Hardware CMOS Sensor & Optical Bayer CFA Verification:
+        # 5. Portrait Subject Presence (Human Skin Tone in YCrCb)
+        ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+        skin_mask = (ycrcb[:, :, 1] >= 133) & (ycrcb[:, :, 1] <= 173) & (ycrcb[:, :, 2] >= 77) & (ycrcb[:, :, 2] <= 127)
+        skin_ratio = float(skin_mask.mean())
+        is_portrait_subject = bool(skin_ratio >= 0.03)
+
+        # 6. Hardware CMOS Sensor & Optical Bayer CFA Verification:
         # Authentic optical camera sensors (DSLR, smartphone, mirrorless) record photons
         # through silicon photodiodes and an RGGB Bayer color filter array.
         # This leaves a characteristic physical photon shot noise floor:
@@ -98,12 +104,13 @@ class SensorNoiseExtractor:
         # Synthetic AI generators (Midjourney, SD, DALL-E, 2D anime) lack physical CMOS sensors.
         is_camera_sensor = bool(1.5 <= flat_noise_std <= 7.0 and cfa_noise_std > 1.8)
         has_bokeh_blur = bool(flat_ratio >= 0.05)
-        is_portrait_bokeh = bool(is_camera_sensor and has_bokeh_blur)
+        # Computational portrait mode specifically blurs around a foreground portrait subject
+        is_portrait_bokeh = bool(is_camera_sensor and has_bokeh_blur and is_portrait_subject)
 
         if is_portrait_bokeh:
             sensor_finding = (
                 f"CMOS Sensor Verified (std={flat_noise_std:.2f}, cfa={cfa_noise_std:.2f}). "
-                f"Optical / Portrait Bokeh Blur Detected (flat={flat_ratio*100:.1f}%, lap_var={lap_var:.1f})."
+                f"Optical / Portrait Bokeh Blur Detected on Subject (skin={skin_ratio*100:.1f}%, flat={flat_ratio*100:.1f}%, lap_var={lap_var:.1f})."
             )
         elif is_camera_sensor:
             sensor_finding = (
@@ -119,7 +126,9 @@ class SensorNoiseExtractor:
         return {
             "is_camera_sensor": is_camera_sensor,
             "has_bokeh_blur": has_bokeh_blur,
+            "is_portrait_subject": is_portrait_subject,
             "is_portrait_bokeh": is_portrait_bokeh,
+            "skin_ratio": skin_ratio,
             "flat_noise_std": flat_noise_std,
             "cfa_noise_std": cfa_noise_std,
             "flat_ratio": flat_ratio,

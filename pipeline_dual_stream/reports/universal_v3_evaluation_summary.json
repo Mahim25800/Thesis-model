@@ -1,0 +1,122 @@
+{
+  "checkpoint": "models/universal_v3/best_model.pt",
+  "epoch": 23,
+  "synthbuster_cross_eval": {
+    "dalle2": {
+      "auc_hybrid": 0.766062,
+      "auc_dinov2": 0.7585080000000001,
+      "auc_physics": 0.690706,
+      "acc_hybrid": 0.5746666666666667,
+      "acc_dinov2": 0.5706666666666667,
+      "acc_physics": 0.5953333333333334,
+      "mean_alpha": 0.6697645051876704,
+      "synergy_delta": 0.00755399999999995
+    },
+    "dalle3": {
+      "auc_hybrid": 0.944474,
+      "auc_dinov2": 0.933109,
+      "auc_physics": 0.69966,
+      "acc_hybrid": 0.8386666666666667,
+      "acc_dinov2": 0.8213333333333334,
+      "acc_physics": 0.578,
+      "mean_alpha": 0.6862487161755562,
+      "synergy_delta": 0.01136500000000007
+    },
+    "firefly": {
+      "auc_hybrid": 0.728556,
+      "auc_dinov2": 0.7159140000000002,
+      "auc_physics": 0.67503,
+      "acc_hybrid": 0.5153333333333333,
+      "acc_dinov2": 0.5106666666666667,
+      "acc_physics": 0.5346666666666666,
+      "mean_alpha": 0.6786729334791501,
+      "synergy_delta": 0.01264199999999982
+    },
+    "glide": {
+      "auc_hybrid": 0.935876,
+      "auc_dinov2": 0.9270790000000001,
+      "auc_physics": 0.7559920000000001,
+      "acc_hybrid": 0.84,
+      "acc_dinov2": 0.8266666666666667,
+      "acc_physics": 0.664,
+      "mean_alpha": 0.6670195899208387,
+      "synergy_delta": 0.008796999999999944
+    },
+    "midjourney-v5": {
+      "auc_hybrid": 0.760792,
+      "auc_dinov2": 0.7523599999999999,
+      "auc_physics": 0.641798,
+      "acc_hybrid": 0.5353333333333333,
+      "acc_dinov2": 0.5533333333333333,
+      "acc_physics": 0.5133333333333333,
+      "mean_alpha": 0.6646003995140394,
+      "synergy_delta": 0.008432000000000106
+    },
+    "sd13": {
+      "auc_hybrid": 0.881572,
+      "auc_dinov2": 0.856769,
+      "auc_physics": 0.704906,
+      "acc_hybrid": 0.7226666666666667,
+      "acc_dinov2": 0.6926666666666667,
+      "acc_physics": 0.5726666666666667,
+      "mean_alpha": 0.6721121377845605,
+      "synergy_delta": 0.02480300000000002
+    },
+    "sd14": {
+      "auc_hybrid": 0.876456,
+      "auc_dinov2": 0.8530819999999999,
+      "auc_physics": 0.704816,
+      "acc_hybrid": 0.734,
+      "acc_dinov2": 0.6966666666666667,
+      "acc_physics": 0.5786666666666667,
+      "mean_alpha": 0.6739772972166538,
+      "synergy_delta": 0.023374000000000117
+    },
+    "sd2": {
+      "auc_hybrid": 0.9438559999999998,
+      "auc_dinov2": 0.9338239999999999,
+      "auc_physics": 0.828304,
+      "acc_hybrid": 0.8653333333333333,
+      "acc_dinov2": 0.8493333333333334,
+      "acc_physics": 0.7406666666666667,
+      "mean_alpha": 0.6535764783322812,
+      "synergy_delta": 0.01003199999999993
+    },
+    "sdxl": {
+      "auc_hybrid": 0.923752,
+      "auc_dinov2": 0.91015,
+      "auc_physics": 0.803184,
+      "acc_hybrid": 0.816,
+      "acc_dinov2": 0.7986666666666666,
+      "acc_physics": 0.7206666666666667,
+      "mean_alpha": 0.6598028432230155,
+      "synergy_delta": 0.013602000000000003
+    }
+  },
+  "mean_synthbuster_auc": 0.8623773333333333,
+  "mean_dino_auc": 0.848977222222222,
+  "mean_phys_auc": 0.7227106666666666,
+  "clean_real_fpr": 0.056,
+  "in_the_wild_results": {
+    "DSC03398.JPG (24MP DSLR Blur)": {
+      "prob_fake": 0.028629347681999207,
+      "verdict": "Authentic Camera Photo"
+    },
+    "Smartphone Portrait Clean": {
+      "prob_fake": 0.35,
+      "verdict": "Authentic Camera Photo"
+    },
+    "Catwoman Diffusion": {
+      "prob_fake": 0.7,
+      "verdict": "AI-Generated Image"
+    },
+    "Blue Bedroom (Anime Illustration PNG)": {
+      "prob_fake": 0.9113872647285461,
+      "verdict": "AI-Generated Image"
+    },
+    "Blue Bedroom JPG (Web Compressed)": {
+      "prob_fake": 0.9549548625946045,
+      "verdict": "AI-Generated Image"
+    }
+  }
+}

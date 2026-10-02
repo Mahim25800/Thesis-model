@@ -100,6 +100,7 @@ def create_demo(predictor: DualStreamPredictor):
             "Sensor Noise Residual": sensor_details.get("sensor_finding", "N/A"),
             "Hardware Sensor Verified": "Yes" if is_cam else "No",
             "Optical / Bokeh Blur": "Yes" if is_bokeh else "No",
+            "Portrait Subject Detected": "Yes" if sensor_details.get("portrait_subject_detected", False) else "No",
         }
 
         return verdict_html, confidence_chart, tech_details
@@ -140,7 +141,7 @@ def main():
     parser.add_argument(
         "--checkpoint",
         type=str,
-        default="G:/Thesis/pipeline_dual_stream/models/dual_stream_v2/best_model.pt",
+        default="G:/Thesis/pipeline_dual_stream/models/universal_v3/best_model.pt",
     )
     parser.add_argument("--port", type=int, default=7865)
     parser.add_argument("--share", action="store_true", help="Create public Gradio share link")
