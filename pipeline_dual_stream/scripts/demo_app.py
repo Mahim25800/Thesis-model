@@ -37,14 +37,16 @@ def create_demo(predictor: DualStreamPredictor):
         percentage = (prob_fake if is_fake else prob_real) * 100.0
 
         sensor_details = result.get("sensor_noise_details", {})
-        is_portrait = sensor_details.get("portrait_mode_detected", False)
+        is_cam = sensor_details.get("camera_sensor_verified", False)
+        is_bokeh = sensor_details.get("bokeh_blur_detected", False)
         finding = result.get("forensic_finding", "Multimodal Consensus")
 
-        portrait_badge = ""
-        if is_portrait and not is_fake:
-            portrait_badge = """
+        sensor_badge = ""
+        if is_cam and not is_fake:
+            extra = " (Optical Bokeh Detected)" if is_bokeh else ""
+            sensor_badge = f"""
             <div style="margin-top: 12px; display: inline-block; padding: 6px 16px; background-color: #dcfce7; color: #15803d; border-radius: 9999px; font-size: 0.95rem; font-weight: 700; border: 1px solid #86efac;">
-                📸 Computational Portrait Mode & CMOS Sensor Verified
+                📸 Hardware CMOS Sensor Verified{extra}
             </div>
             """
 
@@ -79,7 +81,7 @@ def create_demo(predictor: DualStreamPredictor):
                 <p style="color: #166534; margin-top: 8px; font-size: 1.1rem; font-weight: 500;">
                     (Probability AI-Generated: {prob_fake*100:.1f}%)
                 </p>
-                {portrait_badge}
+                {sensor_badge}
             </div>
             """
 
@@ -96,7 +98,8 @@ def create_demo(predictor: DualStreamPredictor):
             "Physics Consistency Score": f"{result['physics_prob_fake']*100:.1f}% fake",
             "Dynamic Trust Weight": result["trust_interpretation"],
             "Sensor Noise Residual": sensor_details.get("sensor_finding", "N/A"),
-            "Portrait Bokeh Detected": "Yes" if is_portrait else "No",
+            "Hardware Sensor Verified": "Yes" if is_cam else "No",
+            "Optical / Bokeh Blur": "Yes" if is_bokeh else "No",
         }
 
         return verdict_html, confidence_chart, tech_details

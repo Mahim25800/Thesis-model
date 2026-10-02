@@ -87,67 +87,42 @@ class SensorNoiseExtractor:
         cfa_noise_std = float(np.std(cfa_hp)) * 1000.0
 
         # 4. Global Sharpness (Laplacian Variance)
-        # Portrait mode photos with computational bokeh have shallow depth of field,
-        # leading to moderate global sharpness (lap_var < 450.0),
-        # whereas digital drawings and synthetic renders have crisp sharp line edges (lap_var > 700.0).
         lap_var = float(cv2.Laplacian(gray, cv2.CV_64F).var())
 
-        # 5. Color & Line Art Analysis (Distinguishes photos from 2D digital art/anime)
-        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-        sat = hsv[:, :, 1] / 255.0
-        val = hsv[:, :, 2] / 255.0
-
-        canny = cv2.Canny(gray, 50, 150)
-        dark_edges = (canny > 0) & (gray < 60)
-        lineart_fraction = float(np.sum(dark_edges) / (np.sum(canny > 0) + 1e-5))
-
-        # Color diversity across quantized 128x128 palette
-        small = cv2.resize(img, (128, 128))
-        unique_colors = len(np.unique(small.reshape(-1, 3), axis=0))
-        color_diversity = unique_colors / (128.0 * 128.0)
-
-        # 6. Photographic Domain Verification
-        is_photographic = (
-            color_diversity >= 0.65 and
-            float(np.mean(sat)) < 0.60 and
-            lineart_fraction < 0.15
-        )
-
-        # 7. Computational Portrait Mode & CMOS Sensor Signature
-        # Authentic smartphone portrait mode features:
-        # - Software depth-map bokeh blur (flat_ratio >= 0.05, lap_var < 450.0)
-        # - Physical CMOS sensor noise floor in flat/bokeh areas (2.0 <= flat_noise_std <= 6.5)
-        # - Bayer CFA color channel demosaicing residual (cfa_noise_std > 2.0)
-        # - Photographic spectrum without comic lineart
-        is_portrait_bokeh = (
-            is_photographic and
-            flat_ratio >= 0.05 and
-            2.0 <= flat_noise_std <= 6.5 and
-            cfa_noise_std > 2.0 and
-            lap_var < 450.0
-        )
+        # 5. Hardware CMOS Sensor & Optical Bayer CFA Verification:
+        # Authentic optical camera sensors (DSLR, smartphone, mirrorless) record photons
+        # through silicon photodiodes and an RGGB Bayer color filter array.
+        # This leaves a characteristic physical photon shot noise floor:
+        # - Flat region noise floor: 1.5 <= flat_noise_std <= 7.0
+        # - Bayer CFA demosaicing high-frequency residual: cfa_noise_std > 1.8
+        # Synthetic AI generators (Midjourney, SD, DALL-E, 2D anime) lack physical CMOS sensors.
+        is_camera_sensor = bool(1.5 <= flat_noise_std <= 7.0 and cfa_noise_std > 1.8)
+        has_bokeh_blur = bool(flat_ratio >= 0.05)
+        is_portrait_bokeh = bool(is_camera_sensor and has_bokeh_blur)
 
         if is_portrait_bokeh:
             sensor_finding = (
                 f"CMOS Sensor Verified (std={flat_noise_std:.2f}, cfa={cfa_noise_std:.2f}). "
-                f"Computational Portrait Mode Bokeh Detected (flat={flat_ratio*100:.1f}%, lap_var={lap_var:.1f})."
+                f"Optical / Portrait Bokeh Blur Detected (flat={flat_ratio*100:.1f}%, lap_var={lap_var:.1f})."
             )
-        elif is_photographic:
+        elif is_camera_sensor:
             sensor_finding = (
-                f"Natural Photographic Spectrum (diversity={color_diversity:.2f}, noise_std={flat_noise_std:.2f})."
+                f"CMOS Sensor Verified (std={flat_noise_std:.2f}, cfa={cfa_noise_std:.2f}). "
+                f"Natural Camera Photo (lap_var={lap_var:.1f})."
             )
         else:
             sensor_finding = (
-                f"Stylized / Non-Photographic Spectrum (lineart={lineart_fraction*100:.1f}%, sat={float(np.mean(sat)):.2f})."
+                f"Synthetic / Non-Camera Spectrum (flat_noise={flat_noise_std:.2f}, cfa={cfa_noise_std:.2f}). "
+                f"Lacks Physical CMOS Sensor Noise Floor."
             )
 
         return {
+            "is_camera_sensor": is_camera_sensor,
+            "has_bokeh_blur": has_bokeh_blur,
             "is_portrait_bokeh": is_portrait_bokeh,
-            "is_photographic": is_photographic,
             "flat_noise_std": flat_noise_std,
             "cfa_noise_std": cfa_noise_std,
             "flat_ratio": flat_ratio,
-            "color_diversity": color_diversity,
-            "lineart_fraction": lineart_fraction,
+            "lap_var": lap_var,
             "sensor_finding": sensor_finding,
         }
