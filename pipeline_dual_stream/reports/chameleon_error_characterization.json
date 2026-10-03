@@ -1,0 +1,369 @@
+{
+  "summary": {
+    "total_real": 14863,
+    "total_fake": 11170,
+    "false_positives_count": 4557,
+    "false_positives_rate_pct": 17.50470556601237,
+    "false_negatives_count": 3330,
+    "false_negatives_rate_pct": 12.791456996888565,
+    "stream_disagreement_count": 12184,
+    "stream_disagreement_pct": 46.80213575077786,
+    "disagreement_accuracy_hybrid": 69.17,
+    "disagreement_accuracy_dinov2": 67.68,
+    "disagreement_accuracy_physics": 32.32
+  },
+  "top_false_positives_real_as_fake": [
+    {
+      "filename": "314c99eb-9d6c-4254-aa29-4b866d739513.jpg",
+      "prob_final": 0.999988317489624,
+      "prob_semantic": 0.9999953508377075,
+      "prob_physics": 0.2566647529602051,
+      "alpha": 0.9197762608528137
+    },
+    {
+      "filename": "8faad9aa-8921-4941-9778-301a910a2408.jpg",
+      "prob_final": 0.9999850988388062,
+      "prob_semantic": 0.9999969005584717,
+      "prob_physics": 0.33379900455474854,
+      "alpha": 0.8627158403396606
+    },
+    {
+      "filename": "e64f87b4-27e4-4b51-a9e3-27d1df200fce.jpg",
+      "prob_final": 0.9999828338623047,
+      "prob_semantic": 0.9999916553497314,
+      "prob_physics": 0.2246745228767395,
+      "alpha": 0.9347095489501953
+    },
+    {
+      "filename": "35dba1e4-d242-4776-b210-48643eae7820.jpg",
+      "prob_final": 0.9999794960021973,
+      "prob_semantic": 0.9999964237213135,
+      "prob_physics": 0.2912476360797882,
+      "alpha": 0.8486549854278564
+    },
+    {
+      "filename": "b86296d3-a1a4-46bc-bd11-163b8e7b6312.jpg",
+      "prob_final": 0.9999767541885376,
+      "prob_semantic": 0.999994158744812,
+      "prob_physics": 0.08216492086648941,
+      "alpha": 0.8908279538154602
+    },
+    {
+      "filename": "253eb16a-32bb-4d1c-8383-abf6f57f1f21.jpg",
+      "prob_final": 0.9999756813049316,
+      "prob_semantic": 0.9999934434890747,
+      "prob_physics": 0.1513332575559616,
+      "alpha": 0.8891080021858215
+    },
+    {
+      "filename": "c505af88-33fc-4404-be30-8908e527926f.jpg",
+      "prob_final": 0.9999752044677734,
+      "prob_semantic": 0.9999942779541016,
+      "prob_physics": 0.40045493841171265,
+      "alpha": 0.8615715503692627
+    },
+    {
+      "filename": "ac9cc0bb-47cb-44c9-b8a6-f44ca2fe2830.jpg",
+      "prob_final": 0.999971866607666,
+      "prob_semantic": 0.9999872446060181,
+      "prob_physics": 0.23282499611377716,
+      "alpha": 0.92524254322052
+    },
+    {
+      "filename": "2ce21a36-c7f1-4740-8219-5a9e3627a11a.jpg",
+      "prob_final": 0.9999557733535767,
+      "prob_semantic": 0.9999810457229614,
+      "prob_physics": 0.16633692383766174,
+      "alpha": 0.9198710918426514
+    },
+    {
+      "filename": "1ae45217-e489-434e-9b6b-cb85bd4181b2.jpg",
+      "prob_final": 0.9999537467956543,
+      "prob_semantic": 0.9999866485595703,
+      "prob_physics": 0.08056607842445374,
+      "alpha": 0.8944543600082397
+    },
+    {
+      "filename": "d9491d85-b3d2-4f40-9093-d9107d34ccf4.jpg",
+      "prob_final": 0.9999523162841797,
+      "prob_semantic": 0.9999927282333374,
+      "prob_physics": 0.46513208746910095,
+      "alpha": 0.813310980796814
+    },
+    {
+      "filename": "8d5ba1ef-2853-4bbe-9acb-b0a332af3ce3.jpg",
+      "prob_final": 0.9999512434005737,
+      "prob_semantic": 0.999984622001648,
+      "prob_physics": 0.11750197410583496,
+      "alpha": 0.8975067734718323
+    },
+    {
+      "filename": "20a54496-6840-4262-8c44-e6ac6e3c19a6.jpg",
+      "prob_final": 0.9999483823776245,
+      "prob_semantic": 0.9999797344207764,
+      "prob_physics": 0.1052004024386406,
+      "alpha": 0.9160820245742798
+    },
+    {
+      "filename": "e561b702-f49c-4b61-9310-85748fba27e5.jpg",
+      "prob_final": 0.9999479055404663,
+      "prob_semantic": 0.9999895095825195,
+      "prob_physics": 0.35145866870880127,
+      "alpha": 0.8426209092140198
+    },
+    {
+      "filename": "dbe03553-2ce7-4172-94eb-e8b9688465be.jpg",
+      "prob_final": 0.9999475479125977,
+      "prob_semantic": 0.9999785423278809,
+      "prob_physics": 0.2260231375694275,
+      "alpha": 0.9114631414413452
+    },
+    {
+      "filename": "fa90a301-c24c-4bc4-94dc-6be496e68d5a.jpg",
+      "prob_final": 0.9999465942382812,
+      "prob_semantic": 0.9999736547470093,
+      "prob_physics": 0.10413651913404465,
+      "alpha": 0.9345259070396423
+    },
+    {
+      "filename": "872e5ccc-ab8a-4058-b5a4-97e00bda4e70.jpg",
+      "prob_final": 0.999944806098938,
+      "prob_semantic": 0.9999985694885254,
+      "prob_physics": 0.5696811079978943,
+      "alpha": 0.6787188053131104
+    },
+    {
+      "filename": "b9c2c191-4345-4ea0-9ffc-c2bb9ffc894d.jpg",
+      "prob_final": 0.9999414682388306,
+      "prob_semantic": 0.9999785423278809,
+      "prob_physics": 0.13568668067455292,
+      "alpha": 0.9077914953231812
+    },
+    {
+      "filename": "f371d860-d9a2-447a-8f97-8724a620e30c.jpg",
+      "prob_final": 0.9999368190765381,
+      "prob_semantic": 0.9999657869338989,
+      "prob_physics": 0.31368789076805115,
+      "alpha": 0.9333502054214478
+    },
+    {
+      "filename": "53809d40-5d04-47d0-9827-a7584dae3e68.jpg",
+      "prob_final": 0.9999349117279053,
+      "prob_semantic": 0.9999710321426392,
+      "prob_physics": 0.37097135186195374,
+      "alpha": 0.9112367033958435
+    },
+    {
+      "filename": "ac510b0d-60a8-4135-aa19-afb888dd6388.jpg",
+      "prob_final": 0.9999315738677979,
+      "prob_semantic": 0.9999725818634033,
+      "prob_physics": 0.412322461605072,
+      "alpha": 0.8981632590293884
+    },
+    {
+      "filename": "8c4960ad-0aa9-4a67-8353-6892dcf6a00e.jpg",
+      "prob_final": 0.999930739402771,
+      "prob_semantic": 0.9999725818634033,
+      "prob_physics": 0.09551841765642166,
+      "alpha": 0.914747416973114
+    },
+    {
+      "filename": "7e9681ed-4ff6-4a56-9b06-313b997281eb.jpg",
+      "prob_final": 0.9999246597290039,
+      "prob_semantic": 0.9999557733535767,
+      "prob_physics": 0.09006549417972565,
+      "alpha": 0.9492101669311523
+    },
+    {
+      "filename": "feff41c4-ca25-4ebb-8246-302d9847f698.jpg",
+      "prob_final": 0.999923825263977,
+      "prob_semantic": 0.9999699592590332,
+      "prob_physics": 0.24873583018779755,
+      "alpha": 0.9032965302467346
+    },
+    {
+      "filename": "431ba6c4-a720-428a-b719-5b3669c76f1e.jpg",
+      "prob_final": 0.9999223947525024,
+      "prob_semantic": 0.9999791383743286,
+      "prob_physics": 0.1397194266319275,
+      "alpha": 0.8930554389953613
+    }
+  ],
+  "top_false_negatives_fake_as_real": [
+    {
+      "filename": "3688531e-e449-4d8d-a4c2-479ed8335ff2.jpg",
+      "prob_final": 1.699542008282151e-05,
+      "prob_semantic": 6.4274363467120565e-06,
+      "prob_physics": 0.6871265172958374,
+      "alpha": 0.910510778427124
+    },
+    {
+      "filename": "fb79c030-7967-47b8-a762-6f1a02ff1c4a.jpg",
+      "prob_final": 3.9591104723513126e-05,
+      "prob_semantic": 1.1439612535468768e-05,
+      "prob_physics": 0.5967749953269958,
+      "alpha": 0.8745235204696655
+    },
+    {
+      "filename": "4fb65a22-fd38-40f3-bd33-c51eb43b11ec.jpg",
+      "prob_final": 4.207621532259509e-05,
+      "prob_semantic": 1.1339327102177776e-05,
+      "prob_physics": 0.9004871845245361,
+      "alpha": 0.8880748748779297
+    },
+    {
+      "filename": "1ea9c22c-6450-47d8-a79f-43a966e4f571.jpg",
+      "prob_final": 5.5371107009705156e-05,
+      "prob_semantic": 2.2609714505961165e-05,
+      "prob_physics": 0.6913657784461975,
+      "alpha": 0.9069666266441345
+    },
+    {
+      "filename": "e7468e3c-3ff8-412f-8db8-a8f8e2ac50a4.jpg",
+      "prob_final": 6.039353320375085e-05,
+      "prob_semantic": 1.660502448430634e-06,
+      "prob_physics": 0.0878281220793724,
+      "alpha": 0.6047343611717224
+    },
+    {
+      "filename": "71618e8b-0d99-4b49-b980-27e93de83f4f.jpg",
+      "prob_final": 6.700988888042048e-05,
+      "prob_semantic": 3.243958417442627e-05,
+      "prob_physics": 0.7913820147514343,
+      "alpha": 0.9259256720542908
+    },
+    {
+      "filename": "d4d49f72-89b9-41c8-b4f0-602709cc1a0d.jpg",
+      "prob_final": 7.424759678542614e-05,
+      "prob_semantic": 2.6690488084568642e-05,
+      "prob_physics": 0.8155725598335266,
+      "alpha": 0.8991188406944275
+    },
+    {
+      "filename": "2a465343-1a6c-4b89-9472-393d0c45e059.jpg",
+      "prob_final": 0.00010073609155369923,
+      "prob_semantic": 3.051971725653857e-05,
+      "prob_physics": 0.5706357359886169,
+      "alpha": 0.8643843531608582
+    },
+    {
+      "filename": "d9c25f53-7804-4ae4-8263-656c2fe589e0.jpg",
+      "prob_final": 0.00010750599903985858,
+      "prob_semantic": 3.9907310565467924e-05,
+      "prob_physics": 0.5814496874809265,
+      "alpha": 0.8845174908638
+    },
+    {
+      "filename": "4381b14e-5f1a-4d52-8eaa-96f9a075de40.jpg",
+      "prob_final": 0.00011184073082404211,
+      "prob_semantic": 5.951513958279975e-05,
+      "prob_physics": 0.7067680358886719,
+      "alpha": 0.9277586340904236
+    },
+    {
+      "filename": "db27b3d9-a597-41a9-8250-a88a2f49eb92.jpg",
+      "prob_final": 0.00011232391989324242,
+      "prob_semantic": 4.811287726624869e-05,
+      "prob_physics": 0.725247323513031,
+      "alpha": 0.9061859846115112
+    },
+    {
+      "filename": "c850b2d3-7bb7-419a-8b9b-9d27e3aac004.jpg",
+      "prob_final": 0.00011693650594679639,
+      "prob_semantic": 4.70209852210246e-05,
+      "prob_physics": 0.8985431790351868,
+      "alpha": 0.9175947308540344
+    },
+    {
+      "filename": "7ce2f197-5397-43d5-9c5a-bb736898c6a9.jpg",
+      "prob_final": 0.00011710511171258986,
+      "prob_semantic": 4.9017533456208184e-05,
+      "prob_physics": 0.8901705741882324,
+      "alpha": 0.914117157459259
+    },
+    {
+      "filename": "d6daf3ea-bdef-49a5-b074-a4caf3e6343c.jpg",
+      "prob_final": 0.00012024043098790571,
+      "prob_semantic": 4.3795596866402775e-05,
+      "prob_physics": 0.6800636053085327,
+      "alpha": 0.8866947889328003
+    },
+    {
+      "filename": "75ecbda6-2d00-4f76-af03-3f24af98e347.jpg",
+      "prob_final": 0.0001263512676814571,
+      "prob_semantic": 3.093000850640237e-05,
+      "prob_physics": 0.8901104927062988,
+      "alpha": 0.8672263622283936
+    },
+    {
+      "filename": "e11fd170-7b5b-449f-8703-9f61ad2afd54.jpg",
+      "prob_final": 0.00012827003956772387,
+      "prob_semantic": 4.6608747652499005e-05,
+      "prob_physics": 0.8925016522407532,
+      "alpha": 0.9008883237838745
+    },
+    {
+      "filename": "c5721e41-6b98-4826-8035-12e00da7e207.jpg",
+      "prob_final": 0.00013110003783367574,
+      "prob_semantic": 3.781208215514198e-05,
+      "prob_physics": 0.7409403324127197,
+      "alpha": 0.8671259880065918
+    },
+    {
+      "filename": "c0570ac0-a7ee-4469-964c-7e160fcd0aef.jpg",
+      "prob_final": 0.00013192706683184952,
+      "prob_semantic": 6.70486842864193e-05,
+      "prob_physics": 0.6738480925559998,
+      "alpha": 0.9199883341789246
+    },
+    {
+      "filename": "fad28b72-3815-43a3-9eb9-0530ce29f95c.jpg",
+      "prob_final": 0.00014285853831097484,
+      "prob_semantic": 5.3262825531419367e-05,
+      "prob_physics": 0.6323082447052002,
+      "alpha": 0.8840068578720093
+    },
+    {
+      "filename": "5ee3107a-2ce1-428b-b8d7-1f2833c661a3.jpg",
+      "prob_final": 0.00015344441635534167,
+      "prob_semantic": 3.6645797081291676e-05,
+      "prob_physics": 0.4914035201072693,
+      "alpha": 0.8275343179702759
+    },
+    {
+      "filename": "82547ea7-3151-463b-a17e-38891b23cd55.jpg",
+      "prob_final": 0.0001690420467639342,
+      "prob_semantic": 8.219719165936112e-05,
+      "prob_physics": 0.7197744250297546,
+      "alpha": 0.9149019718170166
+    },
+    {
+      "filename": "adb1666f-8b2e-49a5-a863-da89f2839d39.jpg",
+      "prob_final": 0.0001806451182346791,
+      "prob_semantic": 8.40890861582011e-05,
+      "prob_physics": 0.7675784230232239,
+      "alpha": 0.9121220707893372
+    },
+    {
+      "filename": "1a81b998-ba6f-42d8-81e6-e7bf7b345be5.jpg",
+      "prob_final": 0.00018127093790099025,
+      "prob_semantic": 6.614555604755878e-05,
+      "prob_physics": 0.8594112396240234,
+      "alpha": 0.922528088092804
+    },
+    {
+      "filename": "b1b9e211-9e00-416f-9ae5-1a8f3fb4400f.jpg",
+      "prob_final": 0.00018266959523316473,
+      "prob_semantic": 5.180198968446348e-06,
+      "prob_physics": 0.12271547317504883,
+      "alpha": 0.5721606612205505
+    },
+    {
+      "filename": "30de6853-dea5-4d5a-9198-b6578db0d865.jpg",
+      "prob_final": 0.00018310188897885382,
+      "prob_semantic": 7.082738738972694e-05,
+      "prob_physics": 0.8604224920272827,
+      "alpha": 0.9027043581008911
+    }
+  ]
+}
