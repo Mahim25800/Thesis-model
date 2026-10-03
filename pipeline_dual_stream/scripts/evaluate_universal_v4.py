@@ -105,6 +105,7 @@ def evaluate_stream(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", type=str, default="models/universal_v4/best_model.pt")
+    parser.add_argument("--output", type=str, default="reports/universal_v4_evaluation_summary.json")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
 
@@ -249,6 +250,7 @@ def main():
     print("SECTION 2: INDEPENDENT HELD-OUT REAL PORTRAIT BENCHMARK (400 REAL CELEBA PHOTOS)")
     print("Tests whether the model incorrectly flags real human faces without heuristic overrides:")
     celeba_test_path = Path("data/universal_v4/celeba_portraits_test.pt")
+    portrait_results = None
     if celeba_test_path.exists():
         c_test = torch.load(celeba_test_path, map_location="cpu", weights_only=True)
         c_pf = apply_standardizer(c_test["physics_features"], standardizer).to(args.device)
@@ -272,12 +274,26 @@ def main():
             print(f"  Hybrid v4 Pure Neural False Positive Rate: {c_fpr*100:.2f}% (Mean Fake Prob: {c_probs.mean():.4f})")
             print(f"  Portrait Real Classification Accuracy: {(1.0 - c_fpr)*100:.2f}%")
 
+            portrait_results = {
+                "num_samples": int(len(c_probs)),
+                "fpr_hybrid": float(c_fpr),
+                "fpr_dinov2": float(c_sem_fpr),
+                "fpr_physics": float(c_phys_fpr),
+                "accuracy_hybrid": float(1.0 - c_fpr),
+                "accuracy_dinov2": float(1.0 - c_sem_fpr),
+                "accuracy_physics": float(1.0 - c_phys_fpr),
+                "mean_fake_prob_hybrid": float(c_probs.mean()),
+                "mean_fake_prob_dinov2": float(c_sem_probs.mean()),
+                "mean_fake_prob_physics": float(c_phys_probs.mean()),
+            }
+
     # SECTION 3: BLUR SENSITIVITY STRESS TEST ON HELD-OUT RAISE PHOTOS
     print("\n" + "=" * 80)
     print("SECTION 3: OPTICAL BLUR SENSITIVITY STRESS TEST ON HELD-OUT RAISE REAL CAMERA PHOTOS")
     print(f"{'Blur Condition':<22} | {'Real Photos':<12} | {'False Positive Rate':<22} | {'Mean Fake Prob':<15}")
     print("-" * 80)
 
+    blur_results = {}
     with torch.no_grad():
         b_pf = apply_standardizer(r_pf, standardizer).to(args.device)
         b_pc = r_pc.to(args.device)
@@ -289,6 +305,10 @@ def main():
         fpr_clean = float((probs_clean >= 0.5).mean())
         mean_p_clean = float(probs_clean.mean())
         print(f"{'Clean (No Blur)':<22} | {len(r_lbl):<12} | {fpr_clean*100:<21.2f}% | {mean_p_clean:<15.4f}")
+        blur_results["clean"] = {
+            "fpr": float(fpr_clean),
+            "mean_fake_prob": float(mean_p_clean),
+        }
 
         for sigma in [1.0, 2.0, 3.0]:
             noise_scale = sigma * 0.02
@@ -299,9 +319,52 @@ def main():
             fpr_blur = float((probs_blur >= 0.5).mean())
             mean_p_blur = float(probs_blur.mean())
             print(f"{f'Gaussian Blur sigma={sigma:.1f}':<22} | {len(r_lbl):<12} | {fpr_blur*100:<21.2f}% | {mean_p_blur:<15.4f}")
+            blur_results[f"gaussian_blur_sigma_{sigma:.1f}"] = {
+                "fpr": float(fpr_blur),
+                "mean_fake_prob": float(mean_p_blur),
+            }
 
     print("=" * 80)
-    print("Evaluation Complete!")
+
+    # Save complete evaluation results to JSON
+    output_path = Path(args.output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    summary_data = {
+        "checkpoint": args.checkpoint,
+        "epoch": ckpt.get("epoch"),
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "unseen_generators": {
+            "per_generator": unseen_results,
+            "mean_auc_hybrid": float(np.mean(u_hyb)),
+            "mean_auc_dinov2": float(np.mean(u_dino)),
+            "mean_auc_physics": float(np.mean(u_phys)),
+            "mean_synergy_delta": float(np.mean(u_deltas)),
+            "all_positive_synergy": bool(all(d > 0 for d in u_deltas)),
+        },
+        "infamily_generators": {
+            "per_generator": infamily_results,
+            "mean_auc_hybrid": float(np.mean(f_hyb)),
+            "mean_auc_dinov2": float(np.mean(f_dino)),
+            "mean_auc_physics": float(np.mean(f_phys)),
+            "mean_synergy_delta": float(np.mean(f_deltas)),
+            "all_positive_synergy": bool(all(d > 0 for d in f_deltas)),
+        },
+        "overall_summary": {
+            "all_9_generators": {**unseen_results, **infamily_results},
+            "mean_auc_hybrid": float(np.mean(u_hyb + f_hyb)),
+            "mean_auc_dinov2": float(np.mean(u_dino + f_dino)),
+            "mean_auc_physics": float(np.mean(u_phys + f_phys)),
+            "mean_synergy_delta": float(np.mean(u_deltas + f_deltas)),
+            "positive_synergy_count": f"{sum(1 for d in u_deltas + f_deltas if d > 0)}/9",
+        },
+        "held_out_real_portraits": portrait_results,
+        "blur_sensitivity_stress_test": blur_results,
+    }
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(summary_data, f, indent=2)
+
+    print(f"Evaluation Complete! Results successfully saved to {output_path.resolve()}")
 
 
 if __name__ == "__main__":
