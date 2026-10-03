@@ -46,8 +46,10 @@ Thumbs.db
 **/cache_*/
 pipeline_40k/data/cache_*/
 pipeline_40k/data/external_*/
-pipeline_dual_stream/data/*.pt
-pipeline_dual_stream/data/*.png
+*.parquet
+pipeline_dual_stream/data/
+pipeline_dual_stream/models/**/*.pt
+pipeline_dual_stream/models/**/*.pth
 
 # Temporary & Log Files
 *.tmp

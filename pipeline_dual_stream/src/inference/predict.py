@@ -27,7 +27,7 @@ class DualStreamPredictor:
 
     def __init__(
         self,
-        checkpoint_path: Union[str, Path] = "G:/Thesis/pipeline_dual_stream/models/universal_v3/best_model.pt",
+        checkpoint_path: Union[str, Path] = "G:/Thesis/pipeline_dual_stream/models/universal_v4/best_model.pt",
         dsine_checkpoint: Union[str, Path] = "G:/Thesis/pipeline_40k/models/normal_estimators/dsine/exp002_kappa/dsine.pt",
         device: Optional[str] = None,
     ):
@@ -150,37 +150,13 @@ class DualStreamPredictor:
         has_dir_light = sensor_info.get("has_directional_light", False)
         dir_corr = sensor_info.get("directional_correlation", 0.0)
 
-        # Universal Forensic Decision Engine:
-        # 1. Physical Illumination & Surface Normal Violation (Catwoman Protection):
-        if mean_quad >= 0.70 and not is_cam:
-            prob_final = max(raw_prob_final, 0.70)
-            forensic_reason = "Physical Illumination / Surface Normal Violation"
-
-        # 2. Authentic Camera Portrait & Ambient / Directional Lighting Protection:
-        # Applies exclusively to genuine camera portraits with verified hardware CMOS sensor,
-        # natural human skin tones, and optical bokeh/defocus:
-        # - Case A: Directional lighting (window/sun) with smooth monotonic gradient (has_dir_light)
-        # - Case B: Standard uniform computational portrait mode (prob_phys < 0.50)
-        # - Case C: Natural outdoor/indoor ambient daylight where outdoor foliage or architecture
-        #           gives moderate surface normal variance (prob_phys < 0.80)
-        elif is_bokeh and is_cam and is_portrait_subject and (prob_phys < 0.80 or has_dir_light) and raw_prob_final > 0.50:
-            if has_dir_light:
-                prob_final = min(raw_prob_final, 0.20)
-                forensic_reason = f"Authentic Camera Photo (CMOS Sensor & Coherent Directional Lighting Verified, r={dir_corr:+.2f})"
-            elif prob_phys < 0.50:
-                prob_final = min(raw_prob_final, 0.35)
-                forensic_reason = "Authentic Camera Photo (Computational Portrait Mode & CMOS Sensor Verified)"
-            else:
-                prob_final = min(raw_prob_final, 0.25)
-                forensic_reason = f"Authentic Camera Photo (CMOS Sensor & Natural Ambient Lighting Verified, phys={prob_phys*100:.1f}%)"
-
-        # 3. Direct Universal Dual-Stream Neural Decision:
+        # Pure Neural Decision: The verdict and confidence are directly output
+        # by the trained Dual-Stream Cross-Attention Network, without any hand-coded
+        # probability overrides or post-hoc threshold hacks.
+        if prob_final < 0.50:
+            forensic_reason = "Authentic Camera Photo (Cross-Attended Physical & Semantic Consistency Verified)"
         else:
-            prob_final = raw_prob_final
-            if prob_final < 0.50:
-                forensic_reason = "Authentic Camera Photo (Physical Consistency & Camera Invariants Verified)"
-            else:
-                forensic_reason = "AI-Generated Image (Synthetic Frequency & Generator Invariant Anomaly)"
+            forensic_reason = "AI-Generated Image (Physical & Semantic Invariant Anomaly Detected)"
 
         return {
             "verdict": "AI-Generated Image" if prob_final >= 0.5 else "Authentic Camera Photo",

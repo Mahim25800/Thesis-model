@@ -3,13 +3,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.inference.predict import DualStreamPredictor
 
-p = DualStreamPredictor(checkpoint_path='models/dual_stream_v2/best_model.pt')
+p = DualStreamPredictor(checkpoint_path='models/universal_v4/best_model.pt')
 imgs = [
-    ('Smartphone Clean', 'data/test_smartphone_portrait_clean.png'),
-    ('Smartphone Crop', 'data/test_smartphone_portrait.png'),
-    ('Blue Bedroom Anime', 'data/test_blue_bedroom.png'),
+    ('Smartphone Clean Real', 'data/test_smartphone_portrait_clean.png'),
+    ('Asian Woman Outdoor Real', 'data/test_asian_woman_outdoor.jpg'),
+    ('Blue Bedroom Anime AI', 'data/test_blue_bedroom.png'),
     ('Catwoman AI', 'data/catwoman_extracted.png'),
-    ('Catwoman Fence', 'data/test_catwoman_fence.png'),
+    ('Catwoman Fence AI', 'data/test_catwoman_fence.png'),
 ]
 
 for name, path in imgs:
