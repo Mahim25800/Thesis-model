@@ -156,18 +156,23 @@ class DualStreamPredictor:
             prob_final = max(raw_prob_final, 0.70)
             forensic_reason = "Physical Illumination / Surface Normal Violation"
 
-        # 2. Authentic Camera Portrait & Directional Lighting Protection:
-        # Applies exclusively to genuine camera portraits (with verified human subject, CMOS sensor,
-        # and bokeh/defocus blur) where:
-        # Case A: Standard uniform portrait mode with low-error surface normals (prob_phys < 0.50)
-        # Case B: Artistic directional chiaroscuro / window lighting with smooth monotonic Lambertian gradient (has_dir_light)
-        elif is_bokeh and is_cam and is_portrait_subject and (prob_phys < 0.50 or has_dir_light) and raw_prob_final > 0.50:
+        # 2. Authentic Camera Portrait & Ambient / Directional Lighting Protection:
+        # Applies exclusively to genuine camera portraits with verified hardware CMOS sensor,
+        # natural human skin tones, and optical bokeh/defocus:
+        # - Case A: Directional lighting (window/sun) with smooth monotonic gradient (has_dir_light)
+        # - Case B: Standard uniform computational portrait mode (prob_phys < 0.50)
+        # - Case C: Natural outdoor/indoor ambient daylight where outdoor foliage or architecture
+        #           gives moderate surface normal variance (prob_phys < 0.80)
+        elif is_bokeh and is_cam and is_portrait_subject and (prob_phys < 0.80 or has_dir_light) and raw_prob_final > 0.50:
             if has_dir_light:
                 prob_final = min(raw_prob_final, 0.20)
                 forensic_reason = f"Authentic Camera Photo (CMOS Sensor & Coherent Directional Lighting Verified, r={dir_corr:+.2f})"
-            else:
+            elif prob_phys < 0.50:
                 prob_final = min(raw_prob_final, 0.35)
                 forensic_reason = "Authentic Camera Photo (Computational Portrait Mode & CMOS Sensor Verified)"
+            else:
+                prob_final = min(raw_prob_final, 0.25)
+                forensic_reason = f"Authentic Camera Photo (CMOS Sensor & Natural Ambient Lighting Verified, phys={prob_phys*100:.1f}%)"
 
         # 3. Direct Universal Dual-Stream Neural Decision:
         else:

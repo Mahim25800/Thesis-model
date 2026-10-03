@@ -98,6 +98,10 @@
   "mean_phys_auc": 0.7227106666666666,
   "clean_real_fpr": 0.056,
   "in_the_wild_results": {
+    "Asian Woman Outdoor (Ambient Daylight)": {
+      "prob_fake": 0.25,
+      "verdict": "Authentic Camera Photo"
+    },
     "Toddler Photo (Directional Window Light)": {
       "prob_fake": 0.2,
       "verdict": "Authentic Camera Photo"

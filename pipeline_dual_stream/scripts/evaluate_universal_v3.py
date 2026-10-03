@@ -226,6 +226,11 @@ def main():
 
     wild_tests = [
         {
+            "name": "Asian Woman Outdoor (Ambient Daylight)",
+            "path": "data/test_asian_woman_outdoor.jpg",
+            "gt": "Real Camera",
+        },
+        {
             "name": "Toddler Photo (Directional Window Light)",
             "path": r"C:\Users\laptop villa\.gemini\antigravity\brain\b7cb5a33-a10e-4028-a138-fa394175e4ff\.user_uploaded\media_1790960672770.jpg",
             "gt": "Real Camera",
