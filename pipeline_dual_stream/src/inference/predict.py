@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Dict, Optional, Tuple, Union
 
 import numpy as np
+import cv2
 import torch
 from PIL import Image
 
@@ -81,6 +82,7 @@ class DualStreamPredictor:
     def predict_image(
         self,
         image_input: Union[str, Path, Image.Image, np.ndarray],
+        return_heatmaps: bool = True,
     ) -> Dict[str, Union[float, str, dict]]:
         """Run full dual-stream inference with explainable breakdown.
         
@@ -158,6 +160,51 @@ class DualStreamPredictor:
         else:
             forensic_reason = "AI-Generated Image (Physical & Semantic Invariant Anomaly Detected)"
 
+        # Generate Explainable Forensic Heatmap & 3D Surface Normal Geometry Map
+        forensic_heatmap = None
+        surface_normal_map = None
+
+        if return_heatmaps:
+            try:
+                # 1. 3D Surface Normal Geometry Map (DSINE Reconstruction)
+                _, normals, _ = self.physics_extractor.normals._estimate_fields(np.array(pil_img))
+                normal_rgb = ((normals + 1.0) / 2.0 * 255.0).clip(0, 255).astype(np.uint8)
+                surface_normal_map = Image.fromarray(normal_rgb)
+
+                # 2. Patch-Level Semantic Anomaly Map (16x16 grid)
+                with torch.no_grad():
+                    _, patch_tok = self.model.semantic_stream.extract_patch_tokens(img_tensor)
+                    patch_logits = self.model.fusion_head.sem_head(patch_tok)
+                    patch_probs = torch.sigmoid(patch_logits).squeeze(-1).squeeze(0).view(16, 16).cpu().numpy()
+
+                # 3. Combine with Quadrant Physical Discrepancies
+                quad_grid = np.array([
+                    [discrepancies[0], discrepancies[1]],
+                    [discrepancies[2], discrepancies[3]]
+                ], dtype=np.float32)
+                quad_upsampled = cv2.resize(quad_grid, (16, 16), interpolation=cv2.INTER_LINEAR)
+                raw_anomaly = 0.5 * patch_probs + 0.5 * quad_upsampled
+
+                # Scale map according to overall verdict:
+                # - Real Photo: map is scaled down into cool blue/cyan tones (consistent camera invariants)
+                # - AI Image: map scales up into warm orange/red tones highlighting anomalous regions
+                if prob_final < 0.50:
+                    calib = raw_anomaly * (prob_final / 0.50) * 0.35
+                else:
+                    norm_anom = (raw_anomaly - raw_anomaly.min()) / (raw_anomaly.max() - raw_anomaly.min() + 1e-6)
+                    calib = 0.40 + 0.60 * norm_anom * min(1.0, prob_final)
+
+                calib_full = cv2.resize(calib, (pil_img.width, pil_img.height), interpolation=cv2.INTER_CUBIC)
+                calib_full = cv2.GaussianBlur(calib_full, (0, 0), sigmaX=4)
+                calib_norm = np.clip(calib_full, 0.0, 1.0)
+
+                h_color = cv2.applyColorMap((calib_norm * 255).astype(np.uint8), cv2.COLORMAP_JET)
+                h_color = cv2.cvtColor(h_color, cv2.COLOR_BGR2RGB)
+                blended = cv2.addWeighted(np.array(pil_img), 0.55, h_color, 0.45, 0)
+                forensic_heatmap = Image.fromarray(blended)
+            except Exception as e:
+                print(f"Forensic heatmap warning: {e}")
+
         return {
             "verdict": "AI-Generated Image" if prob_final >= 0.5 else "Authentic Camera Photo",
             "confidence": f"{max(prob_final, 1.0 - prob_final) * 100:.1f}%",
@@ -170,6 +217,8 @@ class DualStreamPredictor:
             ),
             "forensic_finding": forensic_reason,
             "quadrant_inconsistencies": quad_dict,
+            "forensic_heatmap": forensic_heatmap,
+            "surface_normal_map": surface_normal_map,
             "sensor_noise_details": {
                 "camera_sensor_verified": is_cam,
                 "bokeh_blur_detected": is_bokeh,

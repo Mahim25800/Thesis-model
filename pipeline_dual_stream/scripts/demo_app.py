@@ -1,5 +1,6 @@
-"""Clean & Streamlined Web Application for AI Image Detection.
-Displays a clear Verdict (AI-Generated vs Real) and the exact Confidence Percentage.
+"""Clean & Streamlined Web Application for AI Image Detection with Explainability Heatmaps.
+Displays a clear Verdict (AI-Generated vs Real), Confidence Percentage,
+and Spatial Multimodal Anomaly Heatmaps + 3D Surface Geometry.
 Runs on http://127.0.0.1:7865
 """
 
@@ -27,9 +28,11 @@ def create_demo(predictor: DualStreamPredictor):
                 "<div style='padding: 20px; text-align: center; color: #6b7280; font-size: 1.2rem;'>Please upload an image to analyze.</div>",
                 None,
                 None,
+                None,
+                None,
             )
 
-        result = predictor.predict_image(img)
+        result = predictor.predict_image(img, return_heatmaps=True)
         prob_fake = result["final_prob_fake"]
         prob_real = 1.0 - prob_fake
 
@@ -90,6 +93,9 @@ def create_demo(predictor: DualStreamPredictor):
             "Real Camera": prob_real,
         }
 
+        heatmap_img = result.get("forensic_heatmap")
+        normal_img = result.get("surface_normal_map")
+
         tech_details = {
             "Final Decision": "AI-Generated" if is_fake else "Real",
             "Confidence": f"{percentage:.2f}%",
@@ -97,6 +103,7 @@ def create_demo(predictor: DualStreamPredictor):
             "DINOv2 Semantic Score": f"{result['semantic_prob_fake']*100:.1f}% fake",
             "Physics Consistency Score": f"{result['physics_prob_fake']*100:.1f}% fake",
             "Dynamic Trust Weight": result["trust_interpretation"],
+            "Quadrant Inconsistencies": result.get("quadrant_inconsistencies", {}),
             "Sensor Noise Residual": sensor_details.get("sensor_finding", "N/A"),
             "Hardware Sensor Verified": "Yes" if is_cam else "No",
             "Optical / Bokeh Blur": "Yes" if is_bokeh else "No",
@@ -105,34 +112,56 @@ def create_demo(predictor: DualStreamPredictor):
             "Directional Correlation (r)": f"{sensor_details.get('directional_correlation', 0.0):+.2f}",
         }
 
-        return verdict_html, confidence_chart, tech_details
+        return verdict_html, confidence_chart, heatmap_img, normal_img, tech_details
 
-    with gr.Blocks(title="AI Image Detector") as demo:
+    with gr.Blocks(title="AI Image Detector - Universal v4") as demo:
         gr.Markdown(
             """
-            # 🔍 AI Image Detector
-            ### Upload an image to verify whether it is AI-generated or an authentic camera photo.
+            # 🔬 Universal AI Image Detector (v4)
+            ### Dual-Stream Physics & Semantic Cross-Attention Network with Explainability Heatmaps
             """
         )
 
         with gr.Row():
             with gr.Column(scale=1):
-                input_image = gr.Image(type="pil", label="Upload Image", sources=["upload", "clipboard"])
-                analyze_btn = gr.Button("Detect Image", variant="primary", size="lg")
+                input_image = gr.Image(type="pil", label="Upload Image to Test", sources=["upload", "clipboard"])
+                analyze_btn = gr.Button("🔍 Detect & Explain Image", variant="primary", size="lg")
+
+                with gr.Accordion("ℹ️ How to Interpret the Visual Heatmaps", open=True):
+                    gr.Markdown(
+                        """
+                        * 🟦 **Cool Blue / Cyan**: **Consistent Camera Physics** — Matches authentic hardware camera sensors, continuous 3D surface geometry, and realistic optical light fall-off.
+                        * 🟥 **Warm Orange / Red**: **AI Anomaly Detected** — Localized neural generative artifacts, disrupted noise frequency spectra, or non-physical surface normal inversions.
+                        """
+                    )
 
             with gr.Column(scale=1):
                 verdict_output = gr.HTML(
-                    value="<div style='padding: 40px; text-align: center; color: #9ca3af; font-size: 1.2rem; border: 2px dashed #e5e7eb; border-radius: 16px;'>Upload an image and click <b>Detect Image</b> to see the verdict.</div>"
+                    value="<div style='padding: 40px; text-align: center; color: #9ca3af; font-size: 1.2rem; border: 2px dashed #e5e7eb; border-radius: 16px;'>Upload an image and click <b>Detect & Explain Image</b> to view the verdict and explainability heatmap.</div>"
                 )
                 confidence_bar = gr.Label(label="Confidence Distribution")
 
-                with gr.Accordion("Technical Diagnostics", open=False):
-                    tech_output = gr.JSON(label="Stream Details")
+        with gr.Row():
+            with gr.Column(scale=1):
+                with gr.Tab("🔍 Forensic Anomaly Heatmap"):
+                    heatmap_output = gr.Image(type="pil", label="Spatial Anomaly Heatmap Overlay", interactive=False)
+                    gr.Markdown(
+                        "*Overlay Map: Highlights spatial regions driving the model's verdict. Red/yellow regions indicate generative defects or non-physical lighting discrepancies.*"
+                    )
+                with gr.Tab("🌐 3D Surface Normal Geometry"):
+                    normal_output = gr.Image(type="pil", label="Reconstructed 3D Surface Normals (DSINE)", interactive=False)
+                    gr.Markdown(
+                        "*DSINE Normal Vectors: Physical camera photos maintain smooth, continuous curvature conforming to optical lenses. Generative models often exhibit severe geometric planar warping.*"
+                    )
+
+            with gr.Column(scale=1):
+                with gr.Accordion("📊 Technical Diagnostics & Stream Metrics", open=True):
+                    tech_output = gr.JSON(label="Detailed Dual-Stream Forensic Metrics")
 
         analyze_btn.click(
             fn=analyze_image,
             inputs=[input_image],
-            outputs=[verdict_output, confidence_bar, tech_output],
+            outputs=[verdict_output, confidence_bar, heatmap_output, normal_output, tech_output],
         )
 
     return demo
@@ -143,19 +172,18 @@ def main():
     parser.add_argument(
         "--checkpoint",
         type=str,
-        default="G:/Thesis/pipeline_dual_stream/models/universal_v3/best_model.pt",
+        default="G:/Thesis/pipeline_dual_stream/models/universal_v4/best_model.pt",
     )
     parser.add_argument("--port", type=int, default=7865)
     parser.add_argument("--share", action="store_true", help="Create public Gradio share link")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
 
-    print(f"Launching Clean AI Detector UI on port {args.port}...")
+    print(f"Launching Clean AI Detector UI on port {args.port} using checkpoint {args.checkpoint}...")
     predictor = DualStreamPredictor(checkpoint_path=args.checkpoint, device=args.device)
     demo = create_demo(predictor)
     demo.launch(server_name="127.0.0.1", server_port=args.port, share=args.share)
 
 
 if __name__ == "__main__":
-    import torch
     main()
