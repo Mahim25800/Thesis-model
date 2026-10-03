@@ -106,6 +106,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", type=str, default="models/universal_v4/best_model.pt")
     parser.add_argument("--output", type=str, default="reports/universal_v4_evaluation_summary.json")
+    parser.add_argument("--chameleon-cache", type=str, default="data/universal_v4/chameleon/chameleon_cache.pt")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
 
@@ -324,6 +325,85 @@ def main():
                 "mean_fake_prob": float(mean_p_blur),
             }
 
+    # SECTION 4: CHAMELEON IN-THE-WILD BENCHMARK (ICLR 2025 SANITY CHECK)
+    chameleon_results = None
+    chameleon_cache_path = Path(args.chameleon_cache)
+    if chameleon_cache_path.is_file():
+        print("\n" + "=" * 80)
+        print("SECTION 4: CHAMELEON IN-THE-WILD BENCHMARK (ICLR 2025 SANITY CHECK)")
+        print(f"Loading Chameleon cache from {chameleon_cache_path}...")
+        cham_data = torch.load(chameleon_cache_path, map_location="cpu", weights_only=True)
+        cham_pf = cham_data["physics_features"]
+        cham_pc = cham_data["physics_confidences"]
+        cham_dc = cham_data["dinov2_cls"]
+        cham_dr = cham_data["dinov2_regional"]
+        cham_lbl = cham_data["labels"]
+
+        n_real = int((cham_lbl == 0.0).sum())
+        n_fake = int((cham_lbl == 1.0).sum())
+        print(f"Chameleon samples: {len(cham_lbl)} total ({n_real} Real, {n_fake} Fake)")
+        print(f"{'Benchmark Partition':<25} | {'Samples':<7} | {'DINOv2':<9} | {'Physics':<9} | {'Hybrid v4':<11} | {'Synergy':<9} | {'Alpha':<6}")
+        print("-" * 80)
+
+        # 4A. Chameleon Native: Chameleon Real vs Chameleon Fake
+        metrics_native = evaluate_stream(
+            model, standardizer, cham_pf, cham_pc, cham_dc, cham_dr, cham_lbl, args.device
+        )
+        print(
+            f"{'CHAMELEON NATIVE':<25} | {len(cham_lbl):<7} | "
+            f"{metrics_native['auc_dinov2']:<9.4f} | {metrics_native['auc_physics']:<9.4f} | "
+            f"{metrics_native['auc_hybrid']:<11.4f} | {metrics_native['synergy_delta']:+9.4f} | "
+            f"{metrics_native['mean_alpha']:<6.2f}"
+        )
+
+        # 4B. Cross-Dataset: Held-Out RAISE Real vs Chameleon Fake
+        mask_fake = (cham_lbl == 1.0)
+        f_pf = cham_pf[mask_fake]
+        f_pc = cham_pc[mask_fake]
+        f_dc = cham_dc[mask_fake]
+        f_dr = cham_dr[mask_fake]
+        f_lbl = torch.ones(len(f_pf), dtype=torch.float32)
+
+        comb_pf = torch.cat([r_pf, f_pf], dim=0)
+        comb_pc = torch.cat([r_pc, f_pc], dim=0)
+        comb_dc = torch.cat([r_dc, f_dc], dim=0)
+        comb_dr = torch.cat([r_dr, f_dr], dim=0)
+        comb_lbl = torch.cat([r_lbl, f_lbl], dim=0)
+
+        metrics_raise_vs_cham = evaluate_stream(
+            model, standardizer, comb_pf, comb_pc, comb_dc, comb_dr, comb_lbl, args.device
+        )
+        print(
+            f"{'RAISE REAL vs CHAM FAKE':<25} | {len(comb_lbl):<7} | "
+            f"{metrics_raise_vs_cham['auc_dinov2']:<9.4f} | {metrics_raise_vs_cham['auc_physics']:<9.4f} | "
+            f"{metrics_raise_vs_cham['auc_hybrid']:<11.4f} | {metrics_raise_vs_cham['synergy_delta']:+9.4f} | "
+            f"{metrics_raise_vs_cham['mean_alpha']:<6.2f}"
+        )
+
+        chameleon_results = {
+            "total_samples": len(cham_lbl),
+            "num_real": n_real,
+            "num_fake": n_fake,
+            "native_benchmark": metrics_native,
+            "raise_real_vs_chameleon_fake": metrics_raise_vs_cham,
+        }
+
+        # Standalone Chameleon evaluation report
+        cham_rep_path = Path("reports/chameleon_evaluation_summary.json")
+        cham_rep_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(cham_rep_path, "w", encoding="utf-8") as f_cham:
+            json.dump(
+                {
+                    "checkpoint": args.checkpoint,
+                    "epoch": ckpt.get("epoch"),
+                    "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "chameleon_evaluation": chameleon_results,
+                },
+                f_cham,
+                indent=2,
+            )
+        print(f"Chameleon report saved to {cham_rep_path.resolve()}")
+
     print("=" * 80)
 
     # Save complete evaluation results to JSON
@@ -359,6 +439,7 @@ def main():
         },
         "held_out_real_portraits": portrait_results,
         "blur_sensitivity_stress_test": blur_results,
+        "chameleon_benchmark": chameleon_results,
     }
 
     with open(output_path, "w", encoding="utf-8") as f:

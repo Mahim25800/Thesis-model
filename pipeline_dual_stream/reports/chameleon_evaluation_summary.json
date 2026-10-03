@@ -1,0 +1,30 @@
+{
+  "checkpoint": "models/universal_v4/best_model.pt",
+  "epoch": 19,
+  "timestamp": "2026-10-03 17:05:16",
+  "chameleon_evaluation": {
+    "total_samples": 26033,
+    "num_real": 14863,
+    "num_fake": 11170,
+    "native_benchmark": {
+      "auc_hybrid": 0.7519240155280359,
+      "auc_dinov2": 0.7441978786735624,
+      "auc_physics": 0.5289463100495718,
+      "acc_hybrid": 0.6970383743709907,
+      "acc_dinov2": 0.6840164406714555,
+      "acc_physics": 0.5185341681711674,
+      "mean_alpha": 0.6750338548906792,
+      "synergy_delta": 0.007726136854473542
+    },
+    "raise_real_vs_chameleon_fake": {
+      "auc_hybrid": 0.9297226499552371,
+      "auc_dinov2": 0.9266460161145927,
+      "auc_physics": 0.6622324082363474,
+      "acc_hybrid": 0.712682090831191,
+      "acc_dinov2": 0.7396743787489288,
+      "acc_physics": 0.5138817480719794,
+      "mean_alpha": 0.6851503914341829,
+      "synergy_delta": 0.0030766338406443827
+    }
+  }
+}
