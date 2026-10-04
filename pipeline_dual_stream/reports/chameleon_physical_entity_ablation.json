@@ -1,0 +1,563 @@
+{
+  "ablation_subsets": {
+    "Top 200 Extreme False Positives": {
+      "count": 200,
+      "baseline_mean_p_final": 0.9995003259181976,
+      "baseline_mean_p_phys": 0.44491038026288154,
+      "entity_ablation_physics": {
+        "Entity 0: Illumination (SH Lighting)": {
+          "mean_delta": -0.02751145599409938,
+          "std_delta": 0.17359789072360568,
+          "median_delta": 0.002382606267929077,
+          "max_drop": 0.4802314043045044,
+          "pct_reduced": 45.0
+        },
+        "Entity 1: Specular & Optics Blur": {
+          "mean_delta": -0.2921590625308454,
+          "std_delta": 0.22507136459323368,
+          "median_delta": -0.26013216376304626,
+          "max_drop": 0.17235124111175537,
+          "pct_reduced": 3.0
+        },
+        "Entity 2: DSINE Surface Normals": {
+          "mean_delta": -0.12859454412013294,
+          "std_delta": 0.2838092327845881,
+          "median_delta": -0.0862448513507843,
+          "max_drop": 0.6484610289335251,
+          "pct_reduced": 32.5
+        },
+        "Entity 3: Chromatic Shadow Consistency": {
+          "mean_delta": 0.16814684921875597,
+          "std_delta": 0.20648772691490871,
+          "median_delta": 0.09960053488612175,
+          "max_drop": 0.7392012923955917,
+          "pct_reduced": 85.5
+        }
+      },
+      "entity_ablation_final": {
+        "Entity 0: Illumination (SH Lighting)": {
+          "mean_delta": 9.467899799346924e-05,
+          "std_delta": 0.0004287968289995077,
+          "median_delta": 4.649162292480469e-06,
+          "max_drop": 0.002716243267059326,
+          "pct_reduced": 0.0
+        },
+        "Entity 1: Specular & Optics Blur": {
+          "mean_delta": 0.0004136374592781067,
+          "std_delta": 0.0006301182564254794,
+          "median_delta": 0.00023117661476135254,
+          "max_drop": 0.003722071647644043,
+          "pct_reduced": 0.0
+        },
+        "Entity 2: DSINE Surface Normals": {
+          "mean_delta": 0.00028007984161376953,
+          "std_delta": 0.0005752780446804096,
+          "median_delta": 7.891654968261719e-05,
+          "max_drop": 0.005284428596496582,
+          "pct_reduced": 0.0
+        },
+        "Entity 3: Chromatic Shadow Consistency": {
+          "mean_delta": 6.928086280822753e-05,
+          "std_delta": 0.0005150478513343172,
+          "median_delta": 2.1129846572875977e-05,
+          "max_drop": 0.005216538906097412,
+          "pct_reduced": 0.0
+        }
+      },
+      "region_ablation_physics": {
+        "Region 0: Global": {
+          "mean_delta": -0.14539022279903294,
+          "std_delta": 0.14753741835746392,
+          "median_delta": -0.11859005689620972,
+          "max_drop": 0.16083723306655884
+        },
+        "Region 1: Top-Left": {
+          "mean_delta": -0.003401075731962919,
+          "std_delta": 0.06846236084054523,
+          "median_delta": -0.0010432898998260498,
+          "max_drop": 0.22979480028152466
+        },
+        "Region 2: Top-Right": {
+          "mean_delta": -0.014951812028884888,
+          "std_delta": 0.06867307532123586,
+          "median_delta": -0.007046084851026535,
+          "max_drop": 0.13644137978553772
+        },
+        "Region 3: Bottom-Left": {
+          "mean_delta": -0.018183084577322005,
+          "std_delta": 0.0597584347245578,
+          "median_delta": -0.009282205253839493,
+          "max_drop": 0.13776591420173645
+        },
+        "Region 4: Bottom-Right": {
+          "mean_delta": -0.00266929317265749,
+          "std_delta": 0.06113469033476549,
+          "median_delta": -0.0012652724981307983,
+          "max_drop": 0.30326586961746216
+        }
+      },
+      "region_ablation_final": {
+        "Region 0: Global": {
+          "mean_delta": 0.00045271217823028564,
+          "std_delta": 0.0009148971686721396,
+          "median_delta": 5.46872615814209e-05,
+          "max_drop": 0.009205102920532227
+        },
+        "Region 1: Top-Left": {
+          "mean_delta": 2.6199519634246827e-05,
+          "std_delta": 0.00023332557251655992,
+          "median_delta": -4.589557647705078e-06,
+          "max_drop": 0.0017792582511901855
+        },
+        "Region 2: Top-Right": {
+          "mean_delta": 1.6291141510009765e-05,
+          "std_delta": 0.0002210836233385923,
+          "median_delta": -1.239776611328125e-05,
+          "max_drop": 0.001659393310546875
+        },
+        "Region 3: Bottom-Left": {
+          "mean_delta": 2.4510622024536134e-05,
+          "std_delta": 0.00017370971499437358,
+          "median_delta": -5.7220458984375e-06,
+          "max_drop": 0.0014789104461669922
+        },
+        "Region 4: Bottom-Right": {
+          "mean_delta": 3.681182861328125e-06,
+          "std_delta": 0.00013791825843248153,
+          "median_delta": -7.3909759521484375e-06,
+          "max_drop": 0.000755012035369873
+        }
+      }
+    },
+    "All Real False Positives (Final >= 0.5)": {
+      "count": 4518,
+      "baseline_mean_p_final": 0.8699155608311645,
+      "baseline_mean_p_phys": 0.5193777332859936,
+      "entity_ablation_physics": {
+        "Entity 0: Illumination (SH Lighting)": {
+          "mean_delta": 0.028028554704012255,
+          "std_delta": 0.17689879655136603,
+          "median_delta": 0.03509601950645447,
+          "max_drop": 0.6978538408875465,
+          "pct_reduced": 59.495351925630814
+        },
+        "Entity 1: Specular & Optics Blur": {
+          "mean_delta": -0.24462489299014403,
+          "std_delta": 0.18221492660100133,
+          "median_delta": -0.21378730237483978,
+          "max_drop": 0.1723511815071106,
+          "pct_reduced": 2.3019034971226207
+        },
+        "Entity 2: DSINE Surface Normals": {
+          "mean_delta": -0.16373863196863755,
+          "std_delta": 0.26275738106130836,
+          "median_delta": -0.15316813439130783,
+          "max_drop": 0.704640157520771,
+          "pct_reduced": 21.22620628596724
+        },
+        "Entity 3: Chromatic Shadow Consistency": {
+          "mean_delta": 0.27134934551321255,
+          "std_delta": 0.24364099327522912,
+          "median_delta": 0.24018851667642593,
+          "max_drop": 0.8500318080186844,
+          "pct_reduced": 88.77822045152722
+        }
+      },
+      "entity_ablation_final": {
+        "Entity 0: Illumination (SH Lighting)": {
+          "mean_delta": 0.0020414735559553844,
+          "std_delta": 0.056827984335844774,
+          "median_delta": 4.178285598754883e-05,
+          "max_drop": 0.6987566351890564,
+          "pct_reduced": 21.890216910137227
+        },
+        "Entity 1: Specular & Optics Blur": {
+          "mean_delta": -0.037818459875555155,
+          "std_delta": 0.07130769135115596,
+          "median_delta": -0.008547961711883545,
+          "max_drop": 0.31066498160362244,
+          "pct_reduced": 7.636122177954848
+        },
+        "Entity 2: DSINE Surface Normals": {
+          "mean_delta": -0.03212812167665319,
+          "std_delta": 0.09830299991219764,
+          "median_delta": -0.005565464496612549,
+          "max_drop": 0.7396142408251762,
+          "pct_reduced": 12.616201859229747
+        },
+        "Entity 3: Chromatic Shadow Consistency": {
+          "mean_delta": 0.11426312106629753,
+          "std_delta": 0.19283184936610906,
+          "median_delta": 0.017735809087753296,
+          "max_drop": 0.9240615330636501,
+          "pct_reduced": 55.48915449313856
+        }
+      },
+      "region_ablation_physics": {
+        "Region 0: Global": {
+          "mean_delta": -0.1395785647785376,
+          "std_delta": 0.13991643483053431,
+          "median_delta": -0.09860053658485413,
+          "max_drop": 0.16083720326423645
+        },
+        "Region 1: Top-Left": {
+          "mean_delta": 0.00504049642201993,
+          "std_delta": 0.0729783066942478,
+          "median_delta": 0.004256099462509155,
+          "max_drop": 0.3499951660633087
+        },
+        "Region 2: Top-Right": {
+          "mean_delta": -0.0012112183850085435,
+          "std_delta": 0.07274772916155493,
+          "median_delta": 0.0008563101291656494,
+          "max_drop": 0.3798527717590332
+        },
+        "Region 3: Bottom-Left": {
+          "mean_delta": -0.002259587548300459,
+          "std_delta": 0.06459875284471835,
+          "median_delta": 0.0014236867427825928,
+          "max_drop": 0.296193391084671
+        },
+        "Region 4: Bottom-Right": {
+          "mean_delta": -0.0030996645040127385,
+          "std_delta": 0.06413013965097572,
+          "median_delta": 0.0001944899559020996,
+          "max_drop": 0.3791941702365875
+        }
+      },
+      "region_ablation_final": {
+        "Region 0: Global": {
+          "mean_delta": -0.006053257385625835,
+          "std_delta": 0.043793299135281176,
+          "median_delta": -0.00017392635345458984,
+          "max_drop": 0.2104666829109192
+        },
+        "Region 1: Top-Left": {
+          "mean_delta": 0.0029350664761806284,
+          "std_delta": 0.0324766048006437,
+          "median_delta": 2.4378299713134766e-05,
+          "max_drop": 0.4857299029827118
+        },
+        "Region 2: Top-Right": {
+          "mean_delta": -0.000932062226963972,
+          "std_delta": 0.03089444627950333,
+          "median_delta": -0.0001532435417175293,
+          "max_drop": 0.3369909077882767
+        },
+        "Region 3: Bottom-Left": {
+          "mean_delta": 0.0008726793812565594,
+          "std_delta": 0.027320436361340204,
+          "median_delta": -1.761317253112793e-05,
+          "max_drop": 0.41285985708236694
+        },
+        "Region 4: Bottom-Right": {
+          "mean_delta": -7.85047525639764e-05,
+          "std_delta": 0.026823665993663585,
+          "median_delta": -1.868605613708496e-05,
+          "max_drop": 0.2912292778491974
+        }
+      }
+    },
+    "Physics False Positives (Physics >= 0.5)": {
+      "count": 7014,
+      "baseline_mean_p_final": 0.39467466785471633,
+      "baseline_mean_p_phys": 0.6791296911810687,
+      "entity_ablation_physics": {
+        "Entity 0: Illumination (SH Lighting)": {
+          "mean_delta": 0.11190529635464462,
+          "std_delta": 0.12795284701516388,
+          "median_delta": 0.0954703688621521,
+          "max_drop": 0.6978538408875465,
+          "pct_reduced": 79.52666096378671
+        },
+        "Entity 1: Specular & Optics Blur": {
+          "mean_delta": -0.15121933287591174,
+          "std_delta": 0.10400684213897946,
+          "median_delta": -0.14686813950538635,
+          "max_drop": 0.329511821269989,
+          "pct_reduced": 3.721129170230967
+        },
+        "Entity 2: DSINE Surface Normals": {
+          "mean_delta": -0.12540219735225652,
+          "std_delta": 0.20065067597372832,
+          "median_delta": -0.15948772430419922,
+          "max_drop": 0.7636124938726425,
+          "pct_reduced": 14.471057884231536
+        },
+        "Entity 3: Chromatic Shadow Consistency": {
+          "mean_delta": 0.3899771740884736,
+          "std_delta": 0.24425797752091075,
+          "median_delta": 0.4464011751115322,
+          "max_drop": 0.8540096059441566,
+          "pct_reduced": 90.71856287425149
+        }
+      },
+      "entity_ablation_final": {
+        "Entity 0: Illumination (SH Lighting)": {
+          "mean_delta": 0.0097799161179977,
+          "std_delta": 0.04779763826976722,
+          "median_delta": 2.6192632503807545e-05,
+          "max_drop": 0.6987566351890564,
+          "pct_reduced": 24.151696606786427
+        },
+        "Entity 1: Specular & Optics Blur": {
+          "mean_delta": -0.037856405068090966,
+          "std_delta": 0.07777399832522754,
+          "median_delta": -0.004652500152587891,
+          "max_drop": 0.31066498160362244,
+          "pct_reduced": 1.5540347875677218
+        },
+        "Entity 2: DSINE Surface Normals": {
+          "mean_delta": -0.044378195854786966,
+          "std_delta": 0.10646267986521539,
+          "median_delta": -0.006895169615745544,
+          "max_drop": 0.7396142408251762,
+          "pct_reduced": 5.717137154262903
+        },
+        "Entity 3: Chromatic Shadow Consistency": {
+          "mean_delta": 0.08136938056259771,
+          "std_delta": 0.15265230763768114,
+          "median_delta": 0.0076197851449251175,
+          "max_drop": 0.9240615330636501,
+          "pct_reduced": 48.10379241516966
+        }
+      },
+      "region_ablation_physics": {
+        "Region 0: Global": {
+          "mean_delta": -0.06941082982687927,
+          "std_delta": 0.0699065753032354,
+          "median_delta": -0.05922237038612366,
+          "max_drop": 0.18680226802825928
+        },
+        "Region 1: Top-Left": {
+          "mean_delta": 0.023871524826155316,
+          "std_delta": 0.06888346190782171,
+          "median_delta": 0.015255182981491089,
+          "max_drop": 0.41324836015701294
+        },
+        "Region 2: Top-Right": {
+          "mean_delta": 0.01791879286156239,
+          "std_delta": 0.06858178609390744,
+          "median_delta": 0.011687994003295898,
+          "max_drop": 0.45097605884075165
+        },
+        "Region 3: Bottom-Left": {
+          "mean_delta": 0.012315310459209026,
+          "std_delta": 0.059121240113118485,
+          "median_delta": 0.009489089250564575,
+          "max_drop": 0.4157577455043793
+        },
+        "Region 4: Bottom-Right": {
+          "mean_delta": 0.009389347998817864,
+          "std_delta": 0.05856365839886329,
+          "median_delta": 0.006944030523300171,
+          "max_drop": 0.3791941702365875
+        }
+      },
+      "region_ablation_final": {
+        "Region 0: Global": {
+          "mean_delta": -0.008465366579206131,
+          "std_delta": 0.027991142364558536,
+          "median_delta": -0.0005282983183860779,
+          "max_drop": 0.1738242506980896
+        },
+        "Region 1: Top-Left": {
+          "mean_delta": 0.0030774360883420904,
+          "std_delta": 0.02703717005461132,
+          "median_delta": 2.0290579413995147e-05,
+          "max_drop": 0.4857299029827118
+        },
+        "Region 2: Top-Right": {
+          "mean_delta": 0.0015655627549955133,
+          "std_delta": 0.024987083894160673,
+          "median_delta": 8.905190043151379e-06,
+          "max_drop": 0.3049306273460388
+        },
+        "Region 3: Bottom-Left": {
+          "mean_delta": 0.0018128763907258312,
+          "std_delta": 0.021628405846134468,
+          "median_delta": -2.4817563826218247e-06,
+          "max_drop": 0.41285985708236694
+        },
+        "Region 4: Bottom-Right": {
+          "mean_delta": 0.0011803407193924052,
+          "std_delta": 0.021084896333181193,
+          "median_delta": -5.638867150992155e-09,
+          "max_drop": 0.270571768283844
+        }
+      }
+    }
+  },
+  "top_10_worst_false_positives": [
+    {
+      "rank": 1,
+      "filename": "314c99eb-9d6c-4254-aa29-4b866d739513.jpg",
+      "resolution": "500x375",
+      "prob_final": 0.9999734163284302,
+      "prob_semantic": 0.9999885559082031,
+      "prob_physics": 0.2566647231578827,
+      "alpha": 0.9197744727134705,
+      "primary_culprit_entity": "DSINE Surface Normals",
+      "primary_drop": 0.1287,
+      "all_entity_drops": {
+        "Illumination (SH Lighting)": 0.0216,
+        "Specular & Optics Blur": -0.3913,
+        "DSINE Surface Normals": 0.1287,
+        "Chromatic Shadow Consistency": 0.1055
+      }
+    },
+    {
+      "rank": 2,
+      "filename": "8faad9aa-8921-4941-9778-301a910a2408.jpg",
+      "resolution": "500x500",
+      "prob_final": 0.9999668598175049,
+      "prob_semantic": 0.9999922513961792,
+      "prob_physics": 0.3337991237640381,
+      "alpha": 0.8627139925956726,
+      "primary_culprit_entity": "Chromatic Shadow Consistency",
+      "primary_drop": 0.1535,
+      "all_entity_drops": {
+        "Illumination (SH Lighting)": -0.4654,
+        "Specular & Optics Blur": -0.1845,
+        "DSINE Surface Normals": -0.3329,
+        "Chromatic Shadow Consistency": 0.1535
+      }
+    },
+    {
+      "rank": 3,
+      "filename": "e64f87b4-27e4-4b51-a9e3-27d1df200fce.jpg",
+      "resolution": "500x750",
+      "prob_final": 0.9999619722366333,
+      "prob_semantic": 0.9999804496765137,
+      "prob_physics": 0.22467456758022308,
+      "alpha": 0.9347078204154968,
+      "primary_culprit_entity": "Chromatic Shadow Consistency",
+      "primary_drop": 0.1076,
+      "all_entity_drops": {
+        "Illumination (SH Lighting)": -0.0711,
+        "Specular & Optics Blur": -0.5174,
+        "DSINE Surface Normals": -0.0602,
+        "Chromatic Shadow Consistency": 0.1076
+      }
+    },
+    {
+      "rank": 4,
+      "filename": "35dba1e4-d242-4776-b210-48643eae7820.jpg",
+      "resolution": "500x281",
+      "prob_final": 0.999955415725708,
+      "prob_semantic": 0.9999910593032837,
+      "prob_physics": 0.2912474572658539,
+      "alpha": 0.8486520648002625,
+      "primary_culprit_entity": "Chromatic Shadow Consistency",
+      "primary_drop": 0.1397,
+      "all_entity_drops": {
+        "Illumination (SH Lighting)": -0.5273,
+        "Specular & Optics Blur": -0.4483,
+        "DSINE Surface Normals": 0.1353,
+        "Chromatic Shadow Consistency": 0.1397
+      }
+    },
+    {
+      "rank": 5,
+      "filename": "b86296d3-a1a4-46bc-bd11-163b8e7b6312.jpg",
+      "resolution": "500x786",
+      "prob_final": 0.9999489784240723,
+      "prob_semantic": 0.9999858140945435,
+      "prob_physics": 0.0821649432182312,
+      "alpha": 0.8908251523971558,
+      "primary_culprit_entity": "Chromatic Shadow Consistency",
+      "primary_drop": 0.0145,
+      "all_entity_drops": {
+        "Illumination (SH Lighting)": -0.0164,
+        "Specular & Optics Blur": -0.8218,
+        "DSINE Surface Normals": 0.0104,
+        "Chromatic Shadow Consistency": 0.0145
+      }
+    },
+    {
+      "rank": 6,
+      "filename": "253eb16a-32bb-4d1c-8383-abf6f57f1f21.jpg",
+      "resolution": "500x724",
+      "prob_final": 0.9999470710754395,
+      "prob_semantic": 0.9999842643737793,
+      "prob_physics": 0.1513332575559616,
+      "alpha": 0.8891043663024902,
+      "primary_culprit_entity": "Chromatic Shadow Consistency",
+      "primary_drop": 0.0631,
+      "all_entity_drops": {
+        "Illumination (SH Lighting)": -0.2902,
+        "Specular & Optics Blur": -0.4376,
+        "DSINE Surface Normals": -0.0855,
+        "Chromatic Shadow Consistency": 0.0631
+      }
+    },
+    {
+      "rank": 7,
+      "filename": "c505af88-33fc-4404-be30-8908e527926f.jpg",
+      "resolution": "500x375",
+      "prob_final": 0.9999469518661499,
+      "prob_semantic": 0.9999861717224121,
+      "prob_physics": 0.40045496821403503,
+      "alpha": 0.8615672588348389,
+      "primary_culprit_entity": "Illumination (SH Lighting)",
+      "primary_drop": -0.0227,
+      "all_entity_drops": {
+        "Illumination (SH Lighting)": -0.0227,
+        "Specular & Optics Blur": -0.4701,
+        "DSINE Surface Normals": -0.3151,
+        "Chromatic Shadow Consistency": -0.3034
+      }
+    },
+    {
+      "rank": 8,
+      "filename": "ac9cc0bb-47cb-44c9-b8a6-f44ca2fe2830.jpg",
+      "resolution": "500x483",
+      "prob_final": 0.9999396800994873,
+      "prob_semantic": 0.9999709129333496,
+      "prob_physics": 0.23282493650913239,
+      "alpha": 0.9252389073371887,
+      "primary_culprit_entity": "Chromatic Shadow Consistency",
+      "primary_drop": 0.0626,
+      "all_entity_drops": {
+        "Illumination (SH Lighting)": 0.0467,
+        "Specular & Optics Blur": -0.1108,
+        "DSINE Surface Normals": -0.609,
+        "Chromatic Shadow Consistency": 0.0626
+      }
+    },
+    {
+      "rank": 9,
+      "filename": "2ce21a36-c7f1-4740-8219-5a9e3627a11a.jpg",
+      "resolution": "500x750",
+      "prob_final": 0.9999080896377563,
+      "prob_semantic": 0.9999581575393677,
+      "prob_physics": 0.16633698344230652,
+      "alpha": 0.9198660254478455,
+      "primary_culprit_entity": "DSINE Surface Normals",
+      "primary_drop": 0.1152,
+      "all_entity_drops": {
+        "Illumination (SH Lighting)": -0.2606,
+        "Specular & Optics Blur": -0.6828,
+        "DSINE Surface Normals": 0.1152,
+        "Chromatic Shadow Consistency": 0.0832
+      }
+    },
+    {
+      "rank": 10,
+      "filename": "1ae45217-e489-434e-9b6b-cb85bd4181b2.jpg",
+      "resolution": "500x281",
+      "prob_final": 0.999903678894043,
+      "prob_semantic": 0.9999697208404541,
+      "prob_physics": 0.08056610822677612,
+      "alpha": 0.8944487571716309,
+      "primary_culprit_entity": "DSINE Surface Normals",
+      "primary_drop": 0.0295,
+      "all_entity_drops": {
+        "Illumination (SH Lighting)": -0.0951,
+        "Specular & Optics Blur": -0.6398,
+        "DSINE Surface Normals": 0.0295,
+        "Chromatic Shadow Consistency": 0.0285
+      }
+    }
+  ]
+}
