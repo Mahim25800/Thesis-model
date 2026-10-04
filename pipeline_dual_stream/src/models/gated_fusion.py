@@ -102,6 +102,26 @@ class GatedCrossAttentionFusion(nn.Module):
             )
             self.gate_net[-2].bias.data.fill_(0.0)
 
+        # 6. Cross-Modal Evidential Calibration Network (Tier 2)
+        # Maps physics-semantic discrepancy features to input-adaptive temperature T(x) >= 1.0
+        # Discrepancy features:
+        # 1. raw prob discrepancy |p_sem - p_phys| (1)
+        # 2. raw logit discrepancy |z_sem - z_phys| (1)
+        # 3. quadrant cosine discrepancy (4)
+        # 4. regional physics observability (5)
+        # 5. raw confidence disparity phys_conf - sem_conf (1)
+        # Total: 12 dims
+        if self.gate_mode in ["v3", "v3_calibrated"]:
+            self.calib_net = nn.Sequential(
+                nn.Linear(12, 16),
+                nn.LayerNorm(16),
+                nn.GELU(),
+                nn.Dropout(dropout),
+                nn.Linear(16, 1),
+            )
+            nn.init.zeros_(self.calib_net[-1].weight)
+            nn.init.constant_(self.calib_net[-1].bias, -2.5) # Softplus(-2.5) ~ 0.079 -> T starts ~ 1.08
+
         # Learned blending parameter for joint residual
         self.joint_scale = nn.Parameter(torch.tensor(0.5))
 
@@ -156,6 +176,73 @@ class GatedCrossAttentionFusion(nn.Module):
                 (1.0 - alpha) * phys_logits +
                 self.joint_scale * joint_logits
             ).squeeze(-1)
+        elif self.gate_mode in ["v3", "v3_calibrated"]:
+            prob_sem_raw = torch.sigmoid(sem_logits)
+            prob_phys = torch.sigmoid(phys_logits)
+            raw_discrepancy = torch.abs(prob_sem_raw - prob_phys)
+            sem_conf_raw = 2.0 * torch.abs(prob_sem_raw - 0.5)
+            phys_conf = 2.0 * torch.abs(prob_phys - 0.5)
+            conf_disparity_raw = phys_conf - sem_conf_raw
+
+            # Cross-modal Evidential Calibration Head (Discrepancy features: [B, 12])
+            calib_feat = torch.cat([
+                raw_discrepancy,
+                torch.abs(sem_logits - phys_logits),
+                quad_discrepancy,
+                region_obs,
+                conf_disparity_raw,
+            ], dim=-1)
+
+            # Adaptive Temperature T(x) in [1.0, +inf)
+            temperature = 1.0 + F.softplus(self.calib_net(calib_feat))  # [B, 1]
+
+            # Calibrate semantic logits dynamically
+            sem_logits_cal = sem_logits / temperature
+            prob_sem = torch.sigmoid(sem_logits_cal)
+            stream_discrepancy = torch.abs(prob_sem - prob_phys)
+            sem_conf = 2.0 * torch.abs(prob_sem - 0.5)
+            conf_disparity = phys_conf - sem_conf
+            phys_fake_signal = 2.0 * torch.relu(prob_phys - 0.5)
+            sem_fake_signal = 2.0 * torch.relu(prob_sem - 0.5)
+
+            gate_sem_feat = self.gate_sem_proj(sem_global)     # [B, 64]
+            gate_phys_feat = self.gate_phys_proj(phys_global)  # [B, 64]
+
+            gate_input = torch.cat([
+                gate_sem_feat,
+                gate_phys_feat,
+                prob_sem,
+                prob_phys,
+                stream_discrepancy,
+                quad_discrepancy,
+                region_obs,
+                sem_conf,
+                phys_conf,
+                conf_disparity,
+                phys_fake_signal,
+                sem_fake_signal,
+            ], dim=-1) # [B, 145]
+
+            alpha = self.gate_net(gate_input)  # [B, 1] in [0, 1]
+
+            phys_augmented = phys_logits + self.joint_scale * torch.tanh(joint_logits) * 2.0
+            final_logits = (
+                alpha * sem_logits_cal +
+                (1.0 - alpha) * phys_augmented
+            ).squeeze(-1)
+
+            return {
+                "logits": final_logits,
+                "sem_logits": sem_logits_cal.squeeze(-1),
+                "sem_logits_raw": sem_logits.squeeze(-1),
+                "phys_logits": phys_logits.squeeze(-1),
+                "joint_logits": joint_logits.squeeze(-1),
+                "alpha": alpha.squeeze(-1),
+                "temperature": temperature.squeeze(-1),
+                "quad_discrepancy": quad_discrepancy,
+                "attn_weights": attn_weights,
+                "region_observability": region_obs,
+            }
         else:
             prob_sem = torch.sigmoid(sem_logits)
             prob_phys = torch.sigmoid(phys_logits)

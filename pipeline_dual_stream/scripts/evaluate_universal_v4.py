@@ -115,9 +115,10 @@ def main():
     ckpt = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
     standardizer = ckpt["standardizer"]
 
+    gate_mode = ckpt.get("gate_mode", "v2")
     model = DualStreamHybridDetector(
         load_pretrained_dinov2=False,
-        gate_mode="v2",
+        gate_mode=gate_mode,
         dropout=0.15,
     ).to(args.device)
     model.load_state_dict(ckpt["model_state_dict"])
