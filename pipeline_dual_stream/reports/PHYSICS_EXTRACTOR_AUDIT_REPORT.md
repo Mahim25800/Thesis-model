@@ -1,91 +1,101 @@
 # Physical Feature Extractor Audit & Modernization Report
 **Date:** October 5, 2026  
 **Repository Scope:** `G:\Thesis\pipeline_dual_stream`  
-**Authors:** Research Engineering Team
+**Evaluation Script:** [`scripts/evaluate_modernized_extractors_on_chameleon.py`](file:///G:/Thesis/pipeline_dual_stream/scripts/evaluate_modernized_extractors_on_chameleon.py)  
+**Raw Benchmark Artifact:** [`reports/modernized_extractor_chameleon_eval.json`](file:///G:/Thesis/pipeline_dual_stream/reports/modernized_extractor_chameleon_eval.json)  
 
 ---
 
 ## 1. Executive Summary
 
-This report documents the systematic diagnosis, physical extractor overhaul, and neural weight retraining conducted to resolve the failure modes of the physics-based stream in the dual-stream deepfake detection framework.
+This report documents the diagnosis, code implementation overhaul, and empirical verification of the physical feature extractors in `pipeline_dual_stream`.
 
-Previously, the standalone physics-based model exhibited an accuracy of **51.85%** and an ROC AUC of **0.5289** on the in-the-wild Chameleon benchmark (26,033 real/synthetic images)—essentially operating as a random coin flip. Through rigorous per-entity physical ablation and feature distribution audits across training (COCO / DiffusionDB) versus test domains (Chameleon / Flickr), we pinned down the exact mathematical causes of this breakdown, updated all physical extractors with scale/resolution-invariant mathematics, retrained the physics stream representations, and achieved dramatic performance improvements.
+Previously, the standalone physics-based model exhibited near-random performance on the in-the-wild Chameleon benchmark (**51.85% Accuracy**, **0.5289 AUC**). Through per-entity physical ablation ([`reports/chameleon_physical_entity_ablation.json`](file:///G:/Thesis/pipeline_dual_stream/reports/chameleon_physical_entity_ablation.json)), we diagnosed two primary structural flaws:
+1. **Unnormalized normal error metrics:** causing high-resolution camera textures to be miscategorized as synthetic.
+2. **Color-grading split-toning artifacts:** triggering false alarms in the chromatic shadow consistency checks.
+
+We modernized all physical extractors with scale/resolution-invariant formulas and ran an empirical evaluation on a held-out test split of 200 raw Chameleon images (100 authentic, 100 synthetic) directly extracted from disk.
 
 ---
 
-## 2. Root Cause Analysis (Empirical Evidence)
+## 2. Root Cause Analysis (Verified Empirical Findings)
 
-Through fine-grained entity zeroing and distribution tests, two primary mechanisms were proven to fool the physics model:
+From the verified per-entity ablation report (`46fb332`), zeroing out individual physics cues on Chameleon false alarms revealed:
 
-### A. The Resolution & Texture Kurtosis Inversion in Entity 2 (Surface Normals)
-* **The Training Bias:** In compressed training data (COCO vs. DiffusionDB), real photos had low normal variance and low kurtosis, while synthetic images had unnormalized rough artifacts (`Train Diff = +2.3382`). The neural head learned to treat high kurtosis as a sign of synthetic generation.
-* **The Test Reality:** In high-resolution real-world photography (Flickr / Chameleon), high-quality camera sensors capture sharp high-frequency micro-textures, creating naturally high normal kurtosis (`Cham Diff = -2.4041`).
-* **The Failure:** As a result, the physics head falsely categorized clean, high-resolution authentic photographs as fake.
+### A. Chromatic Shadow Consistency (Entity 3)
+* **Observed Mechanism:** The legacy extractor computed raw log chromaticity divergence between lit and cast-shadow regions without checking scene-wide color dispersion.
+* **Empirical Impact:** In artistic photography with warm highlights and cool shadows (split-toning), the divergence score reached $1.5 - 3.0$ with maximum confidence ($1.0$). Ablating Entity 3 reduced false alarm scores across 90.7% of physical false positives.
 
-### B. Color-Grading False Alarms in Entity 3 (Chromatic Shadow Consistency)
-* **The Previous Assumption:** The extractor assumed any color temperature drift ($R/G$ and $B/G$ ratios) between lit and shadow pixels indicated synthetic illuminant inconsistencies.
-* **The Test Reality:** Artistic and community photography regularly uses global photographic split-toning (e.g., warm/amber highlights and cool/teal shadows).
-* **The Failure:** This triggered maximum confidence ($1.0$) and exploded discrepancy scores ($1.5 - 3.0$), accounting for **90.7%** of physical false alarms on authentic photography.
+### B. Surface Normal Kurtosis & Resolution Sensitivity (Entity 2)
+* **Observed Mechanism:** The legacy Lambertian error calculation used raw, unnormalized pixel variance and high-order kurtosis.
+* **Empirical Impact:** In high-resolution real photography (Flickr), camera sensors naturally capture sharp micro-textures, creating high normal kurtosis that previously acted as an inverted shortcut.
 
 ---
 
 ## 3. Extractor Architecture & Code Modernizations
 
-All modernized extractors were built inside `src/extractors/` with drop-in schema compatibility (`[5, 14]` features and `[5, 4]` confidences across 5 spatial regions):
+All modernized extractors reside in `src/extractors/` and maintain drop-in schema compatibility (`[5, 14]` feature matrix and `[5, 4]` confidence matrix across 5 spatial regions):
 
 1. **[`src/extractors/surface_normals.py`](file:///G:/Thesis/pipeline_dual_stream/src/extractors/surface_normals.py)** & **[`src/extractors/dsine_normals.py`](file:///G:/Thesis/pipeline_dual_stream/src/extractors/dsine_normals.py)**:
-   - **Contrast-Normalized Lambertian Residuals:** Replaced raw error variance with local contrast-normalized residuals:
+   - **Contrast-Normalized Residuals:** Replaced raw error variance with local dynamic-range normalized residuals:
      $$\text{norm\_error} = \frac{\text{raw\_error}}{\max(0.05, p_{95} - p_{5})}$$
-   - **Bounded Kurtosis:** Centered and clamped normal residual kurtosis around the standard normal baseline ($[-3.0, 5.0]$), preventing high-resolution macro-textures from triggering false alarms.
+   - **Bounded Kurtosis:** Centered and clamped normal residual kurtosis around the standard normal baseline ($[-3.0, 5.0]$) to eliminate macro-texture explosions.
 
 2. **[`src/extractors/chromatic_shadow.py`](file:///G:/Thesis/pipeline_dual_stream/src/extractors/chromatic_shadow.py)**:
-   - **Global Dispersion Awareness:** Analyzes scene-wide chromaticity spread ($\sigma_{\text{chroma}}$).
-   - **Split-Toning Discounting:** Downweights confidence dynamically using exponential dampening:
+   - **Global Dispersion Awareness:** Computes scene-wide chromaticity dispersion ($\sigma_{\text{chroma}}$).
+   - **Split-Toning Discounting:** Applies an exponential dampening factor to confidence when global split-toning is detected:
      $$\text{penalty} = \exp\left(-\max(0, \sigma_{\text{chroma}} - 0.05) \cdot 15.0\right)$$
-     preventing stylized photographs with artistic color grading from triggering false fake detections.
 
 3. **[`src/extractors/illumination_sh.py`](file:///G:/Thesis/pipeline_dual_stream/src/extractors/illumination_sh.py)** & **[`src/extractors/corneal_optics.py`](file:///G:/Thesis/pipeline_dual_stream/src/extractors/corneal_optics.py)**:
    - Standardized dynamic range normalization across regional patch Spherical Harmonics ($K=2$ directional clustering).
    - Generalized highlight candidate tracking beyond eye pupils to all reflective scene materials.
 
 4. **[`src/extractors/regional_physics.py`](file:///G:/Thesis/pipeline_dual_stream/src/extractors/regional_physics.py)**:
-   - Coordinates all 4 physical entities across Global and 4 Quadrant crops, generating unified $[5, 14]$ feature vectors and $[5, 4]$ confidence matrices.
+   - Coordinates all 4 physical entities across Global and 4 Quadrants into unified $[5, 14]$ features and $[5, 4]$ confidences.
 
 ---
 
-## 4. Quantitative Results & Performance Improvements
+## 4. Empirical Evaluation on Held-Out Chameleon Images
 
-### A. Standalone Physics Stream Performance (Chameleon Native Benchmark)
+Executed via [`scripts/evaluate_modernized_extractors_on_chameleon.py`](file:///G:/Thesis/pipeline_dual_stream/scripts/evaluate_modernized_extractors_on_chameleon.py) on 200 raw held-out test images (100 authentic, 100 synthetic) using CUDA-accelerated DSINE.
 
-| Evaluation Stage | Standalone Physics Accuracy | Standalone Physics AUC | Impact / Findings |
-| :--- | :---: | :---: | :--- |
-| **Old Baseline Weights** | **51.85%** | **0.5289** | Random coin flip; severely crippled by resolution shortcut. |
-| **Old Weights (Shortcut Suppressed)** | **53.99%** | **0.7174** | Ranking power restored (+18.85% AUC), but decision threshold uncalibrated. |
-| **Retrained Head (Invariant Features)** | **60.39%** | **0.6479** | Zero-shot transfer across distinct datasets without resolution bias. |
-| **Retrained Head (Adapted 16k Held-Out)** | **65.04%** | **0.7083** | Evaluated on 16,033 unseen wild images. |
-| **Physics Stream Representations (5-Fold CV)** | **75.84%** | **0.8283** | **+23.99% Acc, +0.2994 AUC** over old baseline. |
+### A. Raw Global Feature Separation
 
-### B. Dual-Stream Fusion Performance (Physics Tokens + DINOv2 Foundation CLS)
+| Physical Feature | Authentic (Real) Mean | Synthetic (Fake) Mean | Diff (Fake - Real) | Raw Single-Feature AUC |
+| :--- | :---: | :---: | :---: | :---: |
+| **`SH_0`** (SH Order-0 Mean Res) | 0.2137 | 0.2602 | +0.0464 | **0.5987** |
+| **`SH_1`** (SH Order-1 Peak Res) | 0.6842 | 0.7695 | +0.0853 | **0.5760** |
+| **`SH_2`** (SH Mode Variance) | 0.0506 | 0.0603 | +0.0098 | **0.5877** |
+| **`SH_3`** (Mode Angular Sep) | 1.9287 | 1.9218 | -0.0069 | 0.4323 |
+| **`SH_4`** (Spatial Mode Coherence)| 0.5496 | 0.5325 | -0.0171 | 0.4734 |
+| **`Spec_dx`** (Horizontal Glint Shift)| 0.2215 | 0.2342 | +0.0127 | 0.5161 |
+| **`Spec_dy`** (Vertical Glint Shift)| 0.2061 | 0.2299 | +0.0237 | 0.5198 |
+| **`Spec_theta`** (Angular Glint Delta)| 0.4171 | 0.4610 | +0.0439 | 0.5416 |
+| **`Spec_prof`** (Profile Discrepancy)| 0.0777 | 0.0898 | +0.0121 | 0.5484 |
+| **`DSINE_var`** (Norm. Error Var) | 0.0291 | 0.0254 | -0.0037 | 0.5431 |
+| **`DSINE_skew`** (Norm. Error Skew)| 2.1953 | 2.1568 | -0.0385 | 0.4705 |
+| **`DSINE_kurt`** (Norm. Error Kurt)| 3.6898 | 3.4720 | -0.2178 | 0.4672 |
+| **`Chroma_RG`** (Shadow RG Ratio) | 0.2722 | 0.2739 | +0.0017 | **0.6416** |
+| **`Chroma_BG`** (Shadow BG Ratio) | 0.2224 | 0.2484 | +0.0260 | **0.5883** |
 
-Evaluated via 5-fold cross-validation on Chameleon (26,033 images):
+### B. Impact of the Split-Toning Confidence Discounting
 
-| Model Configuration | Accuracy | ROC AUC | False Alarm / Error Reduction |
+| Physical Entity | Authentic (Real) Mean Conf | Synthetic (Fake) Mean Conf | Real Samples Discounted ($c < 0.2$) |
 | :--- | :---: | :---: | :---: |
-| **DINOv2 Semantic Stream Alone** | 93.62% | 0.9818 | Baseline anchor |
-| **Fused Dual-Stream (Physics + DINOv2)** | **94.17%** | **0.9840** | **+0.55% Acc (+143 fewer false errors)** |
+| **Chromatic Shadow** | **0.4256** | **0.5831** | **27.0%** of real photos discounted |
+| **Illumination (SH)**| **0.4876** | **0.6655** | **15.0%** of real photos discounted |
+| **Surface Normals** | 0.4997 | 0.5735 | 5.0% |
+| **Specular Optics** | 0.9664 | 0.9954 | 1.0% |
+
+**Key Finding:**  
+In 27% of authentic photographs, the new split-toning aware extractor explicitly identified scene-wide color grading and dampened confidence to $< 0.20$ (compared to the legacy extractor assigning 1.0 confidence), directly mitigating the false-alarm cascade documented in the ablation report.
 
 ---
 
-## 5. Verification & Git Artifacts
+## 5. Verification Artifacts
 
-The following new and modified modules are staged and committed in this release:
-- `src/extractors/base.py`: Abstract extractor interface and robust image loading.
-- `src/extractors/chromatic_shadow.py`: Photographic split-toning aware shadow extractor.
-- `src/extractors/surface_normals.py`: Resolution & contrast-normalized Lambertian normal extractor.
-- `src/extractors/dsine_normals.py`: Pinned local DSINE model adapter.
-- `src/extractors/illumination_sh.py`: Order-2 Spherical Harmonics extractor.
-- `src/extractors/corneal_optics.py`: Generalized specular reflection extractor.
-- `src/extractors/regional_physics.py`: 5-region multi-physics orchestrator.
-- `scripts/find_invariant_physics.py`: Physical feature distribution and inversion audit script.
-- `scripts/test_entity3_impact.py`: Entity-level ablation verification script.
-- `reports/PHYSICS_EXTRACTOR_AUDIT_REPORT.md`: This comprehensive technical audit report.
+All results in Section 4 are reproducible via:
+```bash
+G:\Thesis\.venv\Scripts\python.exe scripts/evaluate_modernized_extractors_on_chameleon.py --num_real 100 --num_fake 100
+```
+Raw outputs: [`reports/modernized_extractor_chameleon_eval.json`](file:///G:/Thesis/pipeline_dual_stream/reports/modernized_extractor_chameleon_eval.json).
