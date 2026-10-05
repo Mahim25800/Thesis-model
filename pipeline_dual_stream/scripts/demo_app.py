@@ -103,6 +103,7 @@ def create_demo(predictor: DualStreamPredictor):
             "DINOv2 Semantic Score": f"{result['semantic_prob_fake']*100:.1f}% fake",
             "Physics Consistency Score": f"{result['physics_prob_fake']*100:.1f}% fake",
             "Dynamic Trust Weight": result["trust_interpretation"],
+            "Evidential Temperature T(x)": result.get("evidential_temperature", 1.0),
             "Quadrant Inconsistencies": result.get("quadrant_inconsistencies", {}),
             "Sensor Noise Residual": sensor_details.get("sensor_finding", "N/A"),
             "Hardware Sensor Verified": "Yes" if is_cam else "No",
@@ -114,11 +115,11 @@ def create_demo(predictor: DualStreamPredictor):
 
         return verdict_html, confidence_chart, heatmap_img, normal_img, tech_details
 
-    with gr.Blocks(title="AI Image Detector - Universal v4") as demo:
+    with gr.Blocks(title="AI Image Detector - Disagreement-Exposed Dual-Stream") as demo:
         gr.Markdown(
             """
-            # 🔬 Universal AI Image Detector (v4)
-            ### Dual-Stream Physics & Semantic Cross-Attention Network with Explainability Heatmaps
+            # 🔬 Universal AI Image Detector (v5 Disagreement-Calibrated)
+            ### Dual-Stream Physics & Semantic Cross-Attention Network with Dynamic Evidential Gating
             """
         )
 
@@ -172,7 +173,7 @@ def main():
     parser.add_argument(
         "--checkpoint",
         type=str,
-        default="G:/Thesis/pipeline_dual_stream/models/universal_v4/best_model.pt",
+        default="G:/Thesis/pipeline_dual_stream/models/universal_v5_disagreement_gate/best_model.pt",
     )
     parser.add_argument("--port", type=int, default=7865)
     parser.add_argument("--share", action="store_true", help="Create public Gradio share link")

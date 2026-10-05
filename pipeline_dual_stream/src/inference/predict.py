@@ -46,8 +46,11 @@ class DualStreamPredictor:
         self.standardizer = ckpt["standardizer"]
         config = ckpt.get("config", {})
 
-        gate_w = ckpt["model_state_dict"].get("fusion_head.gate_net.0.weight", None)
-        gate_mode = "v1" if (gate_w is not None and gate_w.shape[1] == 901) else "v2"
+        if "gate_mode" in ckpt:
+            gate_mode = ckpt["gate_mode"]
+        else:
+            gate_w = ckpt["model_state_dict"].get("fusion_head.gate_net.0.weight", None)
+            gate_mode = "v1" if (gate_w is not None and gate_w.shape[1] == 901) else "v2"
 
         # Initialize detector with DINOv2 weights loaded
         self.model = DualStreamHybridDetector(
@@ -134,6 +137,7 @@ class DualStreamPredictor:
         prob_sem = float(out["prob_semantic"].item())
         prob_phys = float(out["prob_physics"].item())
         alpha = float(out["alpha"].item())
+        temp = float(out["temperature"].item()) if "temperature" in out else 1.0
 
         # Sensor Noise Residual & Computational Photography Analysis (Solution 3)
         sensor_info = self.sensor_extractor.extract(np.array(pil_img))
@@ -212,8 +216,9 @@ class DualStreamPredictor:
             "semantic_prob_fake": prob_sem,
             "physics_prob_fake": prob_phys,
             "trust_alpha": alpha,
+            "evidential_temperature": round(temp, 3),
             "trust_interpretation": (
-                f"{alpha*100:.1f}% Semantic Foundation vs {(1.0-alpha)*100:.1f}% Physical Consistency"
+                f"{alpha*100:.1f}% Semantic Foundation vs {(1.0-alpha)*100:.1f}% Physical Consistency (Evidential Temp: {temp:.2f})"
             ),
             "forensic_finding": forensic_reason,
             "quadrant_inconsistencies": quad_dict,
