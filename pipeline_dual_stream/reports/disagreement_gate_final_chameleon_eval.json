@@ -1,0 +1,41 @@
+{
+  "checkpoint": "models\\universal_v5_disagreement_gate\\final_model.pt",
+  "gate_mode": "v4_disagreement",
+  "total_samples": 26033,
+  "fused_metrics": {
+    "accuracy": 0.705450774017593,
+    "auc": 0.757764767809798,
+    "ece": 0.16638424795256698,
+    "mean_alpha": 0.6992521558379219,
+    "std_alpha": 0.10189419771460423,
+    "mean_temp": 1.938684705752313
+  },
+  "stream_baselines": {
+    "semantic": {
+      "accuracy": 0.6840164406714555,
+      "auc": 0.7385650023120749
+    },
+    "physics": {
+      "accuracy": 0.5185341681711674,
+      "auc": 0.5289462949911188
+    },
+    "joint": {
+      "accuracy": 0.7046825183421043,
+      "auc": 0.7679440892891573
+    }
+  },
+  "disagreement_dynamics": {
+    "total_disagreements": 12184,
+    "sem_wrong_phys_right_count": 3938,
+    "sem_wrong_phys_right_mean_alpha": 0.6672210564781047,
+    "sem_wrong_phys_right_rescued": 1430,
+    "sem_wrong_phys_right_rescue_rate": 0.36312849162011174,
+    "semantic_false_alarms_count": 5217,
+    "semantic_false_alarms_mean_alpha": 0.6894365298021381,
+    "semantic_false_alarms_rescued": 1599,
+    "semantic_false_alarms_rescue_rate": 0.3064979873490512,
+    "sem_right_phys_wrong_count": 8246,
+    "sem_right_phys_wrong_mean_alpha": 0.6931002152929628,
+    "sem_right_phys_wrong_preserved_acc": 0.8584768372544264
+  }
+}

@@ -111,7 +111,7 @@ class GatedCrossAttentionFusion(nn.Module):
         # 4. regional physics observability (5)
         # 5. raw confidence disparity phys_conf - sem_conf (1)
         # Total: 12 dims
-        if self.gate_mode in ["v3", "v3_calibrated"]:
+        if self.gate_mode in ["v3", "v3_calibrated", "v4_disagreement", "disagreement_gate"]:
             self.calib_net = nn.Sequential(
                 nn.Linear(12, 16),
                 nn.LayerNorm(16),
@@ -176,7 +176,7 @@ class GatedCrossAttentionFusion(nn.Module):
                 (1.0 - alpha) * phys_logits +
                 self.joint_scale * joint_logits
             ).squeeze(-1)
-        elif self.gate_mode in ["v3", "v3_calibrated"]:
+        elif self.gate_mode in ["v3", "v3_calibrated", "v4_disagreement", "disagreement_gate"]:
             prob_sem_raw = torch.sigmoid(sem_logits)
             prob_phys = torch.sigmoid(phys_logits)
             raw_discrepancy = torch.abs(prob_sem_raw - prob_phys)
@@ -225,7 +225,11 @@ class GatedCrossAttentionFusion(nn.Module):
 
             alpha = self.gate_net(gate_input)  # [B, 1] in [0, 1]
 
-            phys_augmented = phys_logits + self.joint_scale * torch.tanh(joint_logits) * 2.0
+            if self.gate_mode in ["v4_disagreement", "disagreement_gate"]:
+                phys_augmented = joint_logits + self.joint_scale * torch.tanh(phys_logits) * 1.0
+            else:
+                phys_augmented = phys_logits + self.joint_scale * torch.tanh(joint_logits) * 2.0
+
             final_logits = (
                 alpha * sem_logits_cal +
                 (1.0 - alpha) * phys_augmented

@@ -122,8 +122,8 @@ The end-to-end evaluation reveals a crucial architectural finding:
    - The gate's trust allocation remains anchored to the semantic stream ($\bar{\alpha} \approx 0.66 - 0.67$) because the gating network (`v3_calibrated` and `v2_confidence_adaptive`) was trained on legacy feature standardizers.
 2. **Feature-Level Normalization Alone Is Insufficient Without Joint Recalibration:**
    - While the raw physical features possess genuine individual discriminative power on pixels (e.g. `Chroma_RG` 0.6416 AUC, `SH_0` 0.5987 AUC), these signals cannot improve the fused end-to-end model unless the downstream fusion gate is retrained or recalibrated to allocate trust based on the updated confidence distributions.
-3. **Next Direction:**
-   - The subsequent optimization must target **gate trust allocation and decision-level fusion** (e.g., fast decision heads or joint evidential calibration on the updated feature space), rather than further ad-hoc feature extractor adjustments.
+3. **Next Direction & Resolution:**
+   - As hypothesized, subsequent optimization targeted **gate trust allocation and decision-level fusion**. This has now been implemented and empirically validated via disagreement-exposed gate training: see [`reports/DISAGREEMENT_GATE_AUDIT_REPORT.md`](file:///G:/Thesis/pipeline_dual_stream/reports/DISAGREEMENT_GATE_AUDIT_REPORT.md) where resolving the optimizer generator exhaustion and training on counterfactual semantic failures lifted full Chameleon AUC from 0.7521 to **0.7655** (+0.0134) and rescued **1,449 semantic false alarms**.
 
 ---
 
