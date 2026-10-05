@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-10-06 00:35:00",
+  "benchmark": "Chameleon (Full 26,033 Images)",
+  "baseline_model": "models\\universal_v5_calibrated\\best_model.pt",
+  "candidate_model": "models\\universal_v5_disagreement_gate\\best_model.pt",
+  "population_metrics": {
+    "baseline_auc": 0.7521001602761503,
+    "candidate_auc": 0.765535489731912,
+    "delta_auc": 0.013435329455761646,
+    "baseline_acc": 0.697499327776284,
+    "candidate_acc": 0.7075634771251873,
+    "delta_acc": 0.010064149348903317,
+    "semantic_fa_count": 5217,
+    "baseline_fa_rescued": 947,
+    "candidate_fa_rescued": 1449,
+    "delta_fa_rescued": 502
+  },
+  "bootstrap_results": {
+    "n_bootstraps": 2000,
+    "delta_auc": {
+      "mean": 0.013424414120769158,
+      "std_error": 0.0009525436266399634,
+      "ci_95": [
+        0.011595263297351738,
+        0.01523517817553107
+      ],
+      "ci_99": [
+        0.010890483123961528,
+        0.015901598340341563
+      ],
+      "p_value_one_tailed": 0.0,
+      "p_value_two_tailed": 0.0,
+      "statistically_significant_p05": true,
+      "statistically_significant_p01": true
+    },
+    "delta_accuracy": {
+      "mean": 0.010061095532593248,
+      "std_error": 0.001389080313474191,
+      "ci_95": [
+        0.00725905581377477,
+        0.01282986978066292
+      ],
+      "p_value_two_tailed": 0.0,
+      "statistically_significant": true
+    },
+    "delta_fa_rescue_rate": {
+      "mean": 0.09611179656713736,
+      "ci_95": [
+        0.08674126907093573,
+        0.10577791401511705
+      ]
+    },
+    "candidate_auc_distribution": {
+      "mean": 0.7654414506280609,
+      "ci_95": [
+        0.7598042370993179,
+        0.7712539450888091
+      ]
+    },
+    "baseline_auc_distribution": {
+      "mean": 0.7520170365072918,
+      "ci_95": [
+        0.7461439960954034,
+        0.7578437484922724
+      ]
+    }
+  }
+}
