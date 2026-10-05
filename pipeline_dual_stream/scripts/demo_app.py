@@ -115,11 +115,20 @@ def create_demo(predictor: DualStreamPredictor):
 
         return verdict_html, confidence_chart, heatmap_img, normal_img, tech_details
 
-    with gr.Blocks(title="AI Image Detector - Disagreement-Exposed Dual-Stream") as demo:
+    ckpt_label = getattr(predictor, "checkpoint_label", "universal_v5_disagreement_gate/best_model.pt")
+    gate_mode_label = getattr(predictor.model.fusion_head, "gate_mode", "v4_disagreement")
+
+    with gr.Blocks(title="AI Image Detector - Universal v5 (Disagreement-Calibrated)") as demo:
         gr.Markdown(
-            """
+            f"""
             # 🔬 Universal AI Image Detector (v5 Disagreement-Calibrated)
             ### Dual-Stream Physics & Semantic Cross-Attention Network with Dynamic Evidential Gating
+
+            <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 10px 16px; margin-bottom: 12px; font-size: 0.95rem; color: #166534;">
+                🟢 <b>Active Checkpoint:</b> <code>models/{ckpt_label}</code> &nbsp;|&nbsp; 
+                ⚙️ <b>Gate Mode:</b> <code>{gate_mode_label}</code> &nbsp;|&nbsp; 
+                ⚡ <b>Compute Device:</b> <code>{predictor.device.upper()}</code>
+            </div>
             """
         )
 

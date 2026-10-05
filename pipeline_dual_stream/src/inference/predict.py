@@ -42,6 +42,8 @@ class DualStreamPredictor:
             raise FileNotFoundError(f"Model checkpoint not found: {checkpoint_path}")
 
         print(f"Loading Dual-Stream model from {checkpoint_path} to {self.device}...")
+        self.checkpoint_path = checkpoint_path
+        self.checkpoint_label = f"{checkpoint_path.parent.name}/{checkpoint_path.name}"
         ckpt = torch.load(str(checkpoint_path), map_location=self.device, weights_only=False)
         self.standardizer = ckpt["standardizer"]
         config = ckpt.get("config", {})
