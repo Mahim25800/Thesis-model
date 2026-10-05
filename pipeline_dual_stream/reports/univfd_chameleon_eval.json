@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-10-06 00:52:05",
+  "method": "UnivFD (Ojha et al., CVPR 2023 - CLIP ViT-L/14 Linear Probe)",
+  "split": "200_raw",
+  "sample_count": 200,
+  "num_real": 100,
+  "num_fake": 100,
+  "metrics": {
+    "accuracy": 0.5,
+    "roc_auc": 0.43690000000000007,
+    "false_positive_rate": 0.0,
+    "false_negative_rate": 1.0,
+    "true_negatives": 100,
+    "false_positives": 0,
+    "false_negatives": 100,
+    "true_positives": 0,
+    "mean_fake_prob_real": 0.010025793315427904,
+    "mean_fake_prob_fake": 0.004353723791379878
+  }
+}
