@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-10-06 07:16:48",
+  "benchmark": "Chameleon Held-Out Raw Images (200 Samples: 100 Real, 100 Fake)",
+  "models": {
+    "univfd_clip_baseline": {
+      "description": "UnivFD (Ojha et al., CVPR 2023 - CLIP ViT-L/14 Linear Probe)",
+      "accuracy": 0.5,
+      "roc_auc": 0.43690000000000007,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 1.0,
+      "false_positives": 0,
+      "false_negatives": 100,
+      "mean_fake_prob_real": 0.010025793315427904,
+      "mean_fake_prob_fake": 0.004353723791379878
+    },
+    "physics_stream_alone": {
+      "description": "Regional Multi-Physics Alone (DSINE Normals, SH Lighting, Shadows, Glints)",
+      "accuracy": 0.51,
+      "roc_auc": 0.5282,
+      "false_positive_rate": 0.54,
+      "false_negative_rate": 0.44,
+      "false_positives": 54,
+      "false_negatives": 44,
+      "mean_fake_prob_real": 0.47788363695144653,
+      "mean_fake_prob_fake": 0.5036347508430481
+    },
+    "dinov2_semantic_alone": {
+      "description": "DINOv2 ViT-Base Semantic Stream Alone",
+      "accuracy": 0.725,
+      "roc_auc": 0.8054,
+      "false_positive_rate": 0.3,
+      "false_negative_rate": 0.25,
+      "false_positives": 30,
+      "false_negatives": 25,
+      "mean_fake_prob_real": 0.3166953921318054,
+      "mean_fake_prob_fake": 0.7073881030082703
+    },
+    "universal_v5_calibrated_baseline": {
+      "description": "Universal v5 Calibrated (Standard Gate without Disagreement Exposure)",
+      "mean_alpha": 0.6674643754959106,
+      "mean_temperature": 1.0788897275924683,
+      "accuracy": 0.73,
+      "roc_auc": 0.8107,
+      "false_positive_rate": 0.26,
+      "false_negative_rate": 0.28,
+      "false_positives": 26,
+      "false_negatives": 28,
+      "mean_fake_prob_real": 0.27490654587745667,
+      "mean_fake_prob_fake": 0.7121934294700623
+    },
+    "universal_v5_disagreement_gate_proposed": {
+      "description": "Proposed Dual-Stream Model (Disagreement-Exposed Gate + Evidential Calibration)",
+      "mean_alpha": 0.7274469137191772,
+      "mean_temperature": 1.8475582599639893,
+      "accuracy": 0.74,
+      "roc_auc": 0.8282,
+      "false_positive_rate": 0.25,
+      "false_negative_rate": 0.27,
+      "false_positives": 25,
+      "false_negatives": 27,
+      "mean_fake_prob_real": 0.2637491524219513,
+      "mean_fake_prob_fake": 0.6966741681098938
+    }
+  },
+  "comparisons": {
+    "dual_stream_vs_univfd_auc_delta": 0.3913,
+    "dual_stream_vs_univfd_acc_delta": 0.24,
+    "dual_stream_vs_dinov2_auc_delta": 0.022800000000000042,
+    "dual_stream_vs_dinov2_acc_delta": 0.015000000000000013,
+    "dual_stream_vs_v5_baseline_auc_delta": 0.01750000000000007,
+    "dual_stream_vs_v5_baseline_acc_delta": 0.010000000000000009
+  }
+}
