@@ -1,30 +1,30 @@
 {
-  "checkpoint": "models/universal_v5_calibrated/best_model.pt",
-  "epoch": 1,
-  "timestamp": "2026-10-04 15:10:28",
+  "checkpoint": "G:\\Thesis\\pipeline_dual_stream\\models\\universal_v6_phase2_alignment\\best_model.pt",
+  "epoch": 6,
+  "timestamp": "2026-10-08 15:52:38",
   "chameleon_evaluation": {
     "total_samples": 26033,
     "num_real": 14863,
     "num_fake": 11170,
     "native_benchmark": {
-      "auc_hybrid": 0.7521001271475537,
-      "auc_dinov2": 0.744197821451441,
-      "auc_physics": 0.5289463100495718,
-      "acc_hybrid": 0.697499327776284,
-      "acc_dinov2": 0.6840164406714555,
-      "acc_physics": 0.5185341681711674,
-      "mean_alpha": 0.6690468788192764,
-      "synergy_delta": 0.007902305696112721
+      "auc_hybrid": 0.7529930060713875,
+      "auc_dinov2": 0.732242271113472,
+      "auc_physics": 0.5223189041831238,
+      "acc_hybrid": 0.7022625129643145,
+      "acc_dinov2": 0.6760265816463719,
+      "acc_physics": 0.5215687780893481,
+      "mean_alpha": 0.7618107092184535,
+      "synergy_delta": 0.020750734957915573
     },
     "raise_real_vs_chameleon_fake": {
-      "auc_hybrid": 0.9300772605192479,
-      "auc_dinov2": 0.9266460161145926,
-      "auc_physics": 0.6622324082363474,
-      "acc_hybrid": 0.7104541559554413,
-      "acc_dinov2": 0.7396743787489288,
-      "acc_physics": 0.5138817480719794,
-      "mean_alpha": 0.6792979158058877,
-      "synergy_delta": 0.0034312444046552537
+      "auc_hybrid": 0.9373116383169203,
+      "auc_dinov2": 0.9268673231871084,
+      "auc_physics": 0.659502327663384,
+      "acc_hybrid": 0.6782347900599829,
+      "acc_dinov2": 0.6989717223650386,
+      "acc_physics": 0.4933161953727506,
+      "mean_alpha": 0.7640210951482933,
+      "synergy_delta": 0.01044431512981192
     }
   }
 }

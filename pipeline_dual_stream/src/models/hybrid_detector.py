@@ -12,6 +12,7 @@ import torch.nn as nn
 
 from .dinov2_stream import DINOv2Stream
 from .gated_fusion import GatedCrossAttentionFusion, dual_stream_hybrid_loss
+from .phase2_fusion import Phase2SpatialAlignmentFusion
 from .physics_stream import RegionalPhysicsStream
 
 
@@ -21,7 +22,7 @@ class DualStreamHybridDetector(nn.Module):
     Streams:
     1. Semantic Foundation Stream: DINOv2 ViT-Base extracting global and quadrant tokens.
     2. Regional Multi-Physics Stream: 4 physical entities across 5 spatial regions.
-    3. Gated Cross-Attention Fusion: Dynamic trust gating and spatial discrepancy analysis.
+    3. Gated Cross-Attention Fusion (Phase 1 or Phase 2 Spatial Alignment).
     """
 
     def __init__(
@@ -38,6 +39,7 @@ class DualStreamHybridDetector(nn.Module):
     ):
         super().__init__()
         self.img_size = img_size
+        self.gate_mode = gate_mode
 
         # Semantic Stream
         self.semantic_stream = DINOv2Stream(
@@ -53,15 +55,24 @@ class DualStreamHybridDetector(nn.Module):
             dropout=dropout,
         )
 
-        # Gated Cross-Attention Fusion Head
-        self.fusion_head = GatedCrossAttentionFusion(
-            sem_dim=768,
-            phys_dim=phys_dim,
-            proj_dim=proj_dim,
-            num_heads=num_heads,
-            dropout=dropout,
-            gate_mode=gate_mode,
-        )
+        # Fusion Head: Phase 1 or Phase 2
+        if gate_mode in ["phase2", "phase2_spatial_alignment"]:
+            self.fusion_head = Phase2SpatialAlignmentFusion(
+                sem_dim=768,
+                phys_dim=phys_dim,
+                proj_dim=256,
+                num_heads=8,
+                dropout=dropout,
+            )
+        else:
+            self.fusion_head = GatedCrossAttentionFusion(
+                sem_dim=768,
+                phys_dim=phys_dim,
+                proj_dim=proj_dim,
+                num_heads=num_heads,
+                dropout=dropout,
+                gate_mode=gate_mode,
+            )
 
     def forward(
         self,

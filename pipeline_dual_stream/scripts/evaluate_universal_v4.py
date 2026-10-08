@@ -106,7 +106,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", type=str, default="models/universal_v4/best_model.pt")
     parser.add_argument("--output", type=str, default="reports/universal_v4_evaluation_summary.json")
-    parser.add_argument("--chameleon-cache", type=str, default="data/universal_v4/chameleon/chameleon_cache.pt")
+    parser.add_argument("--chameleon-cache", type=str, default=str(ROOT_DIR / "data/universal_v4/chameleon/chameleon_cache.pt"))
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
 
@@ -127,7 +127,7 @@ def main():
     print("=" * 80)
 
     # 1. Load held-out RAISE real DSLR test samples (500 images)
-    raise_test_path = Path("data/universal_v4/raise_held_out_test.pt")
+    raise_test_path = ROOT_DIR / "data/universal_v4/raise_held_out_test.pt"
     raise_test_data = torch.load(raise_test_path, map_location="cpu", weights_only=True)
     r_pf = raise_test_data["physics_features"]
     r_pc = raise_test_data["physics_confidences"]
@@ -136,7 +136,7 @@ def main():
     r_lbl = raise_test_data["labels"]
 
     synth_phys_dir = Path("G:/Thesis/pipeline_40k/data/cache_synthbuster_regional_v2")
-    synth_dino_dir = Path("data/synthbuster_dino")
+    synth_dino_dir = ROOT_DIR / "data/synthbuster_dino"
 
     # (A) TRULY UNSEEN GENERATORS (Zero training exposure)
     unseen_generators = [
@@ -251,7 +251,7 @@ def main():
     print("\n" + "=" * 80)
     print("SECTION 2: INDEPENDENT HELD-OUT REAL PORTRAIT BENCHMARK (400 REAL CELEBA PHOTOS)")
     print("Tests whether the model incorrectly flags real human faces without heuristic overrides:")
-    celeba_test_path = Path("data/universal_v4/celeba_portraits_test.pt")
+    celeba_test_path = ROOT_DIR / "data/universal_v4/celeba_portraits_test.pt"
     portrait_results = None
     if celeba_test_path.exists():
         c_test = torch.load(celeba_test_path, map_location="cpu", weights_only=True)
@@ -390,7 +390,7 @@ def main():
         }
 
         # Standalone Chameleon evaluation report
-        cham_rep_path = Path("reports/chameleon_evaluation_summary.json")
+        cham_rep_path = ROOT_DIR / "reports/chameleon_evaluation_summary.json"
         cham_rep_path.parent.mkdir(parents=True, exist_ok=True)
         with open(cham_rep_path, "w", encoding="utf-8") as f_cham:
             json.dump(
