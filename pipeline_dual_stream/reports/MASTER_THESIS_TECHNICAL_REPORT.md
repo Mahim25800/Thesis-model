@@ -301,7 +301,7 @@ To train the fusion head, we constructed a 50,100-sample balanced universal mult
 
 On the initial 9-generator unseen Synthbuster benchmark, Universal v4 delivered consistent positive synergy across **all 9 generators**:
 
-| Generator Architecture | Standalone Physics AUC | Standalone DINOv2 AUC | Universal v4 Fused AUC | Net Synergy ($\Delta$) |
+| Generator Architecture | Standalone Physics AUC | Standalone DINOv2 AUC | Universal v4 Fused AUC | Net Synergy (Δ) |
 | :--- | :---: | :---: | :---: | :---: |
 | **OpenAI GLIDE** | 0.6876 | 0.8941 | **0.8998** | **+0.0057** |
 | **DALL-E 2** | 0.6897 | 0.7464 | **0.7496** | **+0.0032** |
@@ -416,26 +416,40 @@ During training, we synthetically inject two classes of counterfactual failures 
 
 ### 5.2 Directional Competence-Guided Gate Loss
 
-Rather than unconstrained ERM, we define explicit pseudo-ground-truth targets $\alpha^*$ conditioned on relative stream competence:
+Rather than unconstrained empirical risk minimization (ERM) which defaults to trusting semantics 100% of the time, we explicitly supervise the gating network with directional competence targets **α*** conditioned on which stream is failing:
+
+- **Case 1 (Semantic Failure):** When semantic prediction error exceeds physics error by > 0.15, the target is set to **α* = 0.12** (forces the gate to suppress semantic logits and heavily trust physics).
+- **Case 2 (Physics Failure):** When physics prediction error exceeds semantic error by > 0.15, the target is set to **α* = 0.88** (forces the gate to suppress physics and trust semantic features).
+- **Case 3 (Agreement or Ambiguity):** Otherwise, the gate target defaults to a balanced baseline **α* = 0.65**.
+
+Formally defined as:
 $$\alpha^* = \begin{cases}
-0.12, & \text{if } |\hat{p}_{\text{sem}} - y| > |\hat{p}_{\text{phys}} - y| + 0.15 \quad (\text{Semantic Failure}) \\
-0.88, & \text{if } |\hat{p}_{\text{phys}} - y| > |\hat{p}_{\text{sem}} - y| + 0.15 \quad (\text{Physics Failure}) \\
+0.12, & \text{if } |\hat{p}_{\text{sem}} - y| > |\hat{p}_{\text{phys}} - y| + 0.15 \quad (\text{Semantic Failure: Trust Physics}) \\
+0.88, & \text{if } |\hat{p}_{\text{phys}} - y| > |\hat{p}_{\text{sem}} - y| + 0.15 \quad (\text{Physics Failure: Trust Semantic}) \\
 0.65, & \text{otherwise (Agreement / Ambiguity)}
 \end{cases}$$
-The gate loss is supervised via binary cross-entropy:
+
+The gate network is supervised via Binary Cross-Entropy (BCE):
 $$\mathcal{L}_{\text{gate}} = \frac{1}{B} \sum_{i=1}^B \text{BCE}(\alpha_i, \alpha_i^*)$$
 
 ---
 
 ### 5.3 Differentiable Evidential Temperature Scaling
 
-We introduced an input-dependent Evidential Temperature Network $T(\mathbf{x}) \in [1.0, \infty)$ conditioned on the 12-dimensional cross-modal discrepancy vector $\mathbf{d}_{\text{cross}}$:
-$$\mathbf{d}_{\text{cross}} = [|p_{\text{sem}} - p_{\text{phys}}| \,\|\, |z_{\text{sem}} - z_{\text{phys}}| \,\|\, \mathbf{d}_{\text{quad}} \,\|\, \mathbf{c}_{\text{phys}} \,\|\, c_{\text{phys}} - c_{\text{sem}}]$$
+To prevent semantic overconfidence from overpowering valid physical warnings, we introduced an input-dependent Evidential Temperature Network **T(x) ≥ 1.0** conditioned on a 12-dimensional cross-modal discrepancy vector **d_cross**:
+- **Cross-Modal Discrepancy Components (d_cross):**
+  1. Absolute probability divergence: `|p_sem - p_phys|`
+  2. Logit margin difference: `|z_sem - z_phys|`
+  3. Regional quadrant lighting and normal disparities: `d_quad`
+  4. Physical feature extraction confidences: `c_phys`
+  5. Global confidence disparity: `c_phys - c_sem`
+
 $$T(\mathbf{x}) = 1.0 + \text{softplus}(\mathbf{W}_2 \text{GELU}(\text{LN}(\mathbf{W}_1 \mathbf{d}_{\text{cross}} + \mathbf{b}_1)) + b_2)$$
-When large physical-semantic discrepancies occur, $T(\mathbf{x})$ scales upwards ($\bar{T} \approx 1.83$), automatically damping overconfident semantic logits before decision fusion:
-$$\hat{z}_{\text{sem}} = \frac{z_{\text{sem}}}{T(\mathbf{x})}$$
-$$\hat{z}_{\text{phys}} = z_{\text{joint}} + \lambda_{\text{scale}} \cdot \tanh(z_{\text{phys}})$$
-$$z_{\text{final}} = \alpha \hat{z}_{\text{sem}} + (1 - \alpha) \hat{z}_{\text{phys}}$$
+
+When large cross-modal discrepancies appear, **T(x)** dynamically scales upwards (averaging **T ≈ 1.83** on contested images), which automatically scales down and cools overconfident semantic logits before fusion:
+- Calibrated Semantic Logit: $\hat{z}_{\text{sem}} = \frac{z_{\text{sem}}}{T(\mathbf{x})}$
+- Calibrated Physics Logit: $\hat{z}_{\text{phys}} = z_{\text{joint}} + \lambda_{\text{scale}} \cdot \tanh(z_{\text{phys}})$
+- Final Fused Logit: $z_{\text{final}} = \alpha \hat{z}_{\text{sem}} + (1 - \alpha) \hat{z}_{\text{phys}}$
 
 ---
 
@@ -465,8 +479,8 @@ While Phase 1 solved the late-decision gating bottleneck, the physical stream wa
 In Phase 2 ([`src/models/phase2_fusion.py`](file:///G:/Thesis/pipeline_dual_stream/src/models/phase2_fusion.py)), we upgraded the architecture to **Dense Spatial Multimodal Alignment**:
 1. Expanded shared projection dimension: $d_{\text{proj}} = 256$ with 8 attention heads.
 2. Formulated **Bidirectional Cross-Attention**:
-   - $\text{Sem} \rightarrow \text{Phys}$: Geometry validates semantics.
-   - $\text{Phys} \rightarrow \text{Sem}$: Semantic visual tokens anchor geometric normal boundaries.
+   - **Semantic → Physics:** Geometry validates semantics.
+   - **Physics → Semantic:** Semantic visual tokens anchor geometric normal boundaries.
 3. Formulated **Multi-Instance Spatial Anomaly Pooling (MIL)**:
    Instead of averaging quadrants (`mean()`), an anomaly scorer assigns dynamic softmax weights to quadrants:
    $$\mathbf{z}_{\text{max\_anomaly}} = \sum_{q=1}^4 \text{softmax}(2.0 \cdot s_q) \mathbf{z}_q$$
@@ -482,17 +496,17 @@ In Phase 2 ([`src/models/phase2_fusion.py`](file:///G:/Thesis/pipeline_dual_stre
 #### Benchmark A: The 9-Generator Unseen Benchmark (Pre-Chameleon)
 *(Source: [`reports/phase2_unseen_generators_evaluation.json`](file:///G:/Thesis/pipeline_dual_stream/reports/phase2_unseen_generators_evaluation.json))*
 
-| Generator Architecture | DINOv2 Alone AUC | Phase 2 Dual-Stream AUC | Net Synergy ($\Delta$) | Accuracy Leap |
+| Generator Architecture | DINOv2 Alone AUC | Phase 2 Dual-Stream AUC | Net Synergy (Δ) | Accuracy Leap |
 | :--- | :---: | :---: | :---: | :---: |
-| **OpenAI GLIDE** | 0.9078 | **0.9251** | +0.0173 | 76.27% $\rightarrow$ 75.87% |
-| **DALL-E 2** | 0.7601 | **0.7896** | +0.0295 | 53.60% $\rightarrow$ **54.00%** |
-| **DALL-E 3** | 0.9360 | **0.9585** | +0.0225 | 77.27% $\rightarrow$ **81.60% (+4.33%)** |
-| **Adobe Firefly** | 0.7311 | **0.7612** | +0.0302 | 47.40% $\rightarrow$ **47.80%** |
-| **Midjourney v5** | 0.7578 | **0.7825** | +0.0247 | 51.47% $\rightarrow$ 49.73% |
-| **Stable Diffusion 1.3** | 0.8595 | **0.8996** | +0.0401 | 64.53% $\rightarrow$ **67.40% (+2.87%)** |
-| **Stable Diffusion 1.4** | 0.8576 | **0.8965** | +0.0389 | 64.40% $\rightarrow$ **68.47% (+4.07%)** |
-| **Stable Diffusion 2.0** | 0.9416 | **0.9646** | +0.0229 | 82.60% $\rightarrow$ **86.67% (+4.07%)** |
-| **Stable Diffusion XL** | 0.9116 | **0.9390** | +0.0274 | 74.87% $\rightarrow$ **77.87% (+3.00%)** |
+| **OpenAI GLIDE** | 0.9078 | **0.9251** | +0.0173 | 76.27% → 75.87% |
+| **DALL-E 2** | 0.7601 | **0.7896** | +0.0295 | 53.60% → **54.00%** |
+| **DALL-E 3** | 0.9360 | **0.9585** | +0.0225 | 77.27% → **81.60% (+4.33%)** |
+| **Adobe Firefly** | 0.7311 | **0.7612** | +0.0302 | 47.40% → **47.80%** |
+| **Midjourney v5** | 0.7578 | **0.7825** | +0.0247 | 51.47% → 49.73% |
+| **Stable Diffusion 1.3** | 0.8595 | **0.8996** | +0.0401 | 64.53% → **67.40% (+2.87%)** |
+| **Stable Diffusion 1.4** | 0.8576 | **0.8965** | +0.0389 | 64.40% → **68.47% (+4.07%)** |
+| **Stable Diffusion 2.0** | 0.9416 | **0.9646** | +0.0229 | 82.60% → **86.67% (+4.07%)** |
+| **Stable Diffusion XL** | 0.9116 | **0.9390** | +0.0274 | 74.87% → **77.87% (+3.00%)** |
 | **Overall Unseen Mean** | **0.8515** | **0.8796** | **+0.0282 (9/9 Positive)** | **Up to +4.33% Accuracy** |
 
 - **Held-Out Real Portraits (400 CelebA DSLR Photos):** False positive rate suppressed to **0.25% (99.75% Real Accuracy, only 1 error in 400 photos)**.
@@ -522,20 +536,20 @@ Chameleon comprises 26,033 completely unconstrained in-the-wild images (14,863 a
 
 This master table compiles the entire progression across all phases:
 
-| Phase / Model Name | Primary Modality | Primary Innovation | Internal Unseen AUC | Synthbuster 9-Gen AUC | Chameleon (26k) AUC | Chameleon (26k) Acc |
-| :--- | :--- | :--- | :---: | :---: | :---: | :---: |
-| **Historical 40k** | Pure Physics | Global feature MLP | 0.7880 | — | — | — |
-| **Physics v4** | Pure Physics | Official DSINE Normal integration | 0.8404 | 0.6232 | — | — |
-| **Regional v5** | Pure Physics | 5 regions $\times$ 4 entities Transformer | 0.8920 | 0.6285 | — | — |
-| **Generator-Inv v6** | Pure Physics | Gradient Reversal Domain Adversarial | 0.8249 | 0.6297 | — | — |
-| **Ensemble v14** | Pure Physics | Calibrated 70/30 v5-TTA + v6 mixture | **0.8895** | **0.7024** | 0.5289 | 51.85% |
-| **Geometry v15** | Pure Physics | Projective Vanishing Points (Negative) | 0.8944 | 0.6262 | — | — |
-| **UnivFD (CVPR 2023)** | Frozen CLIP | Linear Probe on ProGAN (Baseline) | — | — | 0.4369 | 50.00% |
-| **DINOv2 Standalone** | Self-Supervised | Frozen ViT-Base semantic backbone | — | 0.8361 | 0.7447 | 68.40% |
-| **Universal v4** | Dual-Stream | Standard Gated Cross-Attention | — | 0.8456 | 0.7519 | 69.50% |
-| **Universal v5 Calib** | Dual-Stream | Temperature Scaling (Exhaustion Bug) | — | 0.8456 | 0.7521 | 69.75% |
-| **Phase 1 Gate (Ours)** | Dual-Stream | Disagreement Exposure + Evidential Calib | — | 0.8520 | **0.7655** | **70.76%** |
-| **Phase 2 Dense (Ours)**| Dual-Stream | Bidirectional Cross-Attn + MIL Pooling | — | **0.8796** | **0.7690** | **70.81%** |
+| Phase / Model Name | Primary Modality | Core Architectural Innovation | Internal Unseen AUC | Synthbuster 9-Gen AUC | Chameleon In-The-Wild (26k)<br>[Acc / ROC-AUC] |
+| :--- | :--- | :--- | :---: | :---: | :---: |
+| **Historical 40k** | Pure Physics | Global feature MLP | 0.7880 | — | — |
+| **Physics v4** | Pure Physics | Official DSINE Normal integration | 0.8404 | 0.6232 | — |
+| **Regional v5** | Pure Physics | 5 regions × 4 entities Transformer | 0.8920 | 0.6285 | — |
+| **Generator-Inv v6** | Pure Physics | Gradient Reversal Domain Adversarial | 0.8249 | 0.6297 | — |
+| **Ensemble v14** | Pure Physics | Calibrated 70/30 v5-TTA + v6 mixture | **0.8895** | **0.7024** | 51.85% / 0.5289 |
+| **Geometry v15** | Pure Physics | Projective Vanishing Points (Negative) | 0.8944 | 0.6262 | — |
+| **UnivFD (CVPR 2023)** | Frozen CLIP | Linear Probe on ProGAN (Baseline) | — | — | 50.00% / 0.4369 (100% FNR) |
+| **DINOv2 Standalone** | Self-Supervised | Frozen ViT-Base semantic backbone | — | 0.8361 | 68.40% / 0.7447 (5.2k FPs) |
+| **Universal v4** | Dual-Stream | Standard Gated Cross-Attention | — | 0.8456 | 69.50% / 0.7519 |
+| **Universal v5 Calib** | Dual-Stream | Temperature Scaling (Exhaustion Bug) | — | 0.8456 | 69.75% / 0.7521 |
+| **Phase 1 Gate (Ours)** | Dual-Stream | Disagreement Exposure + Evidential Calib | — | 0.8520 | **70.76% / 0.7655** |
+| **Phase 2 Dense (Ours)**| Dual-Stream | Bidirectional Cross-Attn + MIL Pooling | — | **0.8796** | **70.81% / 0.7690 (Peak)** |
 
 ---
 
@@ -543,20 +557,20 @@ This master table compiles the entire progression across all phases:
 
 # 8. Step-by-Step Version-to-Version Delta Progression (Version N vs. Version N-1)
 
-To provide an auditable record of how the system improved incrementally, the following table details every architectural transition, the exact empirical delta over the preceding version, and the engineering rationale:
+To provide an auditable and easily readable record of how the system improved incrementally, the table below documents every architectural transition, the exact empirical metrics before and after, the quantitative leap (Δ), and the engineering rationale:
 
-| Transition (From $\to$ To) | Benchmark / Dataset | Previous Metric ($N-1$) | New Metric ($N$) | Exact Delta ($\Delta$) | Engineering Rationale & Insight |
-| :--- | :--- | :---: | :---: | :---: | :--- |
-| **Historical 40k $\to$ v3 Multi-Entity** | Internal Unseen (40k) | 71.79% Acc / 0.7880 AUC | 73.23% Acc / 0.8135 AUC | **+1.44% Acc / +0.0255 AUC** | Decomposing physics into 4 independent entities with learned missing-cue tokens beat a single monolithic feature vector. |
-| **v3 Multi-Entity $\to$ v4 DSINE Normals** | Internal Unseen (40k) | 73.23% Acc / 0.8135 AUC | 75.86% Acc / 0.8404 AUC | **+2.63% Acc / +0.0269 AUC** | Replacing heuristic normal estimators with the official pretrained `DSINE_v02_kappa` model produced reliable 3D surface cues. Established first Synthbuster external baseline (0.6232 AUC). |
-| **v4 DSINE $\to$ v5 Regional Transformer** | Internal Unseen (40k) | 75.86% Acc / 0.8404 AUC | 81.02% Acc / 0.8920 AUC | **+5.16% Acc / +0.0516 AUC** | **Major architectural breakthrough.** Partitioning images into 5 regions (Global + 4 Quadrants) and learning pairwise entity interactions across a 2-layer Transformer allowed cross-region anomaly detection. |
-| **v5 Regional $\to$ v6 Generator-Invariant** | Synthbuster (Zero-Shot) | 0.6285 AUC | 0.6297 AUC | **+0.0012 AUC (External)** | Gradient Reversal Layer (GRL) suppressed generator-specific shortcuts; internal AUC dropped to 0.8249 as non-transferable features were stripped, but zero-shot transfer improved and became complementary to v5. |
-| **v5 & v6 $\to$ Physics Ensemble v14** | Synthbuster (Zero-Shot) | 0.6232 AUC (v4 base) | 0.7024 AUC (v14 ens) | **+0.0792 AUC ($p < 0.001$)** | Ensembling 70% v5-TTA + 30% v6 and calibrating with Platt scaling yielded the peak pure-physics model on Synthbuster. |
-| **v14 Ensemble $\to$ v15 Projective Geometry** | Synthbuster (Zero-Shot) | 0.7024 AUC | 0.6262 AUC | **-0.0762 AUC (Severe Drop)** | **Critical Negative Result.** Adding vanishing points and perspective geometry increased internal score (0.8944) but degraded external transfer. The model learned dataset-specific perspective biases. Explicitly rejected. |
-| **v14 Pure Physics $\to$ Dual-Stream v4** | Synthbuster 9-Generators | 0.7024 AUC (v14 ens) | 0.8456 AUC (Dual-Stream) | **+0.1432 AUC (+14.3% Leap)** | **The Paradigm Shift.** Pairing physics with frozen DINOv2 ViT-Base semantic tokens broke the pure-physics ceiling, achieving positive synergy across all 9 generators. |
-| **v5 Calib Baseline $\to$ Phase 1 Disagreement Gate** | Chameleon Full (26,033) | 69.75% Acc / 0.7521 AUC | 70.76% Acc / 0.7655 AUC | **+1.01% Acc / +0.0134 AUC** ($p < 0.00001$) | Fixed the PyTorch optimizer generator exhaustion bug, injected 35% counterfactual disagreement, and trained evidential temperature scaling ($T(x) \approx 1.83$), rescuing **1,449 semantic false alarms**. |
-| **Phase 1 Gate $\to$ Phase 2 Dense Alignment** | Unseen 9-Generators | 0.8456 AUC / 65.1% Acc | 0.8796 AUC / 68.3% Acc | **+0.0340 AUC / +3.2% Acc** (Leaps up to +4.33% Acc) | Upgraded from 41 scalar numbers to 256-dim Bidirectional Cross-Attention and Multi-Instance Spatial Anomaly Pooling (MIL). Real portrait accuracy reached 99.75%. |
-| **Phase 1 Gate $\to$ Phase 2 Joint Stream** | Chameleon Full (26,033) | 70.47% Acc / 0.7679 AUC | 70.81% Acc / 0.7690 AUC | **+0.34% Acc / +0.0011 AUC** | Phase 2 Joint Cross-Attended representation set the all-time peak performance on Chameleon, outperforming standalone DINOv2 by **+3.21% in accuracy and +0.0368 in AUC**. |
+| Architectural Transition | Evaluation Benchmark | Quantitative Shift (Before → After) | Net Delta (Δ) & Engineering Rationale |
+| :--- | :--- | :---: | :--- |
+| **Historical 40k → v3 Multi-Entity** | Internal Unseen (40k) | 71.79% Acc / 0.7880 AUC →<br>73.23% Acc / 0.8135 AUC | **+1.44% Acc / +0.0255 AUC**<br>Decomposed physics into 4 independent entities with learned missing-cue tokens; proved superior to a single monolithic vector. |
+| **v3 Multi-Entity → v4 DSINE Normals** | Internal Unseen (40k) | 73.23% Acc / 0.8135 AUC →<br>75.86% Acc / 0.8404 AUC | **+2.63% Acc / +0.0269 AUC**<br>Replaced heuristic normal estimators with the official pretrained `DSINE_v02_kappa` model, providing reliable 3D surface cues. Established first external Synthbuster baseline (0.6232 AUC). |
+| **v4 DSINE → v5 Regional Transformer** | Internal Unseen (40k) | 75.86% Acc / 0.8404 AUC →<br>81.02% Acc / 0.8920 AUC | **+5.16% Acc / +0.0516 AUC (Major Breakthrough)**<br>Partitioned images into 5 regions (Global + 4 Quadrants) and learned pairwise entity interactions across a 2-layer Transformer, enabling localized cross-region anomaly detection. |
+| **v5 Regional → v6 Generator-Invariant** | Synthbuster (Zero-Shot) | 0.6285 AUC →<br>0.6297 AUC | **+0.0012 AUC (External Transfer)**<br>Introduced Gradient Reversal Layer (GRL) to suppress generator-specific artifacts. Internal AUC dropped to 0.8249 as non-transferable shortcuts were stripped, but zero-shot generalization improved and became complementary to v5. |
+| **v5 & v6 → Physics Ensemble v14** | Synthbuster (Zero-Shot) | 0.6232 AUC (v4 base) →<br>0.7024 AUC (v14 ens) | **+0.0792 AUC (p < 0.001)**<br>Ensembled 70% v5-TTA (quadrant flip test-time augmentation) + 30% v6 with Platt scaling calibration, establishing the peak pure-physics benchmark on Synthbuster. |
+| **v14 Ensemble → v15 Projective Geometry** | Synthbuster (Zero-Shot) | 0.7024 AUC →<br>0.6262 AUC | **-0.0762 AUC (Critical Negative Result)**<br>Adding perspective vanishing points improved internal score (0.8944) but severely degraded external generalization. The model memorized perspective biases. Explicitly rejected. |
+| **v14 Pure Physics → Dual-Stream v4** | Synthbuster 9-Generators | 0.7024 AUC (v14 ens) →<br>0.8456 AUC (Dual-Stream) | **+0.1432 AUC (+14.3% Paradigm Leap)**<br>Combined physics with frozen DINOv2 ViT-Base semantic tokens, breaking the pure-physics ceiling and achieving positive synergy across all 9 commercial generators. |
+| **v5 Calib Baseline → Phase 1 Disagreement Gate** | Chameleon Full (26,033) | 69.75% Acc / 0.7521 AUC →<br>70.76% Acc / 0.7655 AUC | **+1.01% Acc / +0.0134 AUC (p < 0.00001)**<br>Fixed the PyTorch optimizer generator exhaustion bug, injected 35% counterfactual disagreement, and trained evidential temperature scaling (T(x) ≈ 1.83), rescuing **1,449 real photos** from false alarms. |
+| **Phase 1 Gate → Phase 2 Dense Alignment** | Unseen 9-Generators | 0.8456 AUC / 65.1% Acc →<br>0.8796 AUC / 68.3% Acc | **+0.0340 AUC / +3.2% Acc (Leaps up to +4.33%)**<br>Upgraded from 41 scalar numbers to 256-dim Bidirectional Cross-Attention and Multi-Instance Spatial Anomaly Pooling (MIL). Real portrait accuracy reached 99.75%. |
+| **Phase 1 Gate → Phase 2 Joint Stream** | Chameleon Full (26,033) | 70.47% Acc / 0.7679 AUC →<br>70.81% Acc / 0.7690 AUC | **+0.34% Acc / +0.0011 AUC (All-Time Peak)**<br>Phase 2 Joint Cross-Attended representation achieved peak performance on Chameleon, outperforming standalone DINOv2 by **+3.21% in accuracy and +0.0368 in AUC**. |
 
 ---
 
@@ -568,9 +582,9 @@ It is essential to clarify the technical scope of this work: **We did not simply
 The final system is an end-to-end **Bi-Directional Cross-Attention Multi-Instance Network with Counterfactual Disagreement-Exposed Evidential Calibration**:
 1. **The Physical Perception Core:** An official DSINE normal estimator, order-2 Spherical Harmonics lighting solver, corneal reflection analyzer, and chromatic shadow absorption module extracting 14-dimensional physical features across 5 spatial regions with dynamic missing-cue gating.
 2. **The Semantic Perception Core:** A frozen DINOv2 ViT-Base self-supervised foundation model extracting 768-dimensional global and regional patch tokens.
-3. **The Shared Bidirectional Alignment Space:** A 256-dimensional latent space with 8 attention heads where semantic patch tokens query 3D geometry ($\text{Sem} \rightarrow \text{Phys}$) and geometric surface normal vectors query visual semantics ($\text{Phys} \rightarrow \text{Sem}$).
+3. **The Shared Bidirectional Alignment Space:** A 256-dimensional latent space with 8 attention heads where semantic patch tokens query 3D geometry (Semantic → Physics) and geometric surface normal vectors query visual semantics (Physics → Semantic).
 4. **Multi-Instance Anomaly Pooling (MIL):** A localized quadrant anomaly network that computes dynamic softmax attention over regional defects, ensuring that subtle generative glitches in a single quadrant are not washed out by clean background quadrants.
-5. **The Evidential Discrepancy Gate:** A neural network conditioned on a 16-dimensional cross-modal discrepancy vector that dynamically regulates the trust parameter $\alpha(\mathbf{x}) \in [0, 1]$ and input-adaptive evidential temperature $T(\mathbf{x}) \ge 1.0$.
+5. **The Evidential Discrepancy Gate:** A neural network conditioned on a 16-dimensional cross-modal discrepancy vector that dynamically regulates the trust parameter α(x) ∈ [0, 1] and input-adaptive evidential temperature T(x) ≥ 1.0.
 
 ---
 
@@ -579,13 +593,13 @@ The final system is an end-to-end **Bi-Directional Cross-Attention Multi-Instanc
 When presenting this thesis for defense or journal submission, our novelty rests upon **five distinct, scientifically verified contributions**:
 
 #### 1. Discovery and Forensic Characterization of "ERM Disagreement Starvation"
-We provide the first documented diagnosis in deepfake forensics of why multimodal gates fail when combining strong foundation models with compact physical extractors. We proved that standard Empirical Risk Minimization (ERM) creates a mathematical trap: because foundation models are 99% accurate on training corpora, cross-entropy minimization drives $\alpha \to 1.0$, completely starving the physical stream of gradient updates and leaving the detector defenseless against semantic false alarms under out-of-distribution shift.
+We provide the first documented diagnosis in deepfake forensics of why multimodal gates fail when combining strong foundation models with compact physical extractors. We proved that standard Empirical Risk Minimization (ERM) creates a mathematical trap: because foundation models are 99% accurate on training corpora, cross-entropy minimization drives α → 1.0, completely starving the physical stream of gradient updates and leaving the detector defenseless against semantic false alarms under out-of-distribution shift.
 
 #### 2. Synthetic Disagreement Exposure & Competence-Guided Supervision
-We introduced an optimization protocol that cures Disagreement Starvation by synthetically perturbing 35% of training samples with counterfactual feature shifts. By exposing the fusion head to scenarios where semantics is wrong but physics is pristine, and supervising $\alpha$ with explicit directional competence targets ($\alpha^* \in \{0.12, 0.88, 0.65\}$), the gate learned when *not* to trust DINOv2.
+We introduced an optimization protocol that cures Disagreement Starvation by synthetically perturbing 35% of training samples with counterfactual feature shifts. By exposing the fusion head to scenarios where semantics is wrong but physics is pristine, and supervising α with explicit directional competence targets (α* ∈ {0.12, 0.88, 0.65}), the gate learned when *not* to trust DINOv2.
 
-#### 3. Differentiable Evidential Temperature Scaling $T(x)$
-Instead of applying global post-hoc calibration, we developed an input-dependent, end-to-end differentiable evidential calibration network. When cross-modal spatial discrepancies or confidence disparities appear, $T(\mathbf{x})$ dynamically scales from $1.0 \rightarrow 1.83$, smoothing overconfident semantic logits before decision fusion and enabling physical consistency to veto false accusations.
+#### 3. Differentiable Evidential Temperature Scaling T(x)
+Instead of applying global post-hoc calibration, we developed an input-dependent, end-to-end differentiable evidential calibration network. When cross-modal spatial discrepancies or confidence disparities appear, T(x) dynamically scales from 1.0 → 1.83, smoothing overconfident semantic logits before decision fusion and enabling physical consistency to veto false accusations.
 
 #### 4. Resolving Literature Error Asymmetry (The Dual Breakthrough)
 We demonstrate that physical inductive bias solves the two opposing failure modes that currently divide the deepfake detection literature:
