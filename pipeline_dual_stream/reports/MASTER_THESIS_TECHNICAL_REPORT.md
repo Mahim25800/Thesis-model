@@ -52,6 +52,33 @@ The journey of this thesis represents the systematic, empirical stress-testing o
 
 ---
 
+### 1.1 The Strategic Pivot: From "Universal Pure Physics" to "Repairing Multimodal Error Asymmetry"
+
+A critical element of this thesis is understanding the intellectual pivot that occurred halfway through the research. We did not abandon physics; rather, we discovered the true, scientifically viable role of physical grounding within modern computer vision:
+
+#### The Old Goal (The Pure Physics Premise):
+* *"We will build a standalone physics detector that achieves 85%+ accuracy across all generators without using any pixel or semantic deep learning features."*
+* **Why it failed in the wild:** Standalone monocular geometry estimators (DSINE normals, Spherical Harmonics lighting) are themselves deep neural networks. When exposed to photorealistic diffusion models in unconstrained wild photography (the 26,033-image Chameleon benchmark), standalone physics degraded to **51.85% Accuracy and 0.5289 ROC-AUC** (barely above chance).
+
+#### The New Contribution (Diagnosing and Repairing Multimodal Error Asymmetry):
+Instead of denying the negative result, we investigated how modern vision foundation models fail and uncovered a dramatic **Error Asymmetry** across the literature:
+1. **The False Negative Collapse in Classical Universal Detectors:**  
+   The reigning benchmark in universal detection—**UnivFD (Ojha et al., CVPR 2023, CLIP ViT-L/14 linear probe)**—completely collapsed when evaluated on modern Chameleon diffusion images:
+   - **Accuracy: 50.00%** | **ROC-AUC: 0.4369**
+   - **False Negative Rate: 100.0% (100 out of 100 fakes predicted as Real!)**  
+   Because UnivFD overfit to 2018-era ProGAN frequency artifacts, it produced a catastrophic false negative failure against modern diffusion generators.
+2. **The False Positive Trap in Vision Foundation Models:**  
+   Pretrained semantic foundation models (**DINOv2 ViT-Base**) achieved strong raw discrimination, but suffered from severe shortcut learning, triggering **5,217 False Positives (False Alarms)** on authentic photography on Chameleon.
+3. **The Multimodal Gate Bottleneck:**  
+   When combining DINOv2 and Physics, standard Empirical Risk Minimization (ERM) starved the physical stream because DINOv2 was 99% accurate on the training corpus. The gate learned to unconditionally trust semantics ($\alpha \to 1.0$), silencing physical evidence.
+
+#### The Dual-Stream Claim of the Thesis:
+> *By diagnosing ERM disagreement starvation and introducing **Disagreement-Exposed Evidential Calibration** and **Dense Spatial Bidirectional Cross-Attention**, our Dual-Stream system simultaneously resolves both failure modes:*
+> 1. *It eliminates the **False Negative Collapse** of classical universal detectors like UnivFD (delivering a **+39.13% ROC-AUC advantage** and detecting modern diffusion fakes that UnivFD missed entirely).*
+> 2. *It acts as an inductive safety brake against semantic foundation models, overturning **1,449 False Positives (27.77% rescue rate)** on real photographs, raising overall in-the-wild accuracy to **70.76% (Phase 1)** and **70.81% (Phase 2)**.*
+
+---
+
 # 2. Act I: The Pure Physics Pipeline (pipeline_40k)
 
 The first phase of the thesis, embodied in `pipeline_40k`, focused exclusively on building an end-to-end, multi-entity, physics-only deepfake detection system with zero pixel or semantic foundation model dependencies.
