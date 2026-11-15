@@ -27,9 +27,18 @@ class PhysicsFeatureDataset(Dataset):
         self.confidences = confidences.float()
         self.labels = labels.float()
 
-        assert (
-            len(self.features) == len(self.confidences) == len(self.labels)
-        ), "Features, confidences, and labels must have the same length"
+        if self.features.ndim != 2 or self.confidences.ndim != 2 or self.labels.ndim != 1:
+            raise ValueError("Expected matrix features/confidences and vector labels")
+        if not (len(self.features) == len(self.confidences) == len(self.labels)):
+            raise ValueError("Features, confidences, and labels must have the same length")
+        if (self.features.shape[1], self.confidences.shape[1]) not in ((14, 4), (17, 5)):
+            raise ValueError("Unsupported feature schema")
+        if not all(torch.isfinite(t).all() for t in (self.features, self.confidences, self.labels)):
+            raise ValueError("Cache contains non-finite values")
+        if ((self.confidences < 0) | (self.confidences > 1)).any():
+            raise ValueError("Confidences must be in [0, 1]")
+        if not ((self.labels == 0) | (self.labels == 1)).all():
+            raise ValueError("Labels must be binary")
 
     @classmethod
     def from_cache(cls, cache_path: Union[str, Path]) -> "PhysicsFeatureDataset":

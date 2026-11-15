@@ -28,14 +28,22 @@ class PhysicsDeepfakePipeline(nn.Module):
         classifier: Optional[GatedCrossGenClassifier] = None,
         weights_path: Optional[Union[str, Path]] = None,
         device: str = "cpu",
+        allow_legacy_incompatible_inference: bool = False,
+        normal_backend: str = "dsine",
+        normal_checkpoint: Optional[Union[str, Path]] = None,
     ):
         super().__init__()
         self.device = torch.device(device)
+        self.allow_legacy_incompatible_inference = allow_legacy_incompatible_inference
 
         # 4 Physics Extractors
         self.extractor_sh = IlluminationSHExtractor()
         self.extractor_cornea = CornealOpticsExtractor()
-        self.extractor_normals = SurfaceNormalsExtractor()
+        self.extractor_normals = SurfaceNormalsExtractor(
+            normal_backend=normal_backend,
+            dsine_checkpoint=normal_checkpoint,
+            dsine_device=str(self.device),
+        )
         self.extractor_chrom = ChromaticShadowExtractor()
 
         # Classifier
@@ -83,6 +91,7 @@ class PhysicsDeepfakePipeline(nn.Module):
             "geom": {"delta": delta_geom.cpu().tolist(), "conf": c_geom},
             "chrom": {"delta": delta_chrom.cpu().tolist(), "conf": c_chrom},
         }
+        breakdown["geom"]["provenance"] = self.extractor_normals.provenance()
 
         return delta, confidences, breakdown
 
@@ -91,7 +100,12 @@ class PhysicsDeepfakePipeline(nn.Module):
         image: Union[np.ndarray, torch.Tensor, str, Path],
         obs_threshold: float = 1.0,
     ) -> Dict[str, Any]:
-        """End-to-end inference from an image to physics-based deepfake verdict with observability gating."""
+        """Legacy raw-image inference retained only for explicit compatibility."""
+        if not self.allow_legacy_incompatible_inference:
+            raise RuntimeError(
+                "Raw-image classification is disabled because historical classifier features cannot be "
+                "reconstructed exactly. Use scripts/predict_cached.py for the promoted model."
+            )
         delta, confidences, breakdown = self.extract_features(image)
         observability = float(confidences.sum().item())
 

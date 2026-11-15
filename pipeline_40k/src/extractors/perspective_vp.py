@@ -1,137 +1,136 @@
-"""3D Perspective & Vanishing Point Geometry Inconsistency Extractor (Module 5).
+"""Confidence-aware image-space projective geometry descriptors.
 
-Evaluates whether lines that should be parallel in 3D projective space converge
-strictly to consistent 1-, 2-, or 3-point Vanishing Points (VPs).
-Diffusion models generate objects patch-by-patch without enforcing projective 3D camera
-matrices, resulting in scattered, inconsistent vanishing point intersections.
+The extractor does not assert that a single photograph has one vanishing point:
+ordinary scenes can contain several 3-D directions and curved objects. It
+instead measures whether long, observable line families form stable projective
+hypotheses. Low-line or texture-only images receive low confidence so this
+entity cannot turn missing geometry into evidence.
 """
 
+from __future__ import annotations
+
 from typing import Tuple, Union
+
+import cv2
 import numpy as np
 import torch
-import cv2
 
 from .base import BasePhysicsExtractor
 from ..data.preprocessor import validate_and_load_image
 
 
-class PerspectiveVPExtractor(BasePhysicsExtractor):
-    """Computes Vanishing Point (VP) intersection dispersion and projective geometry violations.
+GEOMETRY_DIM = 8
 
-    Outputs:
-    - Delta_persp in R^3:
-        1. dispersion_variance: Variance of normalized pairwise intersection coordinates
-        2. cluster_scatter: Mean residual distance to dominant vanishing point clusters
-        3. collinearity_divergence: Deviation of candidate vanishing points from a common horizon
-    - Confidence c_persp in [0, 1]:
-        Conditioned on the count and structural saliency of detected linear segments.
+
+class PerspectiveVPExtractor(BasePhysicsExtractor):
+    """Describe line-family, vanishing-point, and cross-scale consistency.
+
+    Features are bounded summaries, not direct fake scores. They are learned
+    only in combination with the other physics entities and are confidence
+    gated when the image does not contain enough straight structure.
     """
 
-    def __init__(self, min_line_length: float = 15.0, max_intersections: int = 200):
-        super().__init__(feature_dim=3)
-        self.min_line_length = min_line_length
-        self.max_intersections = max_intersections
-        # Fast Line Segment Detector
-        self.lsd = cv2.createLineSegmentDetector(0)
+    def __init__(self, min_line_length: float = 18.0, max_lines: int = 160):
+        super().__init__(feature_dim=GEOMETRY_DIM)
+        if min_line_length <= 0 or max_lines < 12:
+            raise ValueError("Projective geometry settings are invalid")
+        self.min_line_length = float(min_line_length)
+        self.max_lines = int(max_lines)
+        self.lsd = cv2.createLineSegmentDetector(cv2.LSD_REFINE_STD)
 
-    def _extract_lines(self, gray: np.ndarray) -> np.ndarray:
-        """Detects salient line segments [x1, y1, x2, y2]."""
-        lines = self.lsd.detect(gray)[0]
-        if lines is None or len(lines) == 0:
-            return np.empty((0, 4), dtype=np.float32)
+    def _lines(self, gray: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        detected = self.lsd.detect(gray)[0]
+        if detected is None:
+            return (
+                np.empty((0, 4), dtype=np.float32),
+                np.empty(0, dtype=np.float32),
+                np.empty(0, dtype=np.float32),
+            )
+        lines = detected.reshape(-1, 4).astype(np.float32)
+        dx, dy = lines[:, 2] - lines[:, 0], lines[:, 3] - lines[:, 1]
+        lengths = np.hypot(dx, dy)
+        keep = lengths >= self.min_line_length
+        lines, lengths = lines[keep], lengths[keep]
+        if not len(lines):
+            return lines, lengths, np.empty(0, dtype=np.float32)
+        order = np.argsort(lengths)[::-1][: self.max_lines]
+        lines, lengths = lines[order], lengths[order]
+        angles = np.mod(np.arctan2(lines[:, 3] - lines[:, 1], lines[:, 2] - lines[:, 0]), np.pi)
+        return lines, lengths, angles.astype(np.float32)
 
-        lines = lines.reshape(-1, 4)
-        dx = lines[:, 2] - lines[:, 0]
-        dy = lines[:, 3] - lines[:, 1]
-        lengths = np.sqrt(dx**2 + dy**2)
-        valid = lengths >= self.min_line_length
-        return lines[valid]
+    @staticmethod
+    def _orientation_distribution(angles: np.ndarray, lengths: np.ndarray, bins: int = 12) -> np.ndarray:
+        if not len(angles):
+            return np.full(bins, 1.0 / bins, dtype=np.float32)
+        values, _ = np.histogram(angles, bins=bins, range=(0.0, np.pi), weights=lengths)
+        return (values.astype(np.float32) + 1e-4) / (values.sum() + 1e-4 * bins)
 
-    def _compute_intersections(
-        self, lines: np.ndarray, h: int, w: int
-    ) -> Tuple[np.ndarray, float]:
-        """Computes normalized pairwise intersection points (X, Y)."""
-        num_lines = len(lines)
-        if num_lines < 4:
-            return np.empty((0, 2), dtype=np.float32), 0.0
-
-        # Homogeneous representation of lines: ax + by + c = 0
-        x1, y1, x2, y2 = lines[:, 0], lines[:, 1], lines[:, 2], lines[:, 3]
-        a = y1 - y2
-        b = x2 - x1
-        c = x1 * y2 - x2 * y1
-        norm = np.sqrt(a**2 + b**2) + 1e-7
+    @staticmethod
+    def _vp_summary(lines: np.ndarray, lengths: np.ndarray, height: int, width: int) -> tuple[float, float]:
+        """Return dominant projective-hypothesis support and compactness."""
+        if len(lines) < 6:
+            return 0.0, 0.0
+        x1, y1, x2, y2 = (lines[:, index] for index in range(4))
+        a, b, c = y1 - y2, x2 - x1, x1 * y2 - x2 * y1
+        norm = np.hypot(a, b) + 1e-7
         a, b, c = a / norm, b / norm, c / norm
+        points, weights = [], []
+        for left in range(len(lines)):
+            for right in range(left + 1, len(lines)):
+                determinant = a[left] * b[right] - a[right] * b[left]
+                if abs(determinant) < 0.08:
+                    continue
+                px = (b[left] * c[right] - b[right] * c[left]) / determinant
+                py = (c[left] * a[right] - c[right] * a[left]) / determinant
+                nx, ny = (px - width / 2) / (width / 2), (py - height / 2) / (height / 2)
+                if abs(nx) <= 4.0 and abs(ny) <= 4.0:
+                    points.append((nx, ny))
+                    weights.append(float(min(lengths[left], lengths[right])))
+        if len(points) < 8:
+            return 0.0, 0.0
+        pts, weight_values = np.asarray(points), np.asarray(weights)
+        grid = np.floor((pts + 4.0) * 2.0).astype(int)
+        keys, inverse = np.unique(grid, axis=0, return_inverse=True)
+        support = np.bincount(inverse, weights=weight_values, minlength=len(keys))
+        best = int(np.argmax(support))
+        selected = inverse == best
+        share = float(support[best] / max(float(support.sum()), 1e-6))
+        center = np.average(pts[selected], axis=0, weights=weight_values[selected])
+        distance = np.linalg.norm(pts[selected] - center, axis=1)
+        compactness = float(np.exp(-np.average(distance, weights=weight_values[selected])))
+        return float(np.clip(share, 0.0, 1.0)), float(np.clip(compactness, 0.0, 1.0))
 
-        intersections = []
-        # Sample non-parallel pairs
-        step = max(1, num_lines // 25)
-        for i in range(0, num_lines, step):
-            for j in range(i + 1, min(num_lines, i + 35)):
-                # Cross product of normal directions: |a1*b2 - a2*b1| = |sin(theta)|
-                det = a[i] * b[j] - a[j] * b[i]
-                if abs(det) > 0.15:  # Angle > ~8.5 degrees
-                    ix = (b[i] * c[j] - b[j] * c[i]) / det
-                    iy = (c[i] * a[j] - c[j] * a[i]) / det
-
-                    # Normalize relative to image frame
-                    norm_x = (ix - w / 2.0) / (w / 2.0)
-                    norm_y = (iy - h / 2.0) / (h / 2.0)
-
-                    # Only keep reasonable projective range (-5.0 to 5.0)
-                    if abs(norm_x) <= 5.0 and abs(norm_y) <= 5.0:
-                        intersections.append([norm_x, norm_y])
-
-                if len(intersections) >= self.max_intersections:
-                    break
-            if len(intersections) >= self.max_intersections:
-                break
-
-        pts = np.array(intersections, dtype=np.float32)
-        confidence = float(np.clip(len(pts) / 40.0, 0.05, 1.0))
-        return pts, confidence
-
-    def extract(
-        self, image: Union[np.ndarray, torch.Tensor]
-    ) -> Tuple[torch.Tensor, float]:
+    def extract(self, image: Union[np.ndarray, torch.Tensor]) -> Tuple[torch.Tensor, float]:
         image_np = validate_and_load_image(image)
-        h, w = image_np.shape[:2]
+        height, width = image_np.shape[:2]
         gray = cv2.cvtColor(image_np, cv2.COLOR_RGB2GRAY)
+        lines, lengths, angles = self._lines(gray)
+        if len(lines) < 6:
+            return torch.zeros(GEOMETRY_DIM, dtype=torch.float32), 0.02
 
-        lines = self._extract_lines(gray)
-        pts, confidence = self._compute_intersections(lines, h, w)
+        diagonal = float(np.hypot(height, width))
+        orientation = self._orientation_distribution(angles, lengths)
+        entropy = float(-(orientation * np.log(orientation)).sum() / np.log(len(orientation)))
+        dominant_orientation = float(orientation.max())
+        line_density = float(np.clip(np.log1p(len(lines)) / np.log1p(self.max_lines), 0.0, 1.0))
+        mean_length = float(np.clip(np.average(lengths) / max(diagonal, 1.0), 0.0, 1.0))
+        coverage = float(np.clip(lengths.sum() / max(4.0 * diagonal, 1.0), 0.0, 1.0))
+        vp_support, vp_compactness = self._vp_summary(lines, lengths, height, width)
 
-        if len(pts) < 6:
-            # Low structural evidence: neutral fallback
-            delta = torch.tensor([0.25, 0.50, 0.25], dtype=torch.float32)
-            return delta, 0.02
+        small = cv2.resize(gray, (max(16, width // 2), max(16, height // 2)), interpolation=cv2.INTER_AREA)
+        _, small_lengths, small_angles = self._lines(small)
+        small_orientation = self._orientation_distribution(small_angles, small_lengths)
+        midpoint = 0.5 * (orientation + small_orientation)
+        js_divergence = 0.5 * (
+            np.sum(orientation * np.log(orientation / midpoint))
+            + np.sum(small_orientation * np.log(small_orientation / midpoint))
+        )
+        cross_scale_agreement = float(np.clip(1.0 - js_divergence / np.log(2.0), 0.0, 1.0))
 
-        # 1. Dispersion variance of vanishing point intersections
-        var_x = float(np.var(pts[:, 0]))
-        var_y = float(np.var(pts[:, 1]))
-        dispersion_var = float(np.clip((var_x + var_y) / 2.0, 0.0, 10.0))
-
-        # 2. Cluster scatter: residual distance to dominant 2-cluster median centers
-        # Partition points into 2 clusters along principal axis
-        median_y = np.median(pts[:, 1])
-        c1 = pts[pts[:, 1] <= median_y]
-        c2 = pts[pts[:, 1] > median_y]
-
-        scatter1 = np.mean(np.linalg.norm(c1 - np.median(c1, axis=0), axis=1)) if len(c1) > 0 else 0.0
-        scatter2 = np.mean(np.linalg.norm(c2 - np.median(c2, axis=0), axis=1)) if len(c2) > 0 else 0.0
-        cluster_scatter = float(np.clip((scatter1 + scatter2) / 2.0, 0.0, 5.0))
-
-        # 3. Collinearity divergence: horizon line fit residual
-        # Robust linear fit to candidate vanishing points
-        if len(pts) >= 4:
-            x_vals = pts[:, 0]
-            y_vals = pts[:, 1]
-            # Fit y = mx + c
-            poly = np.polyfit(x_vals, y_vals, deg=1)
-            y_pred = np.polyval(poly, x_vals)
-            collinearity_div = float(np.clip(np.mean(np.abs(y_vals - y_pred)), 0.0, 5.0))
-        else:
-            collinearity_div = 0.5
-
-        delta = torch.tensor([dispersion_var, cluster_scatter, collinearity_div], dtype=torch.float32)
-        return delta, confidence
+        features = torch.tensor([
+            line_density, mean_length, coverage, entropy, dominant_orientation,
+            vp_support, vp_compactness, cross_scale_agreement,
+        ], dtype=torch.float32)
+        evidence = min(1.0, len(lines) / 48.0)
+        confidence = float(np.clip(evidence * (0.35 + 0.65 * max(vp_support, dominant_orientation)), 0.02, 1.0))
+        return features, confidence

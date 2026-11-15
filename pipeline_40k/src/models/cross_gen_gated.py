@@ -1,18 +1,18 @@
-"""100% Pure Physics Transformer Cross-Generator Classifier with Focal & Contrastive Learning.
+"""Legacy transformer for compact physics-inspired consistency features.
 
-Operates strictly on 5 derived optical and geometric invariant tokens (17 physical dimensions):
+The historical 14-dimensional cache contains four measured feature groups. The
+architecture retains a fifth learned mask token for checkpoint compatibility;
+it does not contain measured perspective evidence in this cache schema.
+
+Configured token dimensions:
 1. Token 1 (Light Field SH Decomposition): d_in = 5 -> d_model = 64
 2. Token 2 (Corneal / Specular Optics):   d_in = 4 -> d_model = 64
 3. Token 3 (Surface Normal Shading):      d_in = 3 -> d_model = 64
 4. Token 4 (Chromatic Shadow Rays):       d_in = 2 -> d_model = 64
 5. Token 5 (3D Perspective Vanishing VP): d_in = 3 -> d_model = 64
 
-Enforces Physical Cross-Modal Coupling through 2-Layer Multi-Head Self-Attention:
-- Shadow-to-Light Alignment (Token 4 <-> Token 1): Verifies shadow direction opposes illuminant.
-- Normal-to-Perspective Alignment (Token 3 <-> Token 5): Verifies surface planes match vanishing planes.
-- Specular Consistency (Token 2 <-> Token 1): Verifies highlight angles match radiant source vectors.
-
-Zero raw pixel values, zero frequency/Fourier heuristics, zero generator fingerprints.
+Self-attention learns statistical interactions between these summary tokens. It
+does not explicitly enforce an optical equation.
 """
 
 from typing import Tuple, Union
@@ -34,8 +34,10 @@ class FocalLoss(nn.Module):
         self.reduction = reduction
 
     def forward(self, logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
-        logits = logits.squeeze()
-        targets = targets.float()
+        logits = logits.reshape(-1)
+        targets = targets.float().reshape(-1)
+        if self.reduction not in ("mean", "sum", "none"):
+            raise ValueError("reduction must be mean, sum, or none")
         bce_loss = F.binary_cross_entropy_with_logits(logits, targets, reduction="none")
         probs = torch.sigmoid(logits)
         p_t = targets * probs + (1.0 - targets) * (1.0 - probs)
@@ -44,6 +46,8 @@ class FocalLoss(nn.Module):
         loss = focal_weight * bce_loss
         if self.reduction == "mean":
             return loss.mean()
+        if self.reduction == "none":
+            return loss
         return loss.sum()
 
 
@@ -52,11 +56,14 @@ class SupConLoss(nn.Module):
 
     def __init__(self, temperature: float = 0.07):
         super().__init__()
+        if temperature <= 0:
+            raise ValueError("temperature must be positive")
         self.temperature = temperature
 
     def forward(self, projections: torch.Tensor, labels: torch.Tensor) -> torch.Tensor:
         projections = F.normalize(projections, dim=1)
         similarity_matrix = torch.matmul(projections, projections.T) / self.temperature
+        similarity_matrix = similarity_matrix - similarity_matrix.max(dim=1, keepdim=True).values.detach()
 
         labels = labels.contiguous().view(-1, 1)
         mask = torch.eq(labels, labels.T).float()
@@ -73,11 +80,14 @@ class SupConLoss(nn.Module):
         exp_logits = torch.exp(similarity_matrix) * logits_mask
         log_prob = similarity_matrix - torch.log(exp_logits.sum(1, keepdim=True) + 1e-7)
         mean_log_prob_pos = (mask * log_prob).sum(1) / (mask.sum(1) + 1e-7)
-        return -mean_log_prob_pos.mean()
+        valid = mask.sum(1) > 0
+        if not valid.any():
+            return projections.sum() * 0.0
+        return -mean_log_prob_pos[valid].mean()
 
 
 class TransformerPhysicsCrossGenHead(nn.Module):
-    """5-Token Pure Physics Transformer Classifier Head.
+    """Legacy five-token classifier with four measured 14D cache groups.
 
     Modality Tokens (17 pure physical dimensions):
     - Token 1 (Light Field SH): d_in = 5 -> d_model = 64
@@ -167,6 +177,15 @@ class TransformerPhysicsCrossGenHead(nn.Module):
         if conf.ndim == 1:
             conf = conf.unsqueeze(0)
 
+        if delta.ndim != 2 or conf.ndim != 2 or delta.shape[0] != conf.shape[0]:
+            raise ValueError("Features and confidences must be aligned two-dimensional batches")
+        if (delta.shape[1], conf.shape[1]) not in ((14, 4), (17, 5)):
+            raise ValueError("Expected 14 features/4 confidences or 17 features/5 confidences")
+        if not torch.isfinite(delta).all() or not torch.isfinite(conf).all():
+            raise ValueError("Inputs must be finite")
+        if ((conf < 0) | (conf > 1)).any():
+            raise ValueError("Confidences must be in [0, 1]")
+
         batch_size = delta.shape[0]
 
         # Determine active input modalities from feature dimension
@@ -206,7 +225,7 @@ class TransformerPhysicsCrossGenHead(nn.Module):
         cls_tokens = self.cls_token.repeat(batch_size, 1, 1)
         x = torch.cat([cls_tokens, tokens_seq], dim=1)
 
-        # Multi-Head Self-Attention over Physics + Frequency Tokens
+        # Multi-head self-attention over compact consistency tokens.
         encoded = self.transformer(x)
         encoded = self.norm(encoded)
 
