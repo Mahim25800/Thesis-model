@@ -1,0 +1,64 @@
+{
+  "recorded_at": "2026-09-17",
+  "candidate": "physics_ensemble_v14",
+  "selection_data": [
+    "group-disjoint internal development",
+    "GenImage Wukong development"
+  ],
+  "physics_entities": [
+    "illumination consistency",
+    "scene-wide specular optics",
+    "DSINE surface-normal consistency",
+    "chromatic-shadow consistency"
+  ],
+  "internal_unseen": {
+    "samples": 7992,
+    "accuracy": 0.8030530530530531,
+    "auc_roc": 0.8895299348697395,
+    "eer": 0.19156663326653306
+  },
+  "synthbuster": {
+    "generators": 9,
+    "samples": 18000,
+    "mean_accuracy": 0.6351111111111111,
+    "mean_auc": 0.7023788888888889,
+    "mean_eer": 0.3466111111111111,
+    "minimum_generator_auc": 0.6409819999999999,
+    "minimum_generator": "firefly"
+  },
+  "genimage_confirmatory": {
+    "domains": [
+      "glide",
+      "midjourney",
+      "sdv4",
+      "sdv5"
+    ],
+    "retained_samples": 7998,
+    "excluded_perceptual_hash_matches": 2,
+    "mean_accuracy": 0.5827747623811905,
+    "mean_auc": 0.6238670015015014,
+    "mean_eer": 0.4157257257257257,
+    "minimum_generator_auc": 0.57087,
+    "v6_mean_auc": 0.6330105885885886,
+    "v14_minus_v6_mean_auc": -0.009131699190590592,
+    "v14_minus_v6_95ci": [
+      -0.016906265878378384,
+      -0.0016228145708207938
+    ]
+  },
+  "predeclared_breakthrough_gate_passed": false,
+  "supported_claim": "Regional multi-physics reasoning produced a statistically validated improvement over the project's global physics baseline on Synthbuster, with a documented cross-dataset generalization limit on a frozen GenImage confirmation.",
+  "unsupported_claims": [
+    "universal breakthrough",
+    "state of the art",
+    "generalization to all unseen generators"
+  ],
+  "primary_artifacts": {
+    "model": "models/physics_ensemble_v14/model.pt",
+    "internal": "models/physics_ensemble_v14/evaluation_internal.json",
+    "synthbuster": "models/physics_ensemble_v14/external_synthbuster/evaluation.json",
+    "confirmatory": "models/physics_ensemble_v14/genimage_confirmatory/evaluation.json",
+    "model_card": "models/physics_ensemble_v14/MODEL_CARD.md",
+    "report": "JOURNAL_READINESS_REPORT.md"
+  }
+}

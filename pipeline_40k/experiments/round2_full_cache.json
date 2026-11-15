@@ -1,0 +1,279 @@
+{
+  "protocol": "Development-only screening; calibration and test labels not loaded.",
+  "results": [
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 15,
+        "learning_rate": 0.04,
+        "l2_regularization": 1.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.728220091704877,
+        "auc": 0.8064338337503475,
+        "log_loss": 0.5357208741431877
+      },
+      "seconds": 1.995
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 15,
+        "learning_rate": 0.06,
+        "l2_regularization": 5.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7382242601083785,
+        "auc": 0.8126035585209896,
+        "log_loss": 0.5275036121425941
+      },
+      "seconds": 2.003
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 15,
+        "learning_rate": 0.08,
+        "l2_regularization": 10.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7373905794080867,
+        "auc": 0.8147060050041701,
+        "log_loss": 0.5251293606154044
+      },
+      "seconds": 2.059
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 31,
+        "learning_rate": 0.04,
+        "l2_regularization": 1.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7357232180075032,
+        "auc": 0.8112010008340284,
+        "log_loss": 0.5288749092847044
+      },
+      "seconds": 2.9
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 31,
+        "learning_rate": 0.06,
+        "l2_regularization": 5.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7428095039599834,
+        "auc": 0.8161460939671948,
+        "log_loss": 0.5222080229022845
+      },
+      "seconds": 2.609
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 31,
+        "learning_rate": 0.08,
+        "l2_regularization": 10.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7436431846602751,
+        "auc": 0.8223241590214068,
+        "log_loss": 0.5155108321047338
+      },
+      "seconds": 2.525
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 63,
+        "learning_rate": 0.04,
+        "l2_regularization": 1.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7407253022092538,
+        "auc": 0.8140492076730609,
+        "log_loss": 0.5244768582139832
+      },
+      "seconds": 3.506
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 63,
+        "learning_rate": 0.06,
+        "l2_regularization": 5.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7428095039599834,
+        "auc": 0.8173192938559911,
+        "log_loss": 0.5205218158387488
+      },
+      "seconds": 2.688
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 63,
+        "learning_rate": 0.08,
+        "l2_regularization": 10.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7478115881617341,
+        "auc": 0.8191597164303586,
+        "log_loss": 0.5193408024425032
+      },
+      "seconds": 3.183
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 127,
+        "learning_rate": 0.04,
+        "l2_regularization": 1.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7369737390579408,
+        "auc": 0.8148700305810397,
+        "log_loss": 0.5239891700250142
+      },
+      "seconds": 3.245
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 127,
+        "learning_rate": 0.06,
+        "l2_regularization": 5.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7378074197582326,
+        "auc": 0.8159167361690298,
+        "log_loss": 0.523056920189342
+      },
+      "seconds": 3.399
+    },
+    {
+      "schema": "all_18",
+      "model": "hgb",
+      "params": {
+        "max_leaf_nodes": 127,
+        "learning_rate": 0.08,
+        "l2_regularization": 10.0,
+        "max_iter": 500,
+        "min_samples_leaf": 20,
+        "early_stopping": true,
+        "validation_fraction": 0.1,
+        "n_iter_no_change": 35,
+        "random_state": 42
+      },
+      "development": {
+        "accuracy_0_5": 0.7403084618591079,
+        "auc": 0.8165394773422296,
+        "log_loss": 0.5225978386585824
+      },
+      "seconds": 2.848
+    }
+  ],
+  "best": {
+    "schema": "all_18",
+    "model": "hgb",
+    "params": {
+      "max_leaf_nodes": 63,
+      "learning_rate": 0.08,
+      "l2_regularization": 10.0,
+      "max_iter": 500,
+      "min_samples_leaf": 20,
+      "early_stopping": true,
+      "validation_fraction": 0.1,
+      "n_iter_no_change": 35,
+      "random_state": 42
+    },
+    "development": {
+      "accuracy_0_5": 0.7478115881617341,
+      "auc": 0.8191597164303586,
+      "log_loss": 0.5193408024425032
+    },
+    "seconds": 3.183
+  },
+  "status": "complete"
+}

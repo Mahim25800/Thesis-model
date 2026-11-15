@@ -1,0 +1,9 @@
+{
+  "updated_at_utc": "2026-09-17T03:11:35.230717+00:00",
+  "stage": "complete",
+  "state": "complete",
+  "internal_report": "models/generator_invariant_v6/evaluation_internal.json",
+  "external_report": "models/generator_invariant_v6/external_synthbuster/evaluation.json",
+  "no_adversary_report": "models/generator_diverse_v6_no_adversary/external_synthbuster/evaluation.json",
+  "ablation_report": "models/generator_invariant_v6/external_synthbuster/ablation.json"
+}
