@@ -1,0 +1,273 @@
+Thesis Visual Placeholder Generation Guide
+
+Oct 11, 2026 · @Mostofa Seum
+
+This guide lists every blank figure and table placeholder still needed in the thesis draft (25 total: 22 figures + 3 tables), with the exact repository source and generation method for each, so nothing is invented or mismatched against the committed model and evaluation data.
+
+Tables to generate (3)
+
+All three are plain Word tables filled by a short script that reads the repo directly; none needs image rendering.
+
+Table
+
+Columns
+
+Content and exact values
+
+Source in repo
+
+Generation method
+
+Table 3.3: Training Configuration
+
+Hyperparameter, Phase 1, Phase 2
+
+Epochs 12 / 8; batch 128 / 256; AdamW both; lr 4e-4 / 5e-4; weight decay 1e-4 both; dropout 0.15 both; p_disagree 0.35 both; calibration input features 12 / 16; loss: BCE + gate loss / BCE + 0.6 joint + 0.3 semantic + 0.2 physics + 0.4 gate + 0.15 alignment; seed 42 both
+
+pipeline_dual_stream/scripts/train_disagreement_exposed_gate.py (Phase 1); train_phase2_spatial_alignment.py (Phase 2)
+
+Copy values verbatim from the argparse defaults or config block at the top of each script
+
+Table 4.1: Evaluation Benchmark Composition
+
+Benchmark, Real images, Fake images, Total, Generator(s)/Source
+
+Rows: Internal 40k split; Synthbuster (9 generators); GenImage disjoint confirmation; 9-generator cross-generator suite; Chameleon full (26,033); Chameleon held-out 200-image split
+
+universal_v4_evaluation_summary.json, the Synthbuster report, chameleon_200_heldout_dual_stream_benchmark.json, and any reports/*.json with n_real, n_fake or sample counts
+
+Short Python script prints the count fields from each JSON; transcribe, never estimate
+
+Table 5.1: Computational Footprint
+
+Component, Parameters, Trained in this work, Role
+
+Rows: DINOv2 ViT-Base/14 (frozen); DSINE v02-kappa (frozen); physics extractors (non-learned: SH fitting, highlight detection, shading residual, chromatic drift); Phase 1 fusion head; Phase 2 fusion head; final row: throughput 2.21 images/s (90.6 s on 200 Chameleon images)
+
+gated_fusion.py (Phase 1), phase2_fusion.py (Phase 2); throughput from modernized_extractor_chameleon_eval.json, field metadata.throughput_fps
+
+Load each model class and run sum(p.numel()) for total and for p.requires_grad parameters
+
+Diagrams and sample grids (5 figures)
+
+These are built from repo code and images rather than from evaluation numbers.
+
+Figure
+
+Content
+
+Source in repo
+
+Generation method
+
+Figure 1.1: Authentic Photographs and Visually Indistinguishable AI-Generated Images from the Chameleon In-the-Wild Benchmark
+
+2-row grid: 4 authentic photos (top), 4 AI-generated images (bottom), each labelled with ground-truth class
+
+8 images from the same Chameleon split used in chameleon_200_heldout_dual_stream_benchmark.json
+
+Python with PIL or matplotlib: 2x4 subplot grid, tile captions Real or AI-Generated, save PNG at 300 DPI or higher
+
+Figure 3.1: Five-Region Decomposition
+
+One sample image with 5 labelled boxes: Global (full frame) plus TL, TR, BL, BR quadrants
+
+pipeline_40k/src/extractors/regional_physics.py (confirm exact crop coordinates)
+
+matplotlib patches.Rectangle for the four quadrants, dashed border for Global, labels on each
+
+Figure 3.2: Intermediate Physics Outputs
+
+2 rows x 4 columns: row 1 real image, row 2 fake image; columns: DSINE normal map, Lambertian shading residual, specular highlight mask, chromatic shadow mask
+
+surface_normals.py, corneal_optics.py, chromatic_shadow.py in pipeline_40k/src/extractors
+
+Run each extractor on one real and one fake image, capture intermediate outputs (not just final features), colour-map with cv2.applyColorMap, arrange in a matplotlib grid
+
+Figure 3.4: Phase 2 Fusion Module with Tensor Shapes
+
+Block diagram: semantic input [B, 5, 768] to projection [B, 5, 256] to 8-head bidirectional cross-attention to 1,024-D joint token to calibration input [B, 16]
+
+pipeline_dual_stream/src/models/phase2_fusion.py; verify every shape against the layer definitions in init
+
+Architecture diagram (boxes and arrows) in Graphviz, draw.io or matplotlib FancyArrow, each box labelled with its exact tensor shape
+
+Figure 3.5: Counterfactual Disagreement Exposure
+
+Batch split 65% normal / 35% counterfactual-injected; decision on semantic vs physics error; alpha-star targets 0.12 (semantic wrong), 0.88 (physics wrong), 0.65 (otherwise)
+
+train_disagreement_exposed_gate.py: p_disagree=0.35 and the alpha-star assignment logic
+
+Flowchart: batch-split box feeding a decision diamond that branches to the three alpha-star values; Graphviz or draw.io
+
+Training dynamics chart (Figure 4.1)
+
+Figure 4.1: Training Dynamics of the Trust Gate and Evidential Temperature across the Three Dual-Stream Configurations. A dual-axis line chart: x-axis is training epoch, left y-axis is gate alpha, right y-axis is temperature T(x).
+
+Universal v5: T constant at about 1.079 (the frozen-optimizer bug), no learned alpha curve.
+
+Phase 1: alpha rises from 0.52 to 0.77; T rises from 1.13 to 2.2.
+
+Phase 2: alpha stays between 0.78 and 0.82; T falls from 1.04 to 1.00.
+
+Sources: disagreement_gate_training_log.json (Phase 1), phase2_alignment_training_log.json (Phase 2), universal_v5_calibration_training_log.json (Universal v5).
+
+Method: one matplotlib script using ax.twinx() that parses the epoch arrays from all three JSON logs. Do not hand-type epoch values.
+
+Live interface screenshots (5 figures)
+
+These cannot be generated from JSON or code. They must be real captures of the two running Gradio apps.
+
+Figure
+
+What to capture
+
+App and address
+
+Figure 4.2
+
+Empty upload panel before any image is submitted
+
+demo_app.py (dual-stream), http://127.0.0.1:7865
+
+Figure 4.3
+
+Verdict card for one known-real and one known-fake image (two screenshots or a side-by-side composite)
+
+demo_app.py, port 7865
+
+Figure 4.4
+
+Forensic Anomaly Heatmap tab and 3D Surface Normal Geometry tab after a submission
+
+demo_app.py, port 7865
+
+Figure 4.5
+
+Technical Diagnostics JSON panel showing final_prob_fake, semantic_prob_fake, physics_prob_fake, trust_alpha, evidential_temperature, trust_interpretation, forensic_finding, quadrant_inconsistencies
+
+demo_app.py, port 7865
+
+Figure 4.6
+
+Full physics-only interface
+
+pipeline_40k/demo_v14/app.py, http://127.0.0.1:7860
+
+Steps: run both apps locally, open the addresses in a browser, upload a known-real and a known-fake test image, and take clean full-window screenshots of each state above. Default checkpoint for the dual-stream app is universal_v5_disagreement_gate/best_model.pt unless you pass another.
+
+Benchmark charts (7 figures)
+
+All seven are matplotlib charts whose values must be parsed from the named JSON, not typed from this guide.
+
+Figure
+
+Chart type and content
+
+Source in repo
+
+Figure 4.7: Per-Generator ROC-AUC of the Physics Pipeline on Synthbuster
+
+Vertical bars, 9 generators, y-axis AUC 0 to 1, value labels: DALL·E2 0.683, DALL·E3 0.673, Firefly 0.641, GLIDE 0.716, Midjourney v5 0.649, SD1.3 0.666, SD1.4 0.664, SD2 0.831, SDXL 0.799
+
+Synthbuster evaluation report JSON (per-generator AUC block)
+
+Figure 4.8: Entity and Region Ablation
+
+Bars of AUC change per ablation, sorted by magnitude, baseline AUC as reference line. Known entry: removing quadrants lowers AUC by 0.0839 (0.8895 to 0.8057); include every other ablation present in the file
+
+robustness_audit.json (read every ablation key)
+
+Figure 4.9: Per-Generator AUC, Baseline vs Proposed, Unseen vs In-Family
+
+Grouped bars, 2 per generator. Unseen group: GLIDE, DALL·E2, DALL·E3, Firefly, Midjourney v5. In-family group: SD1.3, SD1.4, SD2.0, SDXL. Shade or hatch the two groups. Group means: unseen 0.8186 to 0.8434, in-family 0.8926 to 0.9249
+
+universal_v4_evaluation_summary.json, blocks unseen_generators and infamily_generators (same values as Table 4.3)
+
+Figure 4.10: Robustness to Gaussian Blur
+
+Line chart, x-axis blur severity levels exactly as stored, y-axis AUC (and accuracy if stored), markers per level
+
+Blur sweep in robustness_audit.json; read the real level names before plotting
+
+Figure 4.11: Chameleon Accuracy and ROC-AUC by Model Stage
+
+Grouped bars, 2 per stage (accuracy, AUC), clear axis labelling. Stages: physics alone 51.85% / 0.5289; DINOv2 alone 68.40% / 0.7447; Universal v5 69.75% / 0.7521; Phase 1 70.76% / 0.7655; Phase 2 gated 70.23% / 0.7530; Phase 2 pre-gate 70.81% / 0.7690
+
+Chameleon evaluation reports in reports/ (same values as Table 4.4)
+
+Figure 4.12: DINOv2 False Alarms Rescued by the Proposed Gate
+
+One stacked horizontal bar of 5,217 DINOv2 false alarms on real Chameleon photos: 1,449 rescued by Phase 1, 3,768 unresolved, with counts and percentages
+
+chameleon_error_characterization.json and the Chameleon evaluation report
+
+Figure 4.13: Paired Bootstrap Forest Plot
+
+Point-and-whisker rows for the Phase 1 vs Universal v5 difference (2,000 paired resamples), 95% CI whiskers, vertical zero line, p < 0.001 noted
+
+paired_bootstrap_gate_significance.json (point estimate, CI bounds, p-value fields)
+
+Qualitative outputs and confusion matrices (3 figures)
+
+Figure
+
+Content
+
+Source in repo
+
+Generation method
+
+Figure 4.14: Explanation Outputs on Chameleon Images
+
+Grid for 3 to 4 images (mix of correct and incorrect): original, forensic heatmap overlay, surface-normal map
+
+pipeline_dual_stream/src/inference/predict.py; outputs forensic_heatmap and surface_normal_map
+
+Call the predict.py inference function directly (not through Gradio) on chosen Chameleon images, save the two outputs, arrange in a labelled matplotlib or PIL grid
+
+Figure 4.15: Failure Cases
+
+Top false positives (top row) and top false negatives (bottom row), each annotated with its predicted probability
+
+chameleon_error_characterization.json: use the exact image IDs it lists, not arbitrary errors
+
+Load the listed image paths, run predict.py for the probability, arrange in a labelled grid
+
+Figure 4.16: Confusion Matrices on the Held-Out Chameleon Split: UnivFD, DINOv2 and the Proposed System
+
+Three 2x2 matrices side by side on the same 200-image split, annotated with TN, FP, FN, TP counts, one shared colour scale
+
+chameleon_200_heldout_dual_stream_benchmark.json (committed counts; do not recompute)
+
+seaborn.heatmap or matplotlib imshow, three subplots, counts annotated in cells
+
+Progression chart (Figure 6.1)
+
+Figure 6.1: Progression of Chameleon ROC-AUC and Accuracy across the Development Stages of This Thesis. A line chart with markers; x-axis is the six stages in order, primary y-axis is AUC, secondary y-axis is accuracy, with value labels on each point.
+
+Physics alone: 0.5289 AUC, 51.85%
+
+DINOv2 alone: 0.7447, 68.40%
+
+Universal v5 gated baseline: 0.7521, 69.75%
+
+Phase 1 disagreement-exposed gate: 0.7655, 70.76%
+
+Phase 2 gated: 0.7530, 70.23%
+
+Phase 2 joint stream before gating: 0.7690, 70.81%
+
+Method: matplotlib with ax.twinx(), values parsed from the Chameleon evaluation reports so the chart matches Table 4.4 and Figure 4.11 exactly.
+
+General notes for generation
+
+Build every chart and table with a script that reads the named JSON file directly. Values in this guide are for cross-checking only, since file schemas can drift.
+
+Only Figures 4.2 to 4.6 need the two Gradio apps running and screenshotted.
+
+Figures 3.2 and 4.14 need real extractor or inference runs to produce intermediate images, not just JSON.
+
+Save each output under its exact number, for example fig_4_7_synthbuster_auc.png or table_3_3_training_config, so it drops into the matching placeholder without renumbering.
+
+Use the same values for Figures 4.9, 4.11 and 6.1 as for Tables 4.3 and 4.4 so charts and tables never disagree.
