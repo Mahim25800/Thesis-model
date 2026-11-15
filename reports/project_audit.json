@@ -1,0 +1,207 @@
+{
+  "scope": "Existing artifacts only; exploratory audit, not a fresh held-out benchmark",
+  "train": {
+    "keys": [
+      "features",
+      "confidences",
+      "labels"
+    ],
+    "shapes": {
+      "features": [
+        32000,
+        14
+      ],
+      "confidences": [
+        32000,
+        4
+      ],
+      "labels": [
+        32000
+      ]
+    },
+    "labels": {
+      "0.0": 16000,
+      "1.0": 16000
+    },
+    "finite": true,
+    "sha256": "7a27ebf3a6bccaa70edc65871ac83309098e6a21aac2e543ace373a227b9057c"
+  },
+  "val": {
+    "keys": [
+      "features",
+      "confidences",
+      "labels"
+    ],
+    "shapes": {
+      "features": [
+        4800,
+        14
+      ],
+      "confidences": [
+        4800,
+        4
+      ],
+      "labels": [
+        4800
+      ]
+    },
+    "labels": {
+      "0.0": 2400,
+      "1.0": 2400
+    },
+    "finite": true,
+    "sha256": "b71600c710205374b1a0b3e9c0c22f8f51eada0631fe9541e6c956a863876e24"
+  },
+  "test": {
+    "keys": [
+      "features",
+      "confidences",
+      "labels"
+    ],
+    "shapes": {
+      "features": [
+        8000,
+        14
+      ],
+      "confidences": [
+        8000,
+        4
+      ],
+      "labels": [
+        8000
+      ]
+    },
+    "labels": {
+      "0.0": 4000,
+      "1.0": 4000
+    },
+    "finite": true,
+    "sha256": "4932a9a749c4360d12ba862e780723d2f9ad12ca7d11267e9f4ab1c2edc807f3"
+  },
+  "cache_row_overlap": {
+    "train_test_unique_exact_rows": 1,
+    "validation_rows_found_in_full_train": 4800,
+    "note": "Equal feature rows alone do not prove equal source images. Validation is expected to be a subset of the full training cache."
+  },
+  "checkpoint_sha256": "d83961b373b6c24bfba3b22145c9c7f4f3241f7ef8bf94ffe6ccdb5759e914f9",
+  "parameter_count": 75457,
+  "checkpoint_evaluation": {
+    "test_auc": 0.78802815625,
+    "test_accuracy_fixed_0_5": 0.717875,
+    "validation_selected_threshold": 0.5215363502502441,
+    "test_accuracy_validation_threshold": 0.708875,
+    "test_selected_threshold_descriptive_only": 0.5000368356704712,
+    "test_accuracy_test_selected_descriptive_only": 0.717875,
+    "validation_auc": 0.7911503472222223,
+    "validation_center_margin_0.08": {
+      "coverage": 0.486,
+      "decided_accuracy": 0.8114711934156379
+    },
+    "validation_center_margin_0.15": {
+      "coverage": 0.223,
+      "decided_accuracy": 0.8934977578475336
+    }
+  },
+  "exploratory_logistic_baselines": {
+    "confidence_only": {
+      "test_auc": 0.54204440625,
+      "test_accuracy_0_5": 0.51425,
+      "fit_samples": 27182
+    },
+    "features_only": {
+      "test_auc": 0.7134671874999999,
+      "test_accuracy_0_5": 0.653625,
+      "fit_samples": 27182
+    },
+    "features_and_confidences": {
+      "test_auc": 0.7550659687499999,
+      "test_accuracy_0_5": 0.687625,
+      "fit_samples": 27182
+    }
+  },
+  "focal_singleton": "ValueError: Target size (torch.Size([1])) must be the same as input size (torch.Size([]))",
+  "fixed_eye_crop_shapes_at_256": [
+    [
+      51,
+      71,
+      3
+    ],
+    [
+      51,
+      71,
+      3
+    ]
+  ],
+  "untrained_normal_heads_mean_abs_output_difference": 0.9706389307975769,
+  "models\\evaluation_scaled_40k.json": {
+    "static_threshold_0_50": {
+      "auc_roc": 0.7734986875000001,
+      "accuracy": 0.692
+    },
+    "optimal_eer_threshold": {
+      "auc_roc": 0.7734986875000001,
+      "accuracy": 0.69625
+    },
+    "youden_j_threshold": {
+      "auc_roc": 0.7734986875000001,
+      "accuracy": 0.70175
+    },
+    "platt_calibrated_0_50": {
+      "auc_roc": 0.7734987500000001,
+      "accuracy": 0.696625
+    },
+    "platt_calibrated_youden": {
+      "auc_roc": 0.7734987500000001,
+      "accuracy": 0.70175
+    }
+  },
+  "pipeline_40k\\models\\evaluation_scaled_40k.json": {
+    "static_threshold_0_50": {
+      "auc_roc": 0.78802815625,
+      "accuracy": 0.717875
+    },
+    "optimal_eer_threshold": {
+      "auc_roc": 0.78802815625,
+      "accuracy": 0.717
+    },
+    "youden_j_threshold": {
+      "auc_roc": 0.78802815625,
+      "accuracy": 0.717875
+    },
+    "platt_calibrated_0_50": {
+      "auc_roc": 0.7880282187500001,
+      "accuracy": 0.715875
+    },
+    "platt_calibrated_youden": {
+      "auc_roc": 0.7880282187500001,
+      "accuracy": 0.717875
+    }
+  },
+  "pipeline_40k\\models\\shortcut_diagnostics_report.json": {
+    "overall_evaluation": {
+      "auc_roc": 0.78802815625,
+      "accuracy": 0.717875
+    }
+  },
+  "raw_image_hash_audit": {
+    "total_files": 40000,
+    "partition_counts": {
+      "test_unseen\\fake": 4000,
+      "test_unseen\\real": 4000,
+      "train\\fake": 16000,
+      "train\\real": 16000
+    },
+    "unique_sha256": 39913,
+    "duplicate_groups": 83,
+    "cross_split_duplicate_groups": 1,
+    "test_files_matching_train": 1,
+    "cross_label_duplicate_groups": 0,
+    "cross_split_examples": [
+      [
+        "test_unseen\\fake\\fake_001703.jpg",
+        "train\\fake\\fake_006434.jpg"
+      ]
+    ],
+    "note": "SHA-256 detects byte-identical files; near-duplicates and re-encoded duplicates remain unaudited."
+  }
+}
