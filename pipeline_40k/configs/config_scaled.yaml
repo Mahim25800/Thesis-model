@@ -16,6 +16,13 @@ extractors:
   batch_size: 64
   feature_dim: 14
   confidence_dim: 4
+  cache_schema: "deterministic_14d_v2_for_future_extraction"
+  surface_normals:
+    backend: "dsine"
+    checkpoint: "models/normal_estimators/dsine/exp002_kappa/dsine.pt"
+    checkpoint_sha256: "1BDDAE86D7D8F59912C50F3164C2543B1B80FDADFBF1C5DD0AB2D85108BBA955"
+    approximate_fov_degrees: 60
+    method: "trained_uncertainty_aware_DSINE_v02_kappa"
 
 model:
   module_dims: [5, 4, 3, 2]
@@ -24,6 +31,8 @@ model:
   use_mask_tokens: true
   include_confidences: true
   dropout: 0.2
+  promoted_artifact: "models/multi_entity_v3/model.pt"
+  promoted_input_scope: "audited_legacy_cache_only"
 
 training:
   batch_size: 256
