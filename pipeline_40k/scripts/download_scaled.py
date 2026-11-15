@@ -4,7 +4,7 @@ Partitions:
 - train/real:       16,000 images (COCO Train 2017)
 - train/fake:       16,000 images (DiffusionDB Stable Diffusion)
 - test_unseen/real:  4,000 images (COCO Val 2017)
-- test_unseen/fake:  4,000 images (Held-out Modern Generators: FLUX/Midjourney)
+- test_unseen/fake:  4,000 images (different DiffusionDB subset, not an unseen generator)
 
 Features:
 - Multi-threaded disk writer pool.
@@ -15,7 +15,11 @@ Features:
 import sys
 import argparse
 import concurrent.futures
+import hashlib
+import json
+import os
 from pathlib import Path
+import tempfile
 from typing import Optional, Set
 from PIL import Image
 from datasets import load_dataset
@@ -39,12 +43,50 @@ def get_existing_file_indices(directory: Path, prefix: str) -> Set[int]:
         name_stem = file_path.stem
         try:
             idx = int(name_stem.split("_")[-1])
-            # Quick verification that file isn't 0 bytes
-            if file_path.stat().st_size > 100:
-                indices.add(idx)
-        except ValueError:
+            with Image.open(file_path) as check:
+                check.verify()
+            with Image.open(file_path) as check:
+                check.load()
+                if check.mode != "RGB":
+                    continue
+            indices.add(idx)
+        except (ValueError, OSError, SyntaxError):
             continue
     return indices
+
+
+def _sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _atomic_save(image, path):
+    """Only publish a destination after decoding the complete temporary JPEG."""
+    with tempfile.NamedTemporaryFile(dir=path.parent, suffix=".part", delete=False) as handle:
+        temporary = Path(handle.name)
+    try:
+        save_verified_jpeg(image, temporary)
+        with Image.open(temporary) as check:
+            check.load()
+            if check.mode != "RGB":
+                raise ValueError("Encoded image is not RGB")
+        digest = _sha256(temporary)
+        os.replace(temporary, path)
+        return digest
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def _save_manifest(path, manifest):
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as handle:
+        temporary = Path(handle.name)
+        json.dump(manifest, handle, indent=2)
+        handle.write("\n")
+    os.replace(temporary, path)
 
 
 def stream_partition(
@@ -56,100 +98,126 @@ def stream_partition(
     config_name: Optional[str] = None,
     max_workers: int = 8,
     stream_offset: int = 0,
+    revision: Optional[str] = None,
+    max_failures: int = 1000,
 ):
-    """Streams images from Hugging Face, checks resume indices, and writes in parallel."""
+    """Download one explicit source with source-row filenames and checked resume.
+
+    A missing/corrupt source is an error. Existing legacy files without provenance
+    cannot safely be resumed; use a new destination directory to regenerate them.
+    Source-row indexes (including failed/skipped rows) preserve stream alignment.
+    """
+    if target_count <= 0 or max_workers <= 0 or stream_offset < 0 or max_failures < 0:
+        raise ValueError("Positive target/workers and nonnegative offset/failure limit required")
+    dest_dir = Path(dest_dir)
     dest_dir.mkdir(parents=True, exist_ok=True)
+    source = {"dataset": dataset_name, "config": config_name, "split": split_name,
+              "stream_offset": stream_offset, "revision": revision, "prefix": prefix}
+    manifest_path = dest_dir / f"{prefix}_download_manifest.json"
+    disk_files = set(dest_dir.glob(f"{prefix}_*.jpg"))
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        if manifest.get("schema_version") != 1 or manifest.get("source") != source:
+            raise ValueError(f"Source/provenance mismatch in {manifest_path}; use a new destination")
+    elif disk_files:
+        raise ValueError(f"Cannot safely resume legacy files without source provenance in {dest_dir}; use a new destination")
+    else:
+        manifest = {"schema_version": 1, "source": source, "images": {},
+                    "status": "incomplete", "failure_count": 0, "target_count": target_count}
+        _save_manifest(manifest_path, manifest)
     existing_indices = get_existing_file_indices(dest_dir, prefix)
-    current_count = len(existing_indices)
-
-    print(f"\n[{prefix.upper()}] Target: {target_count} | Found Existing: {current_count} in {dest_dir}")
-    if current_count >= target_count:
-        print(f"[{prefix.upper()}] Partition already complete ({current_count}/{target_count}). Skipping.")
-        return
-
-    remaining = target_count - current_count
-    print(f"[{prefix.upper()}] Streaming {remaining} images from {dataset_name} ({split_name})...")
-
-    # Load streaming dataset
+    recorded = {int(index) for index in manifest["images"]}
+    expected_files = {dest_dir / f"{prefix}_{index:06d}.jpg" for index in recorded}
+    if existing_indices != recorded or disk_files != expected_files:
+        raise ValueError(f"Missing, corrupt or untracked files in {dest_dir}; provenance must be repaired before resuming")
+    for index in recorded:
+        path = dest_dir / f"{prefix}_{index:06d}.jpg"
+        record = manifest["images"][str(index)]
+        if record["source_row"] != stream_offset + index or _sha256(path) != record["sha256"]:
+            raise ValueError(f"Provenance/hash mismatch for {path}")
+    if len(recorded) > target_count:
+        raise ValueError(f"Destination already contains {len(recorded)} images, exceeding requested {target_count}")
+    current_count = len(recorded)
+    if current_count == target_count:
+        print(f"[{prefix.upper()}] Verified complete partition: {current_count}/{target_count}")
+        return manifest
+    manifest.update(target_count=target_count, status="incomplete")
+    _save_manifest(manifest_path, manifest)
+    print(f"[{prefix.upper()}] Verified {current_count}/{target_count}; source {dataset_name}/{split_name}")
     try:
+        kwargs = {"split": split_name, "streaming": True}
+        if revision is not None:
+            kwargs["revision"] = revision
         if config_name:
-            ds = load_dataset(dataset_name, config_name, split=split_name, streaming=True)
+            ds = load_dataset(dataset_name, config_name, **kwargs)
         else:
-            ds = load_dataset(dataset_name, split=split_name, streaming=True)
-        iter(ds)
+            ds = load_dataset(dataset_name, **kwargs)
+        stream_iter = iter(ds)
     except Exception as e:
-        print(f"Fallback to 50k stream: {e}")
-        ds = load_dataset("svjack/diffusiondb_2m_random_50k", split="train", streaming=True)
+        raise RuntimeError(f"Requested source {dataset_name}/{split_name} failed; no source substitution permitted") from e
+    for row in range(stream_offset):
+        try:
+            next(stream_iter)
+        except StopIteration as error:
+            raise RuntimeError(f"Source exhausted at row {row} before offset {stream_offset}") from error
 
-    stream_iter = iter(ds)
-    if stream_offset > 0:
-        print(f"[{prefix.upper()}] Skipping {stream_offset} initial stream samples for held-out test split...")
-        for _ in range(stream_offset):
-            try:
-                next(stream_iter)
-            except StopIteration:
-                break
-
-    # Writer worker pool
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=max_workers)
-    pending_futures = []
-
-    next_idx = 0
+    failures = 0
+    initial_failure_count = int(manifest.get("failure_count", 0))
+    index = 0
+    exhausted = False
     pbar = tqdm(total=target_count, initial=current_count, desc=f"Ingesting {dest_dir.name}/{prefix}")
-
     try:
-        while current_count < target_count:
-            while next_idx in existing_indices:
-                next_idx += 1
-
-            if next_idx >= target_count:
-                break
-
-            try:
-                sample = next(stream_iter)
-            except StopIteration:
-                print(f"\nWarning: Stream exhausted before reaching target {target_count}. Restarting stream iterator...")
-                stream_iter = iter(ds)
-                sample = next(stream_iter)
-
-            img = sample.get("image")
-            if img is None:
-                continue
-
-            dest_path = dest_dir / f"{prefix}_{next_idx:06d}.jpg"
-
-            future = executor.submit(save_verified_jpeg, img, dest_path)
-            pending_futures.append((future, dest_path, next_idx))
-
-            existing_indices.add(next_idx)
-            next_idx += 1
-            current_count += 1
-            pbar.update(1)
-
-            if len(pending_futures) >= max_workers * 4:
-                for fut, path, idx in pending_futures:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+            while current_count < target_count and not exhausted:
+                pending = []
+                stream_error = None
+                while len(pending) < min(max_workers * 4, target_count - current_count):
                     try:
-                        fut.result(timeout=10)
-                    except Exception as err:
-                        print(f"Error saving image {path}: {err}")
-                        existing_indices.discard(idx)
-                        current_count -= 1
-                        pbar.update(-1)
-                pending_futures.clear()
-
-        for fut, path, idx in pending_futures:
-            try:
-                fut.result(timeout=10)
-            except Exception as err:
-                print(f"Error saving image {path}: {err}")
-                existing_indices.discard(idx)
-
+                        sample = next(stream_iter)
+                    except StopIteration:
+                        exhausted = True
+                        break
+                    except Exception as error:
+                        stream_error = error
+                        break
+                    source_index = index
+                    index += 1
+                    if source_index in existing_indices:
+                        continue
+                    image = sample.get("image")
+                    if image is None:
+                        failures += 1
+                        if failures > max_failures:
+                            break
+                        continue
+                    path = dest_dir / f"{prefix}_{source_index:06d}.jpg"
+                    pending.append((source_index, path, executor.submit(_atomic_save, image, path)))
+                for source_index, path, future in pending:
+                    try:
+                        digest = future.result()
+                    except Exception as error:
+                        failures += 1
+                        print(f"Rejected source row {stream_offset + source_index}: {error}")
+                        continue
+                    manifest["images"][str(source_index)] = {
+                        "source_row": stream_offset + source_index, "file": path.name, "sha256": digest}
+                    existing_indices.add(source_index)
+                    current_count += 1
+                    pbar.update(1)
+                manifest["failure_count"] = initial_failure_count + failures
+                _save_manifest(manifest_path, manifest)
+                if stream_error is not None:
+                    raise RuntimeError("Requested source failed during iteration; partial progress recorded") from stream_error
+                if failures > max_failures:
+                    raise RuntimeError(f"Exceeded failure limit ({max_failures}); verified {current_count}/{target_count}")
     finally:
-        executor.shutdown(wait=True)
         pbar.close()
-
-    final_files = list(dest_dir.glob(f"{prefix}_*.jpg"))
-    print(f"[{prefix.upper()}] Verification: {len(final_files)}/{target_count} intact images present.")
+    if current_count != target_count or len(get_existing_file_indices(dest_dir, prefix)) != target_count:
+        raise RuntimeError(f"Source exhausted or verification failed: {current_count}/{target_count} images; source was not repeated")
+    manifest["status"] = "complete"
+    _save_manifest(manifest_path, manifest)
+    print(f"[{prefix.upper()}] Verified {current_count}/{target_count} images with source-row provenance")
+    return manifest
 
 
 def main():

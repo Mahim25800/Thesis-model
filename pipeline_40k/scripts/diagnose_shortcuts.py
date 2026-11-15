@@ -112,9 +112,9 @@ def run_shortcut_diagnostics(
             feats_d = features.to(device)
             confs_d = confidences.to(device)
             logits, _ = model(feats_d, confs_d)
-            probs = torch.sigmoid(logits.squeeze())
+            probs = torch.sigmoid(logits.reshape(-1))
 
-            all_logits.extend(logits.squeeze().cpu().numpy().tolist())
+            all_logits.extend(logits.reshape(-1).cpu().numpy().tolist())
             all_probs.extend(probs.cpu().numpy().tolist())
             all_targets.extend(labels.numpy().tolist())
             all_confs.extend(confidences.cpu().numpy().tolist())
@@ -130,6 +130,7 @@ def run_shortcut_diagnostics(
     # ---------------------------------------------------------
     base_eval = evaluate_predictions(y_true, y_probs, threshold=0.50)
     eer_val, eer_th = compute_eer(y_true, y_probs)
+    # Descriptive test-set ROC statistic only; never use this as an operating policy.
     youden_j, youden_th = compute_youden_threshold(y_true, y_probs)
 
     real_mask = (y_true == 0)
@@ -184,7 +185,7 @@ def run_shortcut_diagnostics(
                 confs_ab = confidences.clone()
                 confs_ab[:, mod_idx] = 0.0  # Force confidence to 0 -> learned mask token
                 logits, _ = model(features.to(device), confs_ab.to(device))
-                probs = torch.sigmoid(logits.squeeze())
+                probs = torch.sigmoid(logits.reshape(-1))
                 ablated_probs.extend(probs.cpu().numpy().tolist())
 
         res = evaluate_predictions(y_true, np.array(ablated_probs))
