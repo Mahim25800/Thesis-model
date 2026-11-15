@@ -1,0 +1,4 @@
+[submodule "pipeline_40k/third_party/DSINE"]
+	path = pipeline_40k/third_party/DSINE
+	url = https://github.com/baegwangbin/DSINE.git
+	ignore = dirty
