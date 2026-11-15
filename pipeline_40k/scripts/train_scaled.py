@@ -41,6 +41,10 @@ def train_scaled_model(
     lambda_con: float = 0.3,
     seed: int = 42,
 ):
+    if not 0.0 < val_split < 1.0:
+        raise ValueError("A separate validation partition is required; val_split must be in (0, 1)")
+    if epochs < 1 or batch_size < 1:
+        raise ValueError("epochs and batch_size must be positive")
     torch.manual_seed(seed)
     np.random.seed(seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -172,7 +176,7 @@ def train_scaled_model(
 
             optimizer.zero_grad()
             logits, projections = model(features, confidences)
-            loss_focal = criterion_focal(logits.squeeze(), labels)
+            loss_focal = criterion_focal(logits.reshape(-1), labels)
             loss_con = criterion_con(projections, labels)
             loss = loss_focal + lambda_con * loss_con
             loss.backward()
@@ -200,7 +204,7 @@ def train_scaled_model(
                 features = features.to(device)
                 confidences = confidences.to(device)
                 logits, _ = model(features, confidences)
-                probs = torch.sigmoid(logits.squeeze())
+                probs = torch.sigmoid(logits.reshape(-1))
 
                 val_probs.extend(probs.cpu().numpy().tolist())
                 val_targets.extend(labels.numpy().tolist())
@@ -239,7 +243,7 @@ def train_scaled_model(
     with torch.no_grad():
         for features, confidences, labels in val_loader:
             logits, _ = model(features.to(device), confidences.to(device))
-            val_probs_fin.extend(torch.sigmoid(logits.squeeze()).cpu().numpy().tolist())
+            val_probs_fin.extend(torch.sigmoid(logits.reshape(-1)).cpu().numpy().tolist())
             val_targets_fin.extend(labels.numpy().tolist())
     val_final_results = evaluate_predictions(np.array(val_targets_fin), np.array(val_probs_fin))
     print("\n" + format_evaluation_summary(val_final_results, title="Selected Checkpoint - Validation Split Performance"))
@@ -256,7 +260,7 @@ def train_scaled_model(
             features = features.to(device)
             confidences = confidences.to(device)
             logits, _ = model(features, confidences)
-            probs = torch.sigmoid(logits.squeeze())
+            probs = torch.sigmoid(logits.reshape(-1))
 
             final_probs.extend(probs.cpu().numpy().tolist())
             final_targets.extend(labels.numpy().tolist())
@@ -272,17 +276,16 @@ def train_scaled_model(
 
     print("\n" + format_evaluation_summary(sub_results["overall"], title="Final Scaled Unseen Test Evaluation (Static Tau=0.50)"))
 
-    # Youden's J threshold evaluation
-    youden_j_fin, youden_th_fin = compute_youden_threshold(y_t, y_p)
+    # Operational threshold comes only from validation predictions.
+    youden_j_fin, youden_th_fin = compute_youden_threshold(np.array(val_targets_fin), np.array(val_probs_fin))
     youden_results = evaluate_predictions(y_t, y_p, threshold=youden_th_fin)
-    print("\n" + format_evaluation_summary(youden_results, title=f"Cost-Sensitive Evaluation (@ Youden's J* Tau*={youden_th_fin:.4f})"))
+    print("\n" + format_evaluation_summary(youden_results, title=f"Test Evaluation (@ Validation-Selected Tau={youden_th_fin:.4f})"))
 
     print("\n" + "=" * 65)
     print(f"Observability Gating (O >= 1.00):")
     print(f"  Total: {sub_results['total_samples']:,} | Observable: {sub_results['num_observable']:,} | Indeterminate: {sub_results['num_indeterminate']:,}")
-    print(f"  Overall AUC:    {sub_results['overall']['auc_roc']:.4f}  -->  Observable AUC:    {sub_results['observable']['auc_roc']:.4f}")
-    print(f"  Overall Acc:    {sub_results['overall']['accuracy']*100:.2f}%  -->  Observable Acc:    {sub_results['observable']['accuracy']*100:.2f}%")
-    print(f"  Overall EER:    {sub_results['overall']['eer']*100:.2f}%  -->  Observable EER:    {sub_results['observable']['eer']*100:.2f}%")
+    for metric in ("auc_roc", "accuracy", "eer"):
+        print(f"  {metric}: overall={sub_results['overall'][metric]} observable={sub_results['observable'][metric]}")
     print("=" * 65)
 
 
@@ -290,9 +293,9 @@ def main():
     parser = argparse.ArgumentParser(description="Train Scaled Transformer with Hard-Negative Focal Loss")
     parser.add_argument("--train-cache", type=str, default="data/cache_scaled/train_scaled_features.pt")
     parser.add_argument("--test-cache", type=str, default="data/cache_scaled/test_scaled_features.pt")
-    parser.add_argument("--val-cache", type=str, default="data/cache_scaled/val_scaled_features.pt")
+    parser.add_argument("--val-cache", type=str, default="data/cache_scaled/val_legacy_retrain_features.pt")
     parser.add_argument("--val-split", type=float, default=0.15)
-    parser.add_argument("--best-checkpoint", type=str, default="models/gated_cross_gen_40k_best.pt")
+    parser.add_argument("--best-checkpoint", type=str, default="models/legacy_retrain_best.pt")
     parser.add_argument("--epochs", type=int, default=40)
     parser.add_argument("--batch-size", type=int, default=256)
     parser.add_argument("--lr", type=float, default=5e-4)
