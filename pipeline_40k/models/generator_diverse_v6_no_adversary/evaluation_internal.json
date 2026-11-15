@@ -1,0 +1,92 @@
+{
+  "protocol": "final internal unseen test after Wukong-based model selection",
+  "test_samples": 7992,
+  "binary": {
+    "threshold": 0.49149963687707854,
+    "sample_count": 7992,
+    "class_counts": {
+      "real": 4000,
+      "fake": 3992
+    },
+    "auc_roc": 0.8215699524048097,
+    "eer": 0.24874874749498999,
+    "eer_threshold": 0.45519855611946985,
+    "eer_threshold_role": "descriptive_only_not_an_operational_threshold",
+    "accuracy": 0.7462462462462462,
+    "balanced_accuracy": 0.7462119238476954,
+    "authentic_precision": 0.7308052434456929,
+    "synthetic_precision": 0.763978494623656,
+    "real_recall": 0.7805,
+    "fake_recall": 0.7119238476953907,
+    "confusion_matrix": {
+      "tn": 3122,
+      "fp": 878,
+      "fn": 1150,
+      "tp": 2842
+    },
+    "raw_confusion_matrix": [
+      [
+        3122,
+        878
+      ],
+      [
+        1150,
+        2842
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.7308    0.7805    0.7548      4000\n        Fake     0.7640    0.7119    0.7370      3992\n\n    accuracy                         0.7462      7992\n   macro avg     0.7474    0.7462    0.7459      7992\nweighted avg     0.7474    0.7462    0.7459      7992\n"
+  },
+  "raw_threshold_0_5": {
+    "threshold": 0.5,
+    "sample_count": 7992,
+    "class_counts": {
+      "real": 4000,
+      "fake": 3992
+    },
+    "auc_roc": 0.8215699524048097,
+    "eer": 0.24874874749498999,
+    "eer_threshold": 0.37323543429374695,
+    "eer_threshold_role": "descriptive_only_not_an_operational_threshold",
+    "accuracy": 0.7182182182182182,
+    "balanced_accuracy": 0.7180811623246492,
+    "authentic_precision": 0.6716417910447762,
+    "synthetic_precision": 0.8,
+    "real_recall": 0.855,
+    "fake_recall": 0.5811623246492986,
+    "confusion_matrix": {
+      "tn": 3420,
+      "fp": 580,
+      "fn": 1672,
+      "tp": 2320
+    },
+    "raw_confusion_matrix": [
+      [
+        3420,
+        580
+      ],
+      [
+        1672,
+        2320
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.6716    0.8550    0.7523      4000\n        Fake     0.8000    0.5812    0.6732      3992\n\n    accuracy                         0.7182      7992\n   macro avg     0.7358    0.7181    0.7128      7992\nweighted avg     0.7358    0.7182    0.7128      7992\n"
+  },
+  "selective": {
+    "tau_low": 0.39149963687707856,
+    "tau_high": 0.5914996368770785,
+    "obs_threshold": 1.0,
+    "total_samples": 7992,
+    "num_decided": 6313,
+    "num_abstained": 1679,
+    "num_authentic_predictions": 3495,
+    "num_synthetic_predictions": 2818,
+    "coverage_percent": 78.99149149149149,
+    "decided_accuracy_percent": 79.61349596071598,
+    "authentic_precision_percent": 78.96995708154506,
+    "synthetic_precision_percent": 80.41163946061036,
+    "decided_accuracy": 79.61349596071598,
+    "authentic_accuracy": 78.96995708154506,
+    "synthetic_accuracy": 80.41163946061036,
+    "legacy_alias_note": "Legacy accuracy keys are percentages; class-specific values are prediction precision."
+  }
+}

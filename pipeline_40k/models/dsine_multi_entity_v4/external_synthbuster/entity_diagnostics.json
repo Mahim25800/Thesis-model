@@ -1,0 +1,193 @@
+{
+  "role": "post-hoc explanation only; prohibited for model/threshold selection",
+  "real_domain_shift_coco_to_raise": {
+    "illumination": {
+      "mean_absolute_standardized_shift": 0.40603604912757874,
+      "maximum_absolute_standardized_shift": 0.7158469557762146
+    },
+    "specular_optics": {
+      "mean_absolute_standardized_shift": 0.23482486605644226,
+      "maximum_absolute_standardized_shift": 0.35827621817588806
+    },
+    "surface_normals": {
+      "mean_absolute_standardized_shift": 0.2633225619792938,
+      "maximum_absolute_standardized_shift": 0.6331584453582764
+    },
+    "chromatic_shadows": {
+      "mean_absolute_standardized_shift": 0.2791534662246704,
+      "maximum_absolute_standardized_shift": 0.5457187294960022
+    }
+  },
+  "generators": {
+    "dalle2": {
+      "entity_auc": {
+        "illumination": 0.611804,
+        "specular_optics": 0.529811,
+        "surface_normals": 0.611027,
+        "chromatic_shadows": 0.444364
+      },
+      "mean_pair_attention": [
+        0.17334392666816711,
+        0.20301048457622528,
+        0.2014497071504593,
+        0.13402298092842102,
+        0.1285807490348816,
+        0.15959231555461884
+      ]
+    },
+    "dalle3": {
+      "entity_auc": {
+        "illumination": 0.46272800000000003,
+        "specular_optics": 0.515157,
+        "surface_normals": 0.509547,
+        "chromatic_shadows": 0.332198
+      },
+      "mean_pair_attention": [
+        0.17951709032058716,
+        0.19259461760520935,
+        0.19355590641498566,
+        0.13832446932792664,
+        0.1409057378768921,
+        0.15510225296020508
+      ]
+    },
+    "firefly": {
+      "entity_auc": {
+        "illumination": 0.286138,
+        "specular_optics": 0.540638,
+        "surface_normals": 0.598966,
+        "chromatic_shadows": 0.37981699999999996
+      },
+      "mean_pair_attention": [
+        0.17699646949768066,
+        0.19050464034080505,
+        0.19513019919395447,
+        0.14164875447750092,
+        0.13630089163780212,
+        0.1594187617301941
+      ]
+    },
+    "glide": {
+      "entity_auc": {
+        "illumination": 0.300029,
+        "specular_optics": 0.585123,
+        "surface_normals": 0.661538,
+        "chromatic_shadows": 0.5773760000000001
+      },
+      "mean_pair_attention": [
+        0.17406974732875824,
+        0.20202051103115082,
+        0.20126011967658997,
+        0.13569039106369019,
+        0.12634336948394775,
+        0.16061639785766602
+      ]
+    },
+    "midjourney-v5": {
+      "entity_auc": {
+        "illumination": 0.704046,
+        "specular_optics": 0.5255879999999999,
+        "surface_normals": 0.547773,
+        "chromatic_shadows": 0.449997
+      },
+      "mean_pair_attention": [
+        0.17788927257061005,
+        0.20007430016994476,
+        0.19505856931209564,
+        0.14065112173557281,
+        0.1344517469406128,
+        0.15187470614910126
+      ]
+    },
+    "stable-diffusion-1-3": {
+      "entity_auc": {
+        "illumination": 0.171288,
+        "specular_optics": 0.424604,
+        "surface_normals": 0.627718,
+        "chromatic_shadows": 0.554527
+      },
+      "mean_pair_attention": [
+        0.17740488052368164,
+        0.17882376909255981,
+        0.19465836882591248,
+        0.15170453488826752,
+        0.14345520734786987,
+        0.1539529711008072
+      ]
+    },
+    "stable-diffusion-1-4": {
+      "entity_auc": {
+        "illumination": 0.166088,
+        "specular_optics": 0.417311,
+        "surface_normals": 0.624619,
+        "chromatic_shadows": 0.550042
+      },
+      "mean_pair_attention": [
+        0.17781810462474823,
+        0.17813415825366974,
+        0.19377754628658295,
+        0.1514761596918106,
+        0.14464616775512695,
+        0.15414798259735107
+      ]
+    },
+    "stable-diffusion-2": {
+      "entity_auc": {
+        "illumination": 0.4107259999999999,
+        "specular_optics": 0.41381,
+        "surface_normals": 0.7544690000000001,
+        "chromatic_shadows": 0.292389
+      },
+      "mean_pair_attention": [
+        0.16821664571762085,
+        0.18228235840797424,
+        0.17763105034828186,
+        0.16817732155323029,
+        0.14706557989120483,
+        0.1566268652677536
+      ]
+    },
+    "stable-diffusion-xl": {
+      "entity_auc": {
+        "illumination": 0.6548909999999999,
+        "specular_optics": 0.512885,
+        "surface_normals": 0.593398,
+        "chromatic_shadows": 0.259104
+      },
+      "mean_pair_attention": [
+        0.17400014400482178,
+        0.19522227346897125,
+        0.18639589846134186,
+        0.1522054523229599,
+        0.13931749761104584,
+        0.1528589129447937
+      ]
+    }
+  },
+  "pair_order": [
+    [
+      "illumination",
+      "specular_optics"
+    ],
+    [
+      "illumination",
+      "surface_normals"
+    ],
+    [
+      "illumination",
+      "chromatic_shadows"
+    ],
+    [
+      "specular_optics",
+      "surface_normals"
+    ],
+    [
+      "specular_optics",
+      "chromatic_shadows"
+    ],
+    [
+      "surface_normals",
+      "chromatic_shadows"
+    ]
+  ]
+}

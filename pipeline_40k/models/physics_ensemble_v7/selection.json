@@ -1,0 +1,495 @@
+{
+  "protocol": "blend selected only on group-disjoint internal development and held-out Wukong; Synthbuster unread",
+  "selected": {
+    "v5_weight": 0.7000000000000001,
+    "v6_weight": 0.29999999999999993,
+    "internal_auc": 0.8828817657635315,
+    "wukong_auc": 0.6513085,
+    "selection_score": [
+      0.6513085,
+      0.7670951328817657
+    ]
+  },
+  "candidates": [
+    {
+      "v5_weight": 0.0,
+      "v6_weight": 1.0,
+      "internal_auc": 0.8172263134649727,
+      "wukong_auc": 0.6321880000000001,
+      "selection_score": [
+        0.6321880000000001,
+        0.7247071567324863
+      ]
+    },
+    {
+      "v5_weight": 0.025,
+      "v6_weight": 0.975,
+      "internal_auc": 0.821239099268322,
+      "wukong_auc": 0.633417,
+      "selection_score": [
+        0.633417,
+        0.727328049634161
+      ]
+    },
+    {
+      "v5_weight": 0.05,
+      "v6_weight": 0.95,
+      "internal_auc": 0.8251160206024116,
+      "wukong_auc": 0.6346130000000001,
+      "selection_score": [
+        0.6346130000000001,
+        0.7298645103012058
+      ]
+    },
+    {
+      "v5_weight": 0.07500000000000001,
+      "v6_weight": 0.925,
+      "internal_auc": 0.8288348798919821,
+      "wukong_auc": 0.635754,
+      "selection_score": [
+        0.635754,
+        0.7322944399459911
+      ]
+    },
+    {
+      "v5_weight": 0.1,
+      "v6_weight": 0.9,
+      "internal_auc": 0.8324796834778854,
+      "wukong_auc": 0.6368957500000001,
+      "selection_score": [
+        0.6368957500000001,
+        0.7346877167389427
+      ]
+    },
+    {
+      "v5_weight": 0.125,
+      "v6_weight": 0.875,
+      "internal_auc": 0.8359440360856031,
+      "wukong_auc": 0.63791725,
+      "selection_score": [
+        0.63791725,
+        0.7369306430428015
+      ]
+    },
+    {
+      "v5_weight": 0.15000000000000002,
+      "v6_weight": 0.85,
+      "internal_auc": 0.8393563392065057,
+      "wukong_auc": 0.63898525,
+      "selection_score": [
+        0.63898525,
+        0.7391707946032529
+      ]
+    },
+    {
+      "v5_weight": 0.17500000000000002,
+      "v6_weight": 0.825,
+      "internal_auc": 0.8426021605129629,
+      "wukong_auc": 0.63988775,
+      "selection_score": [
+        0.63988775,
+        0.7412449552564815
+      ]
+    },
+    {
+      "v5_weight": 0.2,
+      "v6_weight": 0.8,
+      "internal_auc": 0.8457842594697534,
+      "wukong_auc": 0.6408115,
+      "selection_score": [
+        0.6408115,
+        0.7432978797348767
+      ]
+    },
+    {
+      "v5_weight": 0.225,
+      "v6_weight": 0.775,
+      "internal_auc": 0.8488048519306916,
+      "wukong_auc": 0.6417587499999999,
+      "selection_score": [
+        0.6417587499999999,
+        0.7452818009653457
+      ]
+    },
+    {
+      "v5_weight": 0.25,
+      "v6_weight": 0.75,
+      "internal_auc": 0.8516934070905179,
+      "wukong_auc": 0.64265025,
+      "selection_score": [
+        0.64265025,
+        0.7471718285452589
+      ]
+    },
+    {
+      "v5_weight": 0.275,
+      "v6_weight": 0.725,
+      "internal_auc": 0.8544472459315289,
+      "wukong_auc": 0.64352225,
+      "selection_score": [
+        0.64352225,
+        0.7489847479657644
+      ]
+    },
+    {
+      "v5_weight": 0.30000000000000004,
+      "v6_weight": 0.7,
+      "internal_auc": 0.8570990907413913,
+      "wukong_auc": 0.644356,
+      "selection_score": [
+        0.644356,
+        0.7507275453706956
+      ]
+    },
+    {
+      "v5_weight": 0.325,
+      "v6_weight": 0.675,
+      "internal_auc": 0.8596422439758459,
+      "wukong_auc": 0.6451545,
+      "selection_score": [
+        0.6451545,
+        0.7523983719879229
+      ]
+    },
+    {
+      "v5_weight": 0.35000000000000003,
+      "v6_weight": 0.6499999999999999,
+      "internal_auc": 0.8620462796481149,
+      "wukong_auc": 0.6458699999999999,
+      "selection_score": [
+        0.6458699999999999,
+        0.7539581398240573
+      ]
+    },
+    {
+      "v5_weight": 0.375,
+      "v6_weight": 0.625,
+      "internal_auc": 0.8642555124616423,
+      "wukong_auc": 0.64654525,
+      "selection_score": [
+        0.64654525,
+        0.7554003812308212
+      ]
+    },
+    {
+      "v5_weight": 0.4,
+      "v6_weight": 0.6,
+      "internal_auc": 0.8664090599786138,
+      "wukong_auc": 0.6471484999999999,
+      "selection_score": [
+        0.6471484999999999,
+        0.7567787799893069
+      ]
+    },
+    {
+      "v5_weight": 0.42500000000000004,
+      "v6_weight": 0.575,
+      "internal_auc": 0.8684257862342886,
+      "wukong_auc": 0.64771375,
+      "selection_score": [
+        0.64771375,
+        0.7580697681171442
+      ]
+    },
+    {
+      "v5_weight": 0.45,
+      "v6_weight": 0.55,
+      "internal_auc": 0.8703200431092221,
+      "wukong_auc": 0.6482637499999999,
+      "selection_score": [
+        0.6482637499999999,
+        0.7592918965546109
+      ]
+    },
+    {
+      "v5_weight": 0.47500000000000003,
+      "v6_weight": 0.5249999999999999,
+      "internal_auc": 0.8720918306034142,
+      "wukong_auc": 0.6488225,
+      "selection_score": [
+        0.6488225,
+        0.7604571653017071
+      ]
+    },
+    {
+      "v5_weight": 0.5,
+      "v6_weight": 0.5,
+      "internal_auc": 0.8737267968363097,
+      "wukong_auc": 0.649307,
+      "selection_score": [
+        0.649307,
+        0.7615168984181548
+      ]
+    },
+    {
+      "v5_weight": 0.525,
+      "v6_weight": 0.475,
+      "internal_auc": 0.8752934481177604,
+      "wukong_auc": 0.6497814999999999,
+      "selection_score": [
+        0.6497814999999999,
+        0.7625374740588802
+      ]
+    },
+    {
+      "v5_weight": 0.55,
+      "v6_weight": 0.44999999999999996,
+      "internal_auc": 0.876641568097951,
+      "wukong_auc": 0.650184,
+      "selection_score": [
+        0.650184,
+        0.7634127840489755
+      ]
+    },
+    {
+      "v5_weight": 0.5750000000000001,
+      "v6_weight": 0.42499999999999993,
+      "internal_auc": 0.8779671077860675,
+      "wukong_auc": 0.6504795000000001,
+      "selection_score": [
+        0.6504795000000001,
+        0.7642233038930337
+      ]
+    },
+    {
+      "v5_weight": 0.6000000000000001,
+      "v6_weight": 0.3999999999999999,
+      "internal_auc": 0.879144153350035,
+      "wukong_auc": 0.65080025,
+      "selection_score": [
+        0.65080025,
+        0.7649722016750176
+      ]
+    },
+    {
+      "v5_weight": 0.625,
+      "v6_weight": 0.375,
+      "internal_auc": 0.8802347049138541,
+      "wukong_auc": 0.6510132500000001,
+      "selection_score": [
+        0.6510132500000001,
+        0.7656239774569271
+      ]
+    },
+    {
+      "v5_weight": 0.65,
+      "v6_weight": 0.35,
+      "internal_auc": 0.8812148426765989,
+      "wukong_auc": 0.6511369999999999,
+      "selection_score": [
+        0.6511369999999999,
+        0.7661759213382994
+      ]
+    },
+    {
+      "v5_weight": 0.675,
+      "v6_weight": 0.32499999999999996,
+      "internal_auc": 0.8821262827710841,
+      "wukong_auc": 0.6512095,
+      "selection_score": [
+        0.6512095,
+        0.766667891385542
+      ]
+    },
+    {
+      "v5_weight": 0.7000000000000001,
+      "v6_weight": 0.29999999999999993,
+      "internal_auc": 0.8828817657635315,
+      "wukong_auc": 0.6513085,
+      "selection_score": [
+        0.6513085,
+        0.7670951328817657
+      ]
+    },
+    {
+      "v5_weight": 0.7250000000000001,
+      "v6_weight": 0.2749999999999999,
+      "internal_auc": 0.883560322676201,
+      "wukong_auc": 0.6512912499999999,
+      "selection_score": [
+        0.6512912499999999,
+        0.7674257863381004
+      ]
+    },
+    {
+      "v5_weight": 0.75,
+      "v6_weight": 0.25,
+      "internal_auc": 0.8841409040842774,
+      "wukong_auc": 0.65122575,
+      "selection_score": [
+        0.65122575,
+        0.7676833270421387
+      ]
+    },
+    {
+      "v5_weight": 0.775,
+      "v6_weight": 0.22499999999999998,
+      "internal_auc": 0.8846881891294647,
+      "wukong_auc": 0.65112775,
+      "selection_score": [
+        0.65112775,
+        0.7679079695647324
+      ]
+    },
+    {
+      "v5_weight": 0.8,
+      "v6_weight": 0.19999999999999996,
+      "internal_auc": 0.8851589308116887,
+      "wukong_auc": 0.650973,
+      "selection_score": [
+        0.650973,
+        0.7680659654058444
+      ]
+    },
+    {
+      "v5_weight": 0.8250000000000001,
+      "v6_weight": 0.17499999999999993,
+      "internal_auc": 0.885576283498246,
+      "wukong_auc": 0.65074,
+      "selection_score": [
+        0.65074,
+        0.768158141749123
+      ]
+    },
+    {
+      "v5_weight": 0.8500000000000001,
+      "v6_weight": 0.1499999999999999,
+      "internal_auc": 0.8859059940342102,
+      "wukong_auc": 0.65048675,
+      "selection_score": [
+        0.65048675,
+        0.7681963720171051
+      ]
+    },
+    {
+      "v5_weight": 0.875,
+      "v6_weight": 0.125,
+      "internal_auc": 0.8861547599638409,
+      "wukong_auc": 0.6502485,
+      "selection_score": [
+        0.6502485,
+        0.7682016299819204
+      ]
+    },
+    {
+      "v5_weight": 0.9,
+      "v6_weight": 0.09999999999999998,
+      "internal_auc": 0.8863264084552862,
+      "wukong_auc": 0.6499659999999999,
+      "selection_score": [
+        0.6499659999999999,
+        0.768146204227643
+      ]
+    },
+    {
+      "v5_weight": 0.925,
+      "v6_weight": 0.07499999999999996,
+      "internal_auc": 0.8864318469377679,
+      "wukong_auc": 0.64970425,
+      "selection_score": [
+        0.64970425,
+        0.768068048468884
+      ]
+    },
+    {
+      "v5_weight": 0.9500000000000001,
+      "v6_weight": 0.04999999999999993,
+      "internal_auc": 0.8864521309289531,
+      "wukong_auc": 0.6493265,
+      "selection_score": [
+        0.6493265,
+        0.7678893154644766
+      ]
+    },
+    {
+      "v5_weight": 0.9750000000000001,
+      "v6_weight": 0.02499999999999991,
+      "internal_auc": 0.8863901308049529,
+      "wukong_auc": 0.64894175,
+      "selection_score": [
+        0.64894175,
+        0.7676659404024764
+      ]
+    },
+    {
+      "v5_weight": 1.0,
+      "v6_weight": 0.0,
+      "internal_auc": 0.8862670873489895,
+      "wukong_auc": 0.64853025,
+      "selection_score": [
+        0.64853025,
+        0.7673986686744947
+      ]
+    }
+  ],
+  "wukong": {
+    "threshold": 0.5,
+    "sample_count": 4000,
+    "class_counts": {
+      "real": 2000,
+      "fake": 2000
+    },
+    "auc_roc": 0.6513085000000001,
+    "eer": 0.40225,
+    "eer_threshold": 0.4742971360683441,
+    "eer_threshold_role": "descriptive_only_not_an_operational_threshold",
+    "accuracy": 0.595,
+    "balanced_accuracy": 0.595,
+    "authentic_precision": 0.5902184235517569,
+    "synthetic_precision": 0.6003167898627244,
+    "real_recall": 0.6215,
+    "fake_recall": 0.5685,
+    "confusion_matrix": {
+      "tn": 1243,
+      "fp": 757,
+      "fn": 863,
+      "tp": 1137
+    },
+    "raw_confusion_matrix": [
+      [
+        1243,
+        757
+      ],
+      [
+        863,
+        1137
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.5902    0.6215    0.6055      2000\n        Fake     0.6003    0.5685    0.5840      2000\n\n    accuracy                         0.5950      4000\n   macro avg     0.5953    0.5950    0.5947      4000\nweighted avg     0.5953    0.5950    0.5947      4000\n"
+  },
+  "internal_development": {
+    "threshold": 0.5,
+    "sample_count": 4572,
+    "class_counts": {
+      "real": 2286,
+      "fake": 2286
+    },
+    "auc_roc": 0.8828817657635315,
+    "eer": 0.19400699912510938,
+    "eer_threshold": 0.48679640889167786,
+    "eer_threshold_role": "descriptive_only_not_an_operational_threshold",
+    "accuracy": 0.8051181102362205,
+    "balanced_accuracy": 0.8051181102362204,
+    "authentic_precision": 0.8002582866982351,
+    "synthetic_precision": 0.8101378390395731,
+    "real_recall": 0.8132108486439195,
+    "fake_recall": 0.7970253718285214,
+    "confusion_matrix": {
+      "tn": 1859,
+      "fp": 427,
+      "fn": 464,
+      "tp": 1822
+    },
+    "raw_confusion_matrix": [
+      [
+        1859,
+        427
+      ],
+      [
+        464,
+        1822
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.8003    0.8132    0.8067      2286\n        Fake     0.8101    0.7970    0.8035      2286\n\n    accuracy                         0.8051      4572\n   macro avg     0.8052    0.8051    0.8051      4572\nweighted avg     0.8052    0.8051    0.8051      4572\n"
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "role": "post-freeze paired comparison; not used for model selection",
+  "candidate_vs_v4": {
+    "per_generator": {
+      "dalle2": {
+        "candidate_auc": 0.675092,
+        "baseline_auc": 0.612225,
+        "auc_delta": 0.062867,
+        "candidate_accuracy": 0.6255,
+        "baseline_accuracy": 0.58
+      },
+      "dalle3": {
+        "candidate_auc": 0.5646549999999999,
+        "baseline_auc": 0.564171,
+        "auc_delta": 0.00048399999999992893,
+        "candidate_accuracy": 0.5505,
+        "baseline_accuracy": 0.5585
+      },
+      "firefly": {
+        "candidate_auc": 0.506463,
+        "baseline_auc": 0.5825589999999999,
+        "auc_delta": -0.07609599999999994,
+        "candidate_accuracy": 0.477,
+        "baseline_accuracy": 0.541
+      },
+      "glide": {
+        "candidate_auc": 0.72033,
+        "baseline_auc": 0.61422,
+        "auc_delta": 0.10611000000000004,
+        "candidate_accuracy": 0.65,
+        "baseline_accuracy": 0.5815
+      },
+      "midjourney-v5": {
+        "candidate_auc": 0.626309,
+        "baseline_auc": 0.619694,
+        "auc_delta": 0.0066150000000000375,
+        "candidate_accuracy": 0.5955,
+        "baseline_accuracy": 0.588
+      },
+      "stable-diffusion-1-3": {
+        "candidate_auc": 0.5539620000000001,
+        "baseline_auc": 0.55666,
+        "auc_delta": -0.002697999999999978,
+        "candidate_accuracy": 0.523,
+        "baseline_accuracy": 0.522
+      },
+      "stable-diffusion-1-4": {
+        "candidate_auc": 0.552597,
+        "baseline_auc": 0.551829,
+        "auc_delta": 0.0007679999999999909,
+        "candidate_accuracy": 0.5225,
+        "baseline_accuracy": 0.5105
+      },
+      "stable-diffusion-2": {
+        "candidate_auc": 0.747146,
+        "baseline_auc": 0.751553,
+        "auc_delta": -0.00440700000000005,
+        "candidate_accuracy": 0.6755,
+        "baseline_accuracy": 0.6895
+      },
+      "stable-diffusion-xl": {
+        "candidate_auc": 0.7206689999999999,
+        "baseline_auc": 0.756275,
+        "auc_delta": -0.03560600000000014,
+        "candidate_accuracy": 0.65,
+        "baseline_accuracy": 0.6885
+      }
+    },
+    "mean_auc_delta": 0.006323816555555554,
+    "mean_auc_delta_95ci": [
+      -0.0014308972222222176,
+      0.013708711111111114
+    ],
+    "mean_accuracy_delta": 0.000989666666666669,
+    "mean_accuracy_delta_95ci": [
+      -0.006777777777777759,
+      0.008945833333333321
+    ],
+    "bootstrap_repeats": 2000,
+    "resampling_unit": "matched real/fake filename pair within each generator; generator means equally weighted"
+  },
+  "candidate_vs_no_adversary": {
+    "per_generator": {
+      "dalle2": {
+        "candidate_auc": 0.675092,
+        "baseline_auc": 0.66274,
+        "auc_delta": 0.01235200000000003,
+        "candidate_accuracy": 0.6255,
+        "baseline_accuracy": 0.611
+      },
+      "dalle3": {
+        "candidate_auc": 0.5646549999999999,
+        "baseline_auc": 0.539146,
+        "auc_delta": 0.025508999999999893,
+        "candidate_accuracy": 0.5505,
+        "baseline_accuracy": 0.536
+      },
+      "firefly": {
+        "candidate_auc": 0.506463,
+        "baseline_auc": 0.49145099999999997,
+        "auc_delta": 0.015012000000000025,
+        "candidate_accuracy": 0.477,
+        "baseline_accuracy": 0.4635
+      },
+      "glide": {
+        "candidate_auc": 0.72033,
+        "baseline_auc": 0.719369,
+        "auc_delta": 0.0009609999999999896,
+        "candidate_accuracy": 0.65,
+        "baseline_accuracy": 0.6565
+      },
+      "midjourney-v5": {
+        "candidate_auc": 0.626309,
+        "baseline_auc": 0.61086,
+        "auc_delta": 0.015449000000000046,
+        "candidate_accuracy": 0.5955,
+        "baseline_accuracy": 0.583
+      },
+      "stable-diffusion-1-3": {
+        "candidate_auc": 0.5539620000000001,
+        "baseline_auc": 0.54565,
+        "auc_delta": 0.008312000000000097,
+        "candidate_accuracy": 0.523,
+        "baseline_accuracy": 0.523
+      },
+      "stable-diffusion-1-4": {
+        "candidate_auc": 0.552597,
+        "baseline_auc": 0.5435319999999999,
+        "auc_delta": 0.0090650000000001,
+        "candidate_accuracy": 0.5225,
+        "baseline_accuracy": 0.524
+      },
+      "stable-diffusion-2": {
+        "candidate_auc": 0.747146,
+        "baseline_auc": 0.730793,
+        "auc_delta": 0.01635299999999995,
+        "candidate_accuracy": 0.6755,
+        "baseline_accuracy": 0.66
+      },
+      "stable-diffusion-xl": {
+        "candidate_auc": 0.7206689999999999,
+        "baseline_auc": 0.6977909999999999,
+        "auc_delta": 0.022877999999999954,
+        "candidate_accuracy": 0.65,
+        "baseline_accuracy": 0.634
+      }
+    },
+    "mean_auc_delta": 0.01401484083333333,
+    "mean_auc_delta_95ci": [
+      0.01211215833333334,
+      0.015878372222222197
+    ],
+    "mean_accuracy_delta": 0.008749083333333333,
+    "mean_accuracy_delta_95ci": [
+      0.004944444444444449,
+      0.012668055555555528
+    ],
+    "bootstrap_repeats": 2000,
+    "resampling_unit": "matched real/fake filename pair within each generator; generator means equally weighted"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "feature_schema": "legacy_cache_14_plus_4_v1",
+  "raw_image_inference_supported": false,
+  "reason": "Historical normal-head state and two historical highlight calculations cannot be reconstructed from raw images",
+  "seed": 42,
+  "selected_tree_weight": 0.6000000000000001,
+  "legacy_checkpoint_sha256": "d83961b373b6c24bfba3b22145c9c7f4f3241f7ef8bf94ffe6ccdb5759e914f9",
+  "train_cache_sha256": "7a27ebf3a6bccaa70edc65871ac83309098e6a21aac2e543ace373a227b9057c",
+  "test_cache_sha256": "4932a9a749c4360d12ba862e780723d2f9ad12ca7d11267e9f4ab1c2edc807f3",
+  "split_indices_sha256": "e315592ee536745636efee5d96fd1bc5007466712bc11c5d619dd9672883efdc",
+  "split_manifest_sha256": "160ba4e0e5d29ca78c251970f48940ba146d5af46b30ed30816a8cf0c6298e06",
+  "environment": {
+    "python": "3.12.9",
+    "numpy": "2.5.3",
+    "sklearn": "1.9.1",
+    "torch": "2.14.0+cpu"
+  },
+  "limitations": [
+    "Byte hashes do not detect resized, recompressed or near-duplicate images",
+    "Existing held-out DiffusionDB subset does not demonstrate unseen-generator generalization",
+    "This legacy test set was examined before this improved run; independent future external validation is still needed"
+  ]
+}

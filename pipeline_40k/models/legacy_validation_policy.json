@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "selection_split": "validation",
+  "calibration_samples": 4800,
+  "calibration_class_counts": {
+    "real": 2400,
+    "fake": 2400
+  },
+  "calibration": {
+    "method": "platt",
+    "a": 2.692901349623214,
+    "b": 0.03527461128308281
+  },
+  "threshold_selection": "maximum_calibration_accuracy_ties_nearest_0.5",
+  "obs_threshold": 1.0,
+  "abstention_margin": 0.1,
+  "decision_threshold": 0.5664544376265768,
+  "tau_low": 0.4664544376265768,
+  "tau_high": 0.6664544376265767,
+  "calibration_accuracy": 0.7179166666666666,
+  "probability_label": "fake",
+  "validation_cache": "G:\\Thesis\\pipeline_40k\\data\\cache_scaled\\val_scaled_features.pt",
+  "validation_cache_sha256": "b71600c710205374b1a0b3e9c0c22f8f51eada0631fe9541e6c956a863876e24",
+  "checkpoint_sha256": "d83961b373b6c24bfba3b22145c9c7f4f3241f7ef8bf94ffe6ccdb5759e914f9",
+  "validation_note": "Legacy validation was also used for checkpoint selection; use a separate calibration split for new experiments."
+}

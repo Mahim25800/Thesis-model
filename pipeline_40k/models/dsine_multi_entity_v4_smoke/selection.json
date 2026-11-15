@@ -1,0 +1,96 @@
+{
+  "protocol": "group-disjoint train/development/calibration split; untouched regenerated unseen test",
+  "entity_names": [
+    "illumination",
+    "specular_optics",
+    "surface_normals",
+    "chromatic_shadows"
+  ],
+  "entity_dims": [
+    5,
+    4,
+    3,
+    2
+  ],
+  "split_sizes": {
+    "train": 22856,
+    "development": 4572,
+    "calibration": 4572
+  },
+  "training_runs": [
+    {
+      "seed": 43,
+      "epochs_completed": 2,
+      "development": {
+        "threshold": 0.5,
+        "sample_count": 4572,
+        "class_counts": {
+          "real": 2286,
+          "fake": 2286
+        },
+        "auc_roc": 0.7979975682173586,
+        "eer": 0.2727471566054243,
+        "eer_threshold": 0.5509480834007263,
+        "eer_threshold_role": "descriptive_only_not_an_operational_threshold",
+        "accuracy": 0.7217847769028871,
+        "balanced_accuracy": 0.7217847769028871,
+        "authentic_precision": 0.7446911196911197,
+        "synthetic_precision": 0.7028,
+        "real_recall": 0.6749781277340332,
+        "fake_recall": 0.768591426071741,
+        "confusion_matrix": {
+          "tn": 1543,
+          "fp": 743,
+          "fn": 529,
+          "tp": 1757
+        },
+        "raw_confusion_matrix": [
+          [
+            1543,
+            743
+          ],
+          [
+            529,
+            1757
+          ]
+        ],
+        "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.7447    0.6750    0.7081      2286\n        Fake     0.7028    0.7686    0.7342      2286\n\n    accuracy                         0.7218      4572\n   macro avg     0.7237    0.7218    0.7212      4572\nweighted avg     0.7237    0.7218    0.7212      4572\n"
+      }
+    }
+  ],
+  "development_entity_only": {
+    "threshold": 0.5,
+    "sample_count": 4572,
+    "class_counts": {
+      "real": 2286,
+      "fake": 2286
+    },
+    "auc_roc": 0.7979975682173586,
+    "eer": 0.2727471566054243,
+    "eer_threshold": 0.5509480834007263,
+    "eer_threshold_role": "descriptive_only_not_an_operational_threshold",
+    "accuracy": 0.7217847769028871,
+    "balanced_accuracy": 0.7217847769028871,
+    "authentic_precision": 0.7446911196911197,
+    "synthetic_precision": 0.7028,
+    "real_recall": 0.6749781277340332,
+    "fake_recall": 0.768591426071741,
+    "confusion_matrix": {
+      "tn": 1543,
+      "fp": 743,
+      "fn": 529,
+      "tp": 1757
+    },
+    "raw_confusion_matrix": [
+      [
+        1543,
+        743
+      ],
+      [
+        529,
+        1757
+      ]
+    ],
+    "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.7447    0.6750    0.7081      2286\n        Fake     0.7028    0.7686    0.7342      2286\n\n    accuracy                         0.7218      4572\n   macro avg     0.7237    0.7218    0.7212      4572\nweighted avg     0.7237    0.7218    0.7212      4572\n"
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "protocol": "fixed entity mask selected on group-disjoint internal development and Wukong only",
+  "selected": {
+    "base": "regional_v5",
+    "disabled_entities": [],
+    "internal_auc": 0.886265939198545,
+    "wukong_auc": 0.6485347499999999,
+    "selection_score": [
+      0.6485347499999999,
+      0.7674003445992725
+    ]
+  },
+  "candidates": [
+    {
+      "base": "regional_v5",
+      "disabled_entities": [],
+      "internal_auc": 0.886265939198545,
+      "wukong_auc": 0.6485347499999999,
+      "selection_score": [
+        0.6485347499999999,
+        0.7674003445992725
+      ]
+    },
+    {
+      "base": "regional_v5",
+      "disabled_entities": [
+        "illumination"
+      ],
+      "internal_auc": 0.85613273078398,
+      "wukong_auc": 0.599967,
+      "selection_score": [
+        0.599967,
+        0.72804986539199
+      ]
+    },
+    {
+      "base": "regional_v5",
+      "disabled_entities": [
+        "specular_optics"
+      ],
+      "internal_auc": 0.8741554396689041,
+      "wukong_auc": 0.612599875,
+      "selection_score": [
+        0.612599875,
+        0.743377657334452
+      ]
+    },
+    {
+      "base": "regional_v5",
+      "disabled_entities": [
+        "surface_normals"
+      ],
+      "internal_auc": 0.7951795286306622,
+      "wukong_auc": 0.6396935,
+      "selection_score": [
+        0.6396935,
+        0.7174365143153312
+      ]
+    },
+    {
+      "base": "regional_v5",
+      "disabled_entities": [
+        "chromatic_shadows"
+      ],
+      "internal_auc": 0.8390987707901342,
+      "wukong_auc": 0.58263575,
+      "selection_score": [
+        0.58263575,
+        0.7108672603950671
+      ]
+    },
+    {
+      "base": "regional_v5",
+      "disabled_entities": [
+        "illumination",
+        "specular_optics"
+      ],
+      "internal_auc": 0.8375751751503503,
+      "wukong_auc": 0.5652485,
+      "selection_score": [
+        0.5652485,
+        0.7014118375751752
+      ]
+    },
+    {
+      "base": "regional_v5",
+      "disabled_entities": [
+        "illumination",
+        "surface_normals"
+      ],
+      "internal_auc": 0.7215177362453491,
+      "wukong_auc": 0.5625202499999999,
+      "selection_score": [
+        0.5625202499999999,
+        0.6420189931226745
+      ]
+    },
+    {
+      "base": "regional_v5",
+      "disabled_entities": [
+        "illumination",
+        "chromatic_shadows"
+      ],
+      "internal_auc": 0.7606844966776355,
+      "wukong_auc": 0.47763162499999995,
+      "selection_score": [
+        0.47763162499999995,
+        0.6191580608388177
+      ]
+    },
+    {
+      "base": "regional_v5",
+      "disabled_entities": [
+        "specular_optics",
+        "surface_normals"
+      ],
+      "internal_auc": 0.7763366576115868,
+      "wukong_auc": 0.604356375,
+      "selection_score": [
+        0.604356375,
+        0.6903465163057934
+      ]
+    },
+    {
+      "base": "regional_v5",
+      "disabled_entities": [
+        "specular_optics",
+        "chromatic_shadows"
+      ],
+      "internal_auc": 0.8046107234189777,
+      "wukong_auc": 0.54004675,
+      "selection_score": [
+        0.54004675,
+        0.6723287367094888
+      ]
+    },
+    {
+      "base": "regional_v5",
+      "disabled_entities": [
+        "surface_normals",
+        "chromatic_shadows"
+      ],
+      "internal_auc": 0.7084957966212229,
+      "wukong_auc": 0.6032985,
+      "selection_score": [
+        0.6032985,
+        0.6558971483106114
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [],
+      "internal_auc": 0.8172261221065651,
+      "wukong_auc": 0.6321855000000001,
+      "selection_score": [
+        0.6321855000000001,
+        0.7247058110532826
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [
+        "illumination"
+      ],
+      "internal_auc": 0.7877236310028175,
+      "wukong_auc": 0.6057870000000001,
+      "selection_score": [
+        0.6057870000000001,
+        0.6967553155014088
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [
+        "specular_optics"
+      ],
+      "internal_auc": 0.7934268769772107,
+      "wukong_auc": 0.5975644999999999,
+      "selection_score": [
+        0.5975644999999999,
+        0.6954956884886053
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [
+        "surface_normals"
+      ],
+      "internal_auc": 0.7181248560027984,
+      "wukong_auc": 0.593419125,
+      "selection_score": [
+        0.593419125,
+        0.6557719905013992
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [
+        "chromatic_shadows"
+      ],
+      "internal_auc": 0.767554454861996,
+      "wukong_auc": 0.5663518750000001,
+      "selection_score": [
+        0.5663518750000001,
+        0.6669531649309981
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [
+        "illumination",
+        "specular_optics"
+      ],
+      "internal_auc": 0.7381243929154525,
+      "wukong_auc": 0.55405125,
+      "selection_score": [
+        0.55405125,
+        0.6460878214577263
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [
+        "illumination",
+        "surface_normals"
+      ],
+      "internal_auc": 0.647235751261626,
+      "wukong_auc": 0.56881125,
+      "selection_score": [
+        0.56881125,
+        0.608023500630813
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [
+        "illumination",
+        "chromatic_shadows"
+      ],
+      "internal_auc": 0.743234523506084,
+      "wukong_auc": 0.5310325,
+      "selection_score": [
+        0.5310325,
+        0.637133511753042
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [
+        "specular_optics",
+        "surface_normals"
+      ],
+      "internal_auc": 0.644589264487171,
+      "wukong_auc": 0.5327587500000001,
+      "selection_score": [
+        0.5327587500000001,
+        0.5886740072435855
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [
+        "specular_optics",
+        "chromatic_shadows"
+      ],
+      "internal_auc": 0.7446647362430527,
+      "wukong_auc": 0.52753275,
+      "selection_score": [
+        0.52753275,
+        0.6360987431215264
+      ]
+    },
+    {
+      "base": "generator_invariant_v6",
+      "disabled_entities": [
+        "surface_normals",
+        "chromatic_shadows"
+      ],
+      "internal_auc": 0.6474902579434787,
+      "wukong_auc": 0.5365880000000001,
+      "selection_score": [
+        0.5365880000000001,
+        0.5920391289717394
+      ]
+    }
+  ],
+  "confirmatory_data_read": false
+}

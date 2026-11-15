@@ -1,0 +1,110 @@
+{
+  "protocol": "frozen model, frozen train-only standardizer and calibrated threshold; external data never used for fitting",
+  "benchmark": "Synthbuster generated images paired with RAISE real images",
+  "model": "models/dsine_multi_entity_v4/model.pt",
+  "device": "cuda",
+  "normal_extractor": {
+    "backend": "DSINE_v02_kappa",
+    "source_repository": "https://github.com/baegwangbin/DSINE",
+    "source_commit": "ef0c2afa32b4dd19cb8ca4567c652802cd92591c",
+    "checkpoint": "G:\\Thesis\\pipeline_40k\\models\\normal_estimators\\dsine\\exp002_kappa\\dsine.pt",
+    "checkpoint_sha256": "1bddae86d7d8f59912c50f3164c2543b1b80fdadfbf1c5dd0ab2d85108bba955",
+    "checkpoint_source": "official DSINE Google Drive / checkpoints/exp002_kappa/dsine.pt",
+    "camera_intrinsics": "approximate 60-degree field of view",
+    "oversized_input_policy": "aspect-ratio downscale to 2000px then restore normal fields",
+    "local_patch": "defer pixel_coords device placement for CPU compatibility"
+  },
+  "generators": {
+    "glide": {
+      "pairs": 1,
+      "binary": {
+        "threshold": 0.5131002440882247,
+        "sample_count": 2,
+        "class_counts": {
+          "real": 1,
+          "fake": 1
+        },
+        "auc_roc": 0.0,
+        "eer": 1.0,
+        "eer_threshold": 0.9431185926770876,
+        "eer_threshold_role": "descriptive_only_not_an_operational_threshold",
+        "accuracy": 0.5,
+        "balanced_accuracy": 0.5,
+        "authentic_precision": null,
+        "synthetic_precision": 0.5,
+        "real_recall": 0.0,
+        "fake_recall": 1.0,
+        "confusion_matrix": {
+          "tn": 0,
+          "fp": 1,
+          "fn": 0,
+          "tp": 1
+        },
+        "raw_confusion_matrix": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.0000    0.0000    0.0000         1\n        Fake     0.5000    1.0000    0.6667         1\n\n    accuracy                         0.5000         2\n   macro avg     0.2500    0.5000    0.3333         2\nweighted avg     0.2500    0.5000    0.3333         2\n"
+      },
+      "raw_threshold_0_5": {
+        "threshold": 0.5,
+        "sample_count": 2,
+        "class_counts": {
+          "real": 1,
+          "fake": 1
+        },
+        "auc_roc": 0.0,
+        "eer": 1.0,
+        "eer_threshold": 0.9397978782653809,
+        "eer_threshold_role": "descriptive_only_not_an_operational_threshold",
+        "accuracy": 0.5,
+        "balanced_accuracy": 0.5,
+        "authentic_precision": null,
+        "synthetic_precision": 0.5,
+        "real_recall": 0.0,
+        "fake_recall": 1.0,
+        "confusion_matrix": {
+          "tn": 0,
+          "fp": 1,
+          "fn": 0,
+          "tp": 1
+        },
+        "raw_confusion_matrix": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "classification_report": "              precision    recall  f1-score   support\n\n        Real     0.0000    0.0000    0.0000         1\n        Fake     0.5000    1.0000    0.6667         1\n\n    accuracy                         0.5000         2\n   macro avg     0.2500    0.5000    0.3333         2\nweighted avg     0.2500    0.5000    0.3333         2\n"
+      },
+      "selective": {
+        "tau_low": 0.41310024408822477,
+        "tau_high": 0.6131002440882247,
+        "obs_threshold": 1.0,
+        "total_samples": 2,
+        "num_decided": 2,
+        "num_abstained": 0,
+        "num_authentic_predictions": 0,
+        "num_synthetic_predictions": 2,
+        "coverage_percent": 100.0,
+        "decided_accuracy_percent": 50.0,
+        "authentic_precision_percent": null,
+        "synthetic_precision_percent": 50.0,
+        "decided_accuracy": 50.0,
+        "authentic_accuracy": null,
+        "synthetic_accuracy": 50.0,
+        "legacy_alias_note": "Legacy accuracy keys are percentages; class-specific values are prediction precision."
+      }
+    }
+  }
+}

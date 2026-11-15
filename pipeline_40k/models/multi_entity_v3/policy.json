@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "selection_split": "calibration",
+  "calibration_samples": 2399,
+  "calibration_class_counts": {
+    "real": 1200,
+    "fake": 1199
+  },
+  "calibration": {
+    "method": "platt",
+    "a": 1.4829720613204986,
+    "b": -0.005652453718229775
+  },
+  "threshold_selection": "maximum_calibration_accuracy_ties_nearest_0.5",
+  "obs_threshold": 1.0,
+  "abstention_margin": 0.1,
+  "decision_threshold": 0.5190072511785018,
+  "tau_low": 0.4190072511785018,
+  "tau_high": 0.6190072511785017,
+  "calibration_accuracy": 0.736556898707795,
+  "probability_label": "fake"
+}

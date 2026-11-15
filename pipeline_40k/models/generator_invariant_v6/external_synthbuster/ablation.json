@@ -1,0 +1,312 @@
+{
+  "role": "post-freeze ablation; never used for selection",
+  "model": "models/generator_invariant_v6/model.pt",
+  "variants": {
+    "full": {
+      "generators": {
+        "dalle2": {
+          "auc_roc": 0.675092,
+          "accuracy": 0.6255,
+          "eer": 0.375
+        },
+        "dalle3": {
+          "auc_roc": 0.5646549999999999,
+          "accuracy": 0.5505,
+          "eer": 0.44999999999999996
+        },
+        "firefly": {
+          "auc_roc": 0.506463,
+          "accuracy": 0.477,
+          "eer": 0.4935
+        },
+        "glide": {
+          "auc_roc": 0.72033,
+          "accuracy": 0.65,
+          "eer": 0.35
+        },
+        "midjourney-v5": {
+          "auc_roc": 0.626309,
+          "accuracy": 0.5955,
+          "eer": 0.4
+        },
+        "stable-diffusion-1-3": {
+          "auc_roc": 0.5539620000000001,
+          "accuracy": 0.523,
+          "eer": 0.4655
+        },
+        "stable-diffusion-1-4": {
+          "auc_roc": 0.552597,
+          "accuracy": 0.5225,
+          "eer": 0.46699999999999997
+        },
+        "stable-diffusion-2": {
+          "auc_roc": 0.747146,
+          "accuracy": 0.6755,
+          "eer": 0.32499999999999996
+        },
+        "stable-diffusion-xl": {
+          "auc_roc": 0.7206689999999999,
+          "accuracy": 0.65,
+          "eer": 0.3495
+        }
+      },
+      "mean_auc": 0.6296914444444445,
+      "mean_auc_delta_from_full": 0.0
+    },
+    "global_only": {
+      "generators": {
+        "dalle2": {
+          "auc_roc": 0.603044,
+          "accuracy": 0.57,
+          "eer": 0.43200000000000005
+        },
+        "dalle3": {
+          "auc_roc": 0.49528999999999995,
+          "accuracy": 0.501,
+          "eer": 0.5
+        },
+        "firefly": {
+          "auc_roc": 0.4036955,
+          "accuracy": 0.413,
+          "eer": 0.576
+        },
+        "glide": {
+          "auc_roc": 0.5822039999999999,
+          "accuracy": 0.5405,
+          "eer": 0.45899999999999996
+        },
+        "midjourney-v5": {
+          "auc_roc": 0.6467560000000001,
+          "accuracy": 0.604,
+          "eer": 0.395
+        },
+        "stable-diffusion-1-3": {
+          "auc_roc": 0.467788,
+          "accuracy": 0.4615,
+          "eer": 0.531
+        },
+        "stable-diffusion-1-4": {
+          "auc_roc": 0.466619,
+          "accuracy": 0.4625,
+          "eer": 0.5365
+        },
+        "stable-diffusion-2": {
+          "auc_roc": 0.738522,
+          "accuracy": 0.641,
+          "eer": 0.32999999999999996
+        },
+        "stable-diffusion-xl": {
+          "auc_roc": 0.7353879999999999,
+          "accuracy": 0.663,
+          "eer": 0.32599999999999996
+        }
+      },
+      "mean_auc": 0.5710340555555555,
+      "mean_auc_delta_from_full": -0.05865738888888889
+    },
+    "without_illumination": {
+      "generators": {
+        "dalle2": {
+          "auc_roc": 0.6724749999999999,
+          "accuracy": 0.6325,
+          "eer": 0.365
+        },
+        "dalle3": {
+          "auc_roc": 0.585518,
+          "accuracy": 0.557,
+          "eer": 0.43200000000000005
+        },
+        "firefly": {
+          "auc_roc": 0.557883,
+          "accuracy": 0.5305,
+          "eer": 0.45799999999999996
+        },
+        "glide": {
+          "auc_roc": 0.7662479999999999,
+          "accuracy": 0.7025,
+          "eer": 0.2985
+        },
+        "midjourney-v5": {
+          "auc_roc": 0.573465,
+          "accuracy": 0.552,
+          "eer": 0.44299999999999995
+        },
+        "stable-diffusion-1-3": {
+          "auc_roc": 0.696369,
+          "accuracy": 0.6355,
+          "eer": 0.359
+        },
+        "stable-diffusion-1-4": {
+          "auc_roc": 0.694705,
+          "accuracy": 0.6345,
+          "eer": 0.36
+        },
+        "stable-diffusion-2": {
+          "auc_roc": 0.740885,
+          "accuracy": 0.6765,
+          "eer": 0.32199999999999995
+        },
+        "stable-diffusion-xl": {
+          "auc_roc": 0.666272,
+          "accuracy": 0.615,
+          "eer": 0.383
+        }
+      },
+      "mean_auc": 0.6615355555555555,
+      "mean_auc_delta_from_full": 0.03184411111111111
+    },
+    "without_specular_optics": {
+      "generators": {
+        "dalle2": {
+          "auc_roc": 0.6476120000000001,
+          "accuracy": 0.599,
+          "eer": 0.391
+        },
+        "dalle3": {
+          "auc_roc": 0.5984050000000001,
+          "accuracy": 0.5545,
+          "eer": 0.4285
+        },
+        "firefly": {
+          "auc_roc": 0.5289314999999999,
+          "accuracy": 0.5355,
+          "eer": 0.476
+        },
+        "glide": {
+          "auc_roc": 0.592686,
+          "accuracy": 0.56,
+          "eer": 0.4335
+        },
+        "midjourney-v5": {
+          "auc_roc": 0.640855,
+          "accuracy": 0.592,
+          "eer": 0.3925
+        },
+        "stable-diffusion-1-3": {
+          "auc_roc": 0.528667,
+          "accuracy": 0.5105,
+          "eer": 0.4855
+        },
+        "stable-diffusion-1-4": {
+          "auc_roc": 0.542349,
+          "accuracy": 0.528,
+          "eer": 0.4785
+        },
+        "stable-diffusion-2": {
+          "auc_roc": 0.7722910000000002,
+          "accuracy": 0.6505,
+          "eer": 0.30500000000000005
+        },
+        "stable-diffusion-xl": {
+          "auc_roc": 0.705987,
+          "accuracy": 0.6265,
+          "eer": 0.3615
+        }
+      },
+      "mean_auc": 0.6175315000000001,
+      "mean_auc_delta_from_full": -0.01215994444444441
+    },
+    "without_surface_normals": {
+      "generators": {
+        "dalle2": {
+          "auc_roc": 0.650929,
+          "accuracy": 0.5875,
+          "eer": 0.387
+        },
+        "dalle3": {
+          "auc_roc": 0.5695749999999999,
+          "accuracy": 0.5385,
+          "eer": 0.45099999999999996
+        },
+        "firefly": {
+          "auc_roc": 0.44231200000000004,
+          "accuracy": 0.4595,
+          "eer": 0.558
+        },
+        "glide": {
+          "auc_roc": 0.597977,
+          "accuracy": 0.529,
+          "eer": 0.45299999999999996
+        },
+        "midjourney-v5": {
+          "auc_roc": 0.6527569999999999,
+          "accuracy": 0.6085,
+          "eer": 0.3875
+        },
+        "stable-diffusion-1-3": {
+          "auc_roc": 0.353652,
+          "accuracy": 0.3875,
+          "eer": 0.612
+        },
+        "stable-diffusion-1-4": {
+          "auc_roc": 0.348926,
+          "accuracy": 0.378,
+          "eer": 0.624
+        },
+        "stable-diffusion-2": {
+          "auc_roc": 0.58788,
+          "accuracy": 0.563,
+          "eer": 0.44399999999999995
+        },
+        "stable-diffusion-xl": {
+          "auc_roc": 0.751665,
+          "accuracy": 0.6495,
+          "eer": 0.3115
+        }
+      },
+      "mean_auc": 0.5506303333333333,
+      "mean_auc_delta_from_full": -0.07906111111111111
+    },
+    "without_chromatic_shadows": {
+      "generators": {
+        "dalle2": {
+          "auc_roc": 0.6464355,
+          "accuracy": 0.5605,
+          "eer": 0.393
+        },
+        "dalle3": {
+          "auc_roc": 0.48948099999999994,
+          "accuracy": 0.496,
+          "eer": 0.508
+        },
+        "firefly": {
+          "auc_roc": 0.485969,
+          "accuracy": 0.48,
+          "eer": 0.514
+        },
+        "glide": {
+          "auc_roc": 0.7123815,
+          "accuracy": 0.646,
+          "eer": 0.3525
+        },
+        "midjourney-v5": {
+          "auc_roc": 0.611397,
+          "accuracy": 0.546,
+          "eer": 0.4205
+        },
+        "stable-diffusion-1-3": {
+          "auc_roc": 0.538733,
+          "accuracy": 0.525,
+          "eer": 0.4725
+        },
+        "stable-diffusion-1-4": {
+          "auc_roc": 0.5354920000000001,
+          "accuracy": 0.518,
+          "eer": 0.47
+        },
+        "stable-diffusion-2": {
+          "auc_roc": 0.7555339999999999,
+          "accuracy": 0.684,
+          "eer": 0.30900000000000005
+        },
+        "stable-diffusion-xl": {
+          "auc_roc": 0.7203579999999999,
+          "accuracy": 0.6425,
+          "eer": 0.33999999999999997
+        }
+      },
+      "mean_auc": 0.6106423333333333,
+      "mean_auc_delta_from_full": -0.01904911111111111
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "device": "cuda",
+  "seeds": [
+    43
+  ],
+  "training_seconds": 5.968797399998948,
+  "train_cache_sha256": "4cce7888b3dbea5ab6924273babcd4941ce2db8e19a3327312e27fdbfadac24f",
+  "test_cache_sha256": "46c36de8b2585d8fa7b59690ddd512fc1382a1d270afb9ce31a86fd5cb376745",
+  "cache_provenance_sha256": "67315582e1df8eef1b7d346c1bb46ce2cfc53ed62590a8d7502e100152c08658",
+  "normal_extractor": {
+    "backend": "DSINE_v02_kappa",
+    "camera_intrinsics": "approximate 60-degree field of view",
+    "checkpoint": "G:\\Thesis\\pipeline_40k\\models\\normal_estimators\\dsine\\exp002_kappa\\dsine.pt",
+    "checkpoint_sha256": "1bddae86d7d8f59912c50f3164c2543b1b80fdadfbf1c5dd0ab2d85108bba955",
+    "checkpoint_source": "official DSINE Google Drive / checkpoints/exp002_kappa/dsine.pt",
+    "local_patch": "defer pixel_coords device placement for CPU compatibility",
+    "oversized_input_policy": "aspect-ratio downscale to 2000px then restore normal fields",
+    "source_commit": "ef0c2afa32b4dd19cb8ca4567c652802cd92591c",
+    "source_repository": "https://github.com/baegwangbin/DSINE"
+  },
+  "limitations": [
+    "This is an internal regenerated unseen split, not an external unseen-generator benchmark.",
+    "Difference hash is a near-duplicate safeguard, not a proof of semantic independence."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "device": "cpu",
+  "seeds": [
+    43,
+    47,
+    53
+  ],
+  "training_seconds": 273.17075750000004,
+  "train_cache_sha256": "7a27ebf3a6bccaa70edc65871ac83309098e6a21aac2e543ace373a227b9057c",
+  "test_cache_sha256": "4932a9a749c4360d12ba862e780723d2f9ad12ca7d11267e9f4ab1c2edc807f3",
+  "integrity_split_sha256": "e315592ee536745636efee5d96fd1bc5007466712bc11c5d619dd9672883efdc",
+  "limitations": [
+    "Byte hashes do not detect resized, recompressed or near-duplicate images",
+    "Existing held-out DiffusionDB subset does not demonstrate unseen-generator generalization",
+    "This legacy test set was examined before this improved run; independent future external validation is still needed",
+    "The historical normal residual columns came from an unrecoverable random normal head; this candidate cannot validate learned normal physics.",
+    "No unseen-generator or external dataset has been used in this run."
+  ]
+}

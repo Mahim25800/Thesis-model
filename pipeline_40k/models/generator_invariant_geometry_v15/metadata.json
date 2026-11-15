@@ -1,0 +1,15 @@
+{
+  "device": "cuda",
+  "seeds": [
+    71,
+    73,
+    79
+  ],
+  "training_seconds": 945.4456992999912,
+  "domain_loss_weight": 0.1,
+  "entity_loss_weight": 0.03,
+  "disabled_entities": [],
+  "base_cache_provenance_sha256": "e81c246d757729849f7c00eab52561841d3e2d68759c3cc49f7f5f13cee30b24",
+  "genimage_cache_provenance_sha256": "9b305e017af05effc1f5f8c82a5259d9f4c44294a9e17729b484e2b51978e681",
+  "final_external_test": "Synthbuster remains unread and frozen until this artifact is complete"
+}

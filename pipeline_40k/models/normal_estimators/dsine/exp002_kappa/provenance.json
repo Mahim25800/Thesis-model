@@ -1,0 +1,18 @@
+{
+  "backend": "DSINE_v02_kappa",
+  "checkpoint": "dsine.pt",
+  "checkpoint_source": "Official DSINE Google Drive, checkpoints/exp002_kappa/dsine.pt",
+  "checkpoint_google_drive_id": "1u8TdKXkR7-0zzRRcx-3x3rPN7gvAAM9N",
+  "checkpoint_sha256": "1BDDAE86D7D8F59912C50F3164C2543B1B80FDADFBF1C5DD0AB2D85108BBA955",
+  "source_repository": "https://github.com/baegwangbin/DSINE",
+  "source_commit": "ef0c2afa32b4dd19cb8ca4567c652802cd92591c",
+  "source_license": "DSINE academic-research licence reviewed and accepted by the project user",
+  "runtime_dependency": "geffnet==1.0.2 in third_party/python_packages",
+  "preprocessing": {
+    "rgb_normalization_mean": [0.485, 0.456, 0.406],
+    "rgb_normalization_std": [0.229, 0.224, 0.225],
+    "input_padding": "symmetric zero padding to multiples of 32",
+    "camera_intrinsics": "approximate 60-degree field of view when unknown"
+  },
+  "local_source_patch": "DSINE_v02_kappa defers pixel_coords device placement so CPU inference works; no model weights or architecture were changed."
+}

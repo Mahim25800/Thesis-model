@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "seed": 42,
+  "mapping": "ASSUMPTION: legacy sorted real files followed by sorted fake files; count and label sequence checked, historical identity unverified",
+  "duplicate_policy": "SHA256 of image bytes; transitive image/feature groups reserved across train/development/calibration; one row per image retained",
+  "validation_policy": "All full-train rows matching saved validation features+confidences+labels are reserved; groups split by class into development/calibration",
+  "test_policy": "Remove image hashes present anywhere in original train and duplicate test hashes; labels used only for conflict checks and reporting",
+  "test_labels_used_for_selection": false,
+  "source_caches": {
+    "train": {
+      "path": "G:\\Thesis\\pipeline_40k\\data\\cache_scaled\\train_scaled_features.pt",
+      "sha256": "7a27ebf3a6bccaa70edc65871ac83309098e6a21aac2e543ace373a227b9057c"
+    },
+    "validation": {
+      "path": "G:\\Thesis\\pipeline_40k\\data\\cache_scaled\\val_scaled_features.pt",
+      "sha256": "b71600c710205374b1a0b3e9c0c22f8f51eada0631fe9541e6c956a863876e24"
+    },
+    "test": {
+      "path": "G:\\Thesis\\pipeline_40k\\data\\cache_scaled\\test_scaled_features.pt",
+      "sha256": "4932a9a749c4360d12ba862e780723d2f9ad12ca7d11267e9f4ab1c2edc807f3"
+    }
+  },
+  "original_counts": {
+    "train": 32000,
+    "saved_validation": 4800,
+    "test": 8000
+  },
+  "saved_validation_matching_train_rows": 4818,
+  "reserved_train_rows_including_groups": 4818,
+  "duplicate_hash_groups": 83,
+  "removed_train_duplicate_rows": 67,
+  "removed_test_overlap_rows": 1,
+  "removed_test_duplicate_rows": 19,
+  "label_conflict_count": 0,
+  "splits": {
+    "train": {
+      "total": 27135,
+      "real": 13600,
+      "fake": 13535
+    },
+    "development": {
+      "total": 2399,
+      "real": 1200,
+      "fake": 1199
+    },
+    "calibration": {
+      "total": 2399,
+      "real": 1200,
+      "fake": 1199
+    },
+    "test": {
+      "total": 7980,
+      "real": 4000,
+      "fake": 3980
+    }
+  },
+  "limitations": [
+    "Byte hashes do not detect resized, recompressed or near-duplicate images",
+    "Existing held-out DiffusionDB subset does not demonstrate unseen-generator generalization",
+    "This legacy test set was examined before this improved run; independent future external validation is still needed"
+  ]
+}

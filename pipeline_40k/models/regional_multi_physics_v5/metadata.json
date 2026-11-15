@@ -1,0 +1,44 @@
+{
+  "device": "cuda",
+  "seeds": [
+    59,
+    61,
+    67
+  ],
+  "training_seconds": 595.931645699995,
+  "train_cache_sha256": "e7c403ef96abeb0c8c5f0fdf690f41487d8d6a863c13b5785a91b7cac22fb665",
+  "test_cache_sha256": "681d3a34c03264f58e90ace92e4bd1d03d1eaf02ec131da404c831b48346a40b",
+  "cache_provenance_sha256": "74b9cb96f7ae97b179b4598a444330d476269ff980dd650a1b46340f9aa6f09a",
+  "extractor": {
+    "feature_dimensions_per_region": [
+      5,
+      4,
+      3,
+      2
+    ],
+    "layout": [
+      "global",
+      "top_left",
+      "top_right",
+      "bottom_left",
+      "bottom_right"
+    ],
+    "normal_estimation": "one full-image prediction, aligned regional summaries",
+    "normal_extractor": {
+      "backend": "DSINE_v02_kappa",
+      "camera_intrinsics": "approximate 60-degree field of view",
+      "checkpoint": "G:\\Thesis\\pipeline_40k\\models\\normal_estimators\\dsine\\exp002_kappa\\dsine.pt",
+      "checkpoint_sha256": "1bddae86d7d8f59912c50f3164c2543b1b80fdadfbf1c5dd0ab2d85108bba955",
+      "checkpoint_source": "official DSINE Google Drive / checkpoints/exp002_kappa/dsine.pt",
+      "local_patch": "defer pixel_coords device placement for CPU compatibility",
+      "oversized_input_policy": "aspect-ratio downscale to 2000px then restore normal fields",
+      "source_commit": "ef0c2afa32b4dd19cb8ca4567c652802cd92591c",
+      "source_repository": "https://github.com/baegwangbin/DSINE"
+    },
+    "specular_region_selection": "scene-wide high-frequency highlight components; no fixed eye coordinates"
+  },
+  "limitations": [
+    "Internal test performance does not establish unseen-generator generalization.",
+    "Synthbuster remains a frozen external benchmark and is not used for selection."
+  ]
+}
